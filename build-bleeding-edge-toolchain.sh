@@ -70,7 +70,7 @@ find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
 
 echo "========== Download =========="
 mkdir -p ${sources}
-pushd ${sources}
+cd ${sources}
 wget --passive-ftp -c -q --show-progress \
 	http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 wget --passive-ftp -c -q --show-progress -O ${expatArchive} \
@@ -93,10 +93,10 @@ wget --passive-ftp -c -q --show-progress \
 	ftp://sourceware.org/pub/newlib/${newlibArchive}
 wget --passive-ftp -c -q --show-progress \
 	http://zlib.net/${zlibArchive}
-popd
+cd ${top}
 
 echo "========== Extract =========="
-pushd ${sources}
+cd ${sources}
 echo "Extracting ${binutilsArchive}..."
 tar -xf ${binutilsArchive}
 echo "Extracting ${expatArchive}..."
@@ -119,10 +119,10 @@ echo "Extracting ${newlibArchive}..."
 tar -xf ${newlibArchive}
 echo "Extracting ${zlibArchive}..."
 tar -xf ${zlibArchive}
-popd
+cd ${top}
 
 echo "========== Patch =========="
-pushd ${sources}/${gcc}
+cd ${sources}/${gcc}
 patch -p1 << 'EOF'
 diff -ruN gcc-6.2.0-original/gcc/config/arm/t-baremetal gcc-6.2.0/gcc/config/arm/t-baremetal
 --- gcc-6.2.0-original/gcc/config/arm/t-baremetal	1970-01-01 01:00:00.000000000 +0100
@@ -477,19 +477,19 @@ diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
  extra_modes_file=@extra_modes_file@
  extra_opt_files=@extra_opt_files@
 EOF
-popd
+cd ${top}
 
 echo "========== ${zlib} =========="
 cp -R ${sources}/${zlib} ${buildNative}
-pushd ${buildNative}/${zlib}
+cd ${buildNative}/${zlib}
 ./configure --static --prefix=$(pwd)/install
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${gmp} =========="
 mkdir -p ${buildNative}/${gmp}
-pushd ${buildNative}/${gmp}
+cd ${buildNative}/${gmp}
 CPPFLAGS="-fexceptions" ${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
 	--enable-cxx \
@@ -497,11 +497,11 @@ CPPFLAGS="-fexceptions" ${top}/${sources}/${gmp}/configure \
 	--disable-nls
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${mpfr} =========="
 mkdir -p ${buildNative}/${mpfr}
-pushd ${buildNative}/${mpfr}
+cd ${buildNative}/${mpfr}
 ${top}/${sources}/${mpfr}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
@@ -509,11 +509,11 @@ ${top}/${sources}/${mpfr}/configure \
 	--with-gmp=${top}/${buildNative}/${gmp}/install
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${mpc} =========="
 mkdir -p ${buildNative}/${mpc}
-pushd ${buildNative}/${mpc}
+cd ${buildNative}/${mpc}
 ${top}/${sources}/${mpc}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
@@ -522,11 +522,11 @@ ${top}/${sources}/${mpc}/configure \
 	--with-mpfr=${top}/${buildNative}/${mpfr}/install
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${isl} =========="
 mkdir -p ${buildNative}/${isl}
-pushd ${buildNative}/${isl}
+cd ${buildNative}/${isl}
 ${top}/${sources}/${isl}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
@@ -534,33 +534,33 @@ ${top}/${sources}/${isl}/configure \
 	--with-gmp-prefix=${top}/${buildNative}/${gmp}/install
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${libelf} =========="
 mkdir -p ${buildNative}/${libelf}
-pushd ${buildNative}/${libelf}
+cd ${buildNative}/${libelf}
 ${top}/${sources}/${libelf}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${expat} =========="
 mkdir -p ${buildNative}/${expat}
-pushd ${buildNative}/${expat}
+cd ${buildNative}/${expat}
 ${top}/${sources}/${expat}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls
 make -j$(nproc)
 make install
-popd
+cd ${top}
 
 echo "========== ${binutils} =========="
 mkdir -p ${buildNative}/${binutils}
-pushd ${buildNative}/${binutils}
+cd ${buildNative}/${binutils}
 CFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
 	CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
 	LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib \
@@ -580,11 +580,11 @@ make -j$(nproc)
 make install
 make install-html
 #make install-pdf
-popd
+cd ${top}
 
 echo "========== ${gcc} =========="
 mkdir -p ${buildNative}/${gcc}
-pushd ${buildNative}/${gcc}
+cd ${buildNative}/${gcc}
 ${top}/${sources}/${gcc}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -614,11 +614,11 @@ ${top}/${sources}/${gcc}/configure \
 	--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
 make -j$(nproc) all-gcc
 make install-gcc
-popd
+cd ${top}
 
 echo "========== ${newlib} =========="
 mkdir -p ${buildNative}/${newlib}
-pushd ${buildNative}/${newlib}
+cd ${buildNative}/${newlib}
 PATH=${top}/${installNative}/bin:${PATH} \
 	CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections" \
 	${top}/${sources}/${newlib}/configure \
@@ -637,19 +637,19 @@ PATH=${top}/${installNative}/bin:${PATH} \
 	--disable-nls
 make -j$(nproc)
 make install
-pushd ${target}/newlib/libc
+cd ${target}/newlib/libc
 make install-html
 #make install-pdf
-popd
-pushd ${target}/newlib/libm
+cd ../../..
+cd ${target}/newlib/libm
 make install-html
 #make install-pdf
-popd
-popd
+cd ../../..
+cd ${top}
 
 echo "========== ${gcc} final =========="
 mkdir -p ${buildNative}/${gcc}-final
-pushd ${buildNative}/${gcc}-final
+cd ${buildNative}/${gcc}-final
 CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions" \
 	CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions" \
 	${top}/${sources}/${gcc}/configure \
@@ -685,11 +685,11 @@ make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
 make install
 make install-html
 #make install-pdf
-popd
+cd ${top}
 
 echo "========== ${gdb} =========="
 mkdir -p ${buildNative}/${gdb}
-pushd ${buildNative}/${gdb}
+cd ${buildNative}/${gdb}
 CFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
 	CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
 	LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib \
@@ -713,7 +713,7 @@ make -j$(nproc)
 make install
 make install-html
 #make install-pdf
-popd
+cd ${top}
 
 echo "========== Post-cleanup =========="
 find ${installNative} -name '*.la' -exec rm -rf {} +
