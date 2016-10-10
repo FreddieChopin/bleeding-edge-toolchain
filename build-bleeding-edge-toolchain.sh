@@ -71,28 +71,17 @@ find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
 echo "========== Download =========="
 mkdir -p ${sources}
 cd ${sources}
-wget --passive-ftp -c -q --show-progress \
-	http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
-wget --passive-ftp -c -q --show-progress -O ${expatArchive} \
-	https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}/download
-wget --passive-ftp -c -q --show-progress \
-	ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
-wget --passive-ftp -c -q --show-progress \
-	http://ftp.gnu.org/gnu/gdb/${gdbArchive}
-wget --passive-ftp -c -q --show-progress \
-	https://gmplib.org/download/gmp/${gmpArchive}
-wget --passive-ftp -c -q --show-progress \
-	http://isl.gforge.inria.fr/${islArchive}
-wget --passive-ftp -c -q --show-progress \
-	http://www.mr511.de/software/${libelfArchive}
-wget --passive-ftp -c -q --show-progress \
-	ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
-wget --passive-ftp -c -q --show-progress \
-	http://www.mpfr.org/mpfr-${mpfrVersion}/${mpfrArchive}
-wget --passive-ftp -c -q --show-progress \
-	ftp://sourceware.org/pub/newlib/${newlibArchive}
-wget --passive-ftp -c -q --show-progress \
-	http://zlib.net/${zlibArchive}
+curl -L -O -C - http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
+curl -L -O -C - https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
+curl -L -O -C - ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
+curl -L -O -C - http://ftp.gnu.org/gnu/gdb/${gdbArchive}
+curl -L -O -C - https://gmplib.org/download/gmp/${gmpArchive}
+curl -L -O -C - http://isl.gforge.inria.fr/${islArchive}
+curl -L -O -C - http://www.mr511.de/software/${libelfArchive}
+curl -L -O -C - ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
+curl -L -O -C - http://www.mpfr.org/mpfr-${mpfrVersion}/${mpfrArchive}
+curl -L -O -C - ftp://sourceware.org/pub/newlib/${newlibArchive}
+curl -L -O -C - http://zlib.net/${zlibArchive}
 cd ${top}
 
 echo "========== Extract =========="
