@@ -485,13 +485,16 @@ cd ${top}
 echo "========== ${gmp} =========="
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
-CPPFLAGS="-fexceptions" ${top}/${sources}/${gmp}/configure \
+savedCPPFLAGS=${CPPFLAGS-}
+export CPPFLAGS="-fexceptions"
+${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
 	--enable-cxx \
 	--disable-shared \
 	--disable-nls
 make -j$(nproc)
 make install
+export CPPFLAGS=${savedCPPFLAGS}
 cd ${top}
 
 echo "========== ${mpfr} =========="
@@ -556,10 +559,13 @@ cd ${top}
 echo "========== ${binutils} =========="
 mkdir -p ${buildNative}/${binutils}
 cd ${buildNative}/${binutils}
-CFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
-	CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
-	LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib \
-	${top}/${sources}/${binutils}/configure \
+savedCFLAGS=${CFLAGS-}
+savedCPPFLAGS=${CPPFLAGS-}
+savedLDFLAGS=${LDFLAGS-}
+export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
+export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
+export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+${top}/${sources}/${binutils}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
 	--disable-nls \
@@ -575,6 +581,9 @@ make -j$(nproc)
 make install
 make install-html
 #make install-pdf
+export CFLAGS=${savedCFLAGS}
+export CPPFLAGS=${savedCPPFLAGS}
+export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
 echo "========== ${gcc} =========="
@@ -614,9 +623,11 @@ cd ${top}
 echo "========== ${newlib} =========="
 mkdir -p ${buildNative}/${newlib}
 cd ${buildNative}/${newlib}
-PATH=${top}/${installNative}/bin:${PATH} \
-	CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections" \
-	${top}/${sources}/${newlib}/configure \
+savedPATH=${PATH-}
+savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
+export PATH=${top}/${installNative}/bin:${PATH}
+export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections"
+${top}/${sources}/${newlib}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
 	--enable-newlib-io-c99-formats \
@@ -640,14 +651,18 @@ cd ${target}/newlib/libm
 make install-html
 #make install-pdf
 cd ../../..
+export PATH=${savedPATH}
+export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
 cd ${top}
 
 echo "========== ${gcc} final =========="
 mkdir -p ${buildNative}/${gcc}-final
 cd ${buildNative}/${gcc}-final
-CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions" \
-	CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions" \
-	${top}/${sources}/${gcc}/configure \
+savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
+savedCXXFLAGS_FOR_TARGET=${CXXFLAGS_FOR_TARGET-}
+export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
+export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
+${top}/${sources}/${gcc}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
 	--libexecdir=${top}/${installNative}/lib \
@@ -680,15 +695,20 @@ make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
 make install
 make install-html
 #make install-pdf
+export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
+export CXXFLAGS_FOR_TARGET=${savedCXXFLAGS_FOR_TARGET}
 cd ${top}
 
 echo "========== ${gdb} =========="
 mkdir -p ${buildNative}/${gdb}
 cd ${buildNative}/${gdb}
-CFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
-	CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include \
-	LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib \
-	${top}/${sources}/${gdb}/configure \
+savedCFLAGS=${CFLAGS-}
+savedCPPFLAGS=${CPPFLAGS-}
+savedLDFLAGS=${LDFLAGS-}
+export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
+export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
+export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+${top}/${sources}/${gdb}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
 	--disable-nls \
@@ -708,6 +728,9 @@ make -j$(nproc)
 make install
 make install-html
 #make install-pdf
+export CFLAGS=${savedCFLAGS}
+export CPPFLAGS=${savedCPPFLAGS}
+export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
 echo "========== Post-cleanup =========="
