@@ -48,7 +48,10 @@ target=arm-none-eabi
 package=${target}-${gcc}-$(date +'%y%m%d')
 packageArchive=${package}.tar.xz
 
-echo "========== Cleanup =========="
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+echo "${bold}********** Cleanup${normal}"
 rm -rf ${buildNative}
 mkdir -p ${buildNative}
 rm -rf ${installNative}
@@ -68,12 +71,12 @@ find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
 	! -name "${zlibArchive}" \
 	-exec rm -rf {} +
 
-echo "========== Download =========="
+echo "${bold}********** Download${normal}"
 mkdir -p ${sources}
 cd ${sources}
 download() {
 	if [ ! -e ${1} ]; then
-		echo "Downloading ${1}..."
+		echo "${bold}---------- Downloading ${1}${normal}"
 		curl -L -o ${1} -C - ${2}
 	fi	
 }
@@ -90,33 +93,33 @@ download ${newlibArchive} ftp://sourceware.org/pub/newlib/${newlibArchive}
 download ${zlibArchive} http://zlib.net/${zlibArchive}
 cd ${top}
 
-echo "========== Extract =========="
+echo "${bold}********** Extract${normal}"
 cd ${sources}
-echo "Extracting ${binutilsArchive}..."
+echo "${bold}---------- Extracting ${binutilsArchive}${normal}"
 tar -xf ${binutilsArchive}
-echo "Extracting ${expatArchive}..."
+echo "${bold}---------- Extracting ${expatArchive}${normal}"
 tar -xf ${expatArchive}
-echo "Extracting ${gccArchive}..."
+echo "${bold}---------- Extracting ${gccArchive}${normal}"
 tar -xf ${gccArchive}
-echo "Extracting ${gdbArchive}..."
+echo "${bold}---------- Extracting ${gdbArchive}${normal}"
 tar -xf ${gdbArchive}
-echo "Extracting ${gmpArchive}..."
+echo "${bold}---------- Extracting ${gmpArchive}${normal}"
 tar -xf ${gmpArchive}
-echo "Extracting ${islArchive}..."
+echo "${bold}---------- Extracting ${islArchive}${normal}"
 tar -xf ${islArchive}
-echo "Extracting ${libelfArchive}..."
+echo "${bold}---------- Extracting ${libelfArchive}${normal}"
 tar -xf ${libelfArchive}
-echo "Extracting ${mpcArchive}..."
+echo "${bold}---------- Extracting ${mpcArchive}${normal}"
 tar -xf ${mpcArchive}
-echo "Extracting ${mpfrArchive}..."
+echo "${bold}---------- Extracting ${mpfrArchive}${normal}"
 tar -xf ${mpfrArchive}
-echo "Extracting ${newlibArchive}..."
+echo "${bold}---------- Extracting ${newlibArchive}${normal}"
 tar -xf ${newlibArchive}
-echo "Extracting ${zlibArchive}..."
+echo "${bold}---------- Extracting ${zlibArchive}${normal}"
 tar -xf ${zlibArchive}
 cd ${top}
 
-echo "========== Patch =========="
+echo "${bold}********** Patch${normal}"
 cd ${sources}/${gcc}
 patch -p1 << 'EOF'
 diff -ruN gcc-6.2.0-original/gcc/config/arm/t-baremetal gcc-6.2.0/gcc/config/arm/t-baremetal
@@ -458,7 +461,7 @@ diff -ruN gcc-6.2.0-original/gcc/configure.ac gcc-6.2.0/gcc/configure.ac
  with_multilib_list=default)
 +AC_SUBST(with_multilib_list)
  
- # -------------------------
+ #---------------
  # Checks for other programs
 diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
 --- gcc-6.2.0-original/gcc/Makefile.in	2016-04-15 13:49:39.000000000 +0200
@@ -474,89 +477,110 @@ diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
 EOF
 cd ${top}
 
-echo "========== ${zlib} =========="
+echo "${bold}********** ${zlib}${normal}"
 cp -R ${sources}/${zlib} ${buildNative}
 cd ${buildNative}/${zlib}
+echo "${bold}---------- ${zlib} configure${normal}"
 ./configure --static --prefix=$(pwd)/install
+echo "${bold}---------- ${zlib} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${zlib} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${gmp} =========="
+echo "${bold}********** ${gmp}${normal}"
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
 savedCPPFLAGS=${CPPFLAGS-}
 export CPPFLAGS="-fexceptions"
+echo "${bold}---------- ${gmp} configure${normal}"
 ${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
 	--enable-cxx \
 	--disable-shared \
 	--disable-nls
+echo "${bold}---------- ${gmp} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${gmp} make install${normal}"
 make install
 export CPPFLAGS=${savedCPPFLAGS}
 cd ${top}
 
-echo "========== ${mpfr} =========="
+echo "${bold}********** ${mpfr}${normal}"
 mkdir -p ${buildNative}/${mpfr}
 cd ${buildNative}/${mpfr}
+echo "${bold}---------- ${mpfr} configure${normal}"
 ${top}/${sources}/${mpfr}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls \
 	--with-gmp=${top}/${buildNative}/${gmp}/install
+echo "${bold}---------- ${mpfr} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${mpfr} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${mpc} =========="
+echo "${bold}********** ${mpc}${normal}"
 mkdir -p ${buildNative}/${mpc}
 cd ${buildNative}/${mpc}
+echo "${bold}---------- ${mpc} configure${normal}"
 ${top}/${sources}/${mpc}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls \
 	--with-gmp=${top}/${buildNative}/${gmp}/install \
 	--with-mpfr=${top}/${buildNative}/${mpfr}/install
+echo "${bold}---------- ${mpc} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${mpc} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${isl} =========="
+echo "${bold}********** ${isl}${normal}"
 mkdir -p ${buildNative}/${isl}
 cd ${buildNative}/${isl}
+echo "${bold}---------- ${isl} configure${normal}"
 ${top}/${sources}/${isl}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls \
 	--with-gmp-prefix=${top}/${buildNative}/${gmp}/install
+echo "${bold}---------- ${isl} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${isl} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${libelf} =========="
+echo "${bold}********** ${libelf}${normal}"
 mkdir -p ${buildNative}/${libelf}
 cd ${buildNative}/${libelf}
+echo "${bold}---------- ${libelf} configure${normal}"
 ${top}/${sources}/${libelf}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls
+echo "${bold}---------- ${libelf} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${libelf} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${expat} =========="
+echo "${bold}********** ${expat}${normal}"
 mkdir -p ${buildNative}/${expat}
 cd ${buildNative}/${expat}
+echo "${bold}---------- ${expat} configure${normal}"
 ${top}/${sources}/${expat}/configure \
 	--prefix=$(pwd)/install \
 	--disable-shared \
 	--disable-nls
+echo "${bold}---------- ${expat} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${expat} make install${normal}"
 make install
 cd ${top}
 
-echo "========== ${binutils} =========="
+echo "${bold}********** ${binutils}${normal}"
 mkdir -p ${buildNative}/${binutils}
 cd ${buildNative}/${binutils}
 savedCFLAGS=${CFLAGS-}
@@ -565,6 +589,7 @@ savedLDFLAGS=${LDFLAGS-}
 export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
 export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
 export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+echo "${bold}---------- ${binutils} configure${normal}"
 ${top}/${sources}/${binutils}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -577,18 +602,23 @@ ${top}/${sources}/${binutils}/configure \
 	--enable-interwork \
 	--enable-plugins \
 	"--with-pkgversion=${pkgversion}"
+echo "${bold}---------- ${binutils} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${binutils} make install${normal}"
 make install
+echo "${bold}---------- ${binutils} make install-html${normal}"
 make install-html
+#echo "${bold}---------- ${binutils} make install-pdf${normal}"
 #make install-pdf
 export CFLAGS=${savedCFLAGS}
 export CPPFLAGS=${savedCPPFLAGS}
 export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
-echo "========== ${gcc} =========="
+echo "${bold}********** ${gcc}${normal}"
 mkdir -p ${buildNative}/${gcc}
 cd ${buildNative}/${gcc}
+echo "${bold}---------- ${gcc} configure${normal}"
 ${top}/${sources}/${gcc}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -616,17 +646,20 @@ ${top}/${sources}/${gcc}/configure \
 	--with-isl=${top}/${buildNative}/${isl}/install \
 	"--with-pkgversion=${pkgversion}" \
 	--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
+echo "${bold}---------- ${gcc} make all-gcc${normal}"
 make -j$(nproc) all-gcc
+echo "${bold}---------- ${gcc} make install-gcc${normal}"
 make install-gcc
 cd ${top}
 
-echo "========== ${newlib} =========="
+echo "${bold}********** ${newlib}${normal}"
 mkdir -p ${buildNative}/${newlib}
 cd ${buildNative}/${newlib}
 savedPATH=${PATH-}
 savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
 export PATH=${top}/${installNative}/bin:${PATH}
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections"
+echo "${bold}---------- ${newlib} configure${normal}"
 ${top}/${sources}/${newlib}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -641,27 +674,34 @@ ${top}/${sources}/${newlib}/configure \
 	--disable-newlib-unbuf-stream-opt \
 	--enable-newlib-global-atexit \
 	--disable-nls
+echo "${bold}---------- ${newlib} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${newlib} make install${normal}"
 make install
 cd ${target}/newlib/libc
+echo "${bold}---------- ${newlib} libc make install-html${normal}"
 make install-html
+#echo "${bold}---------- ${newlib} libc make install-pdf${normal}"
 #make install-pdf
 cd ../../..
 cd ${target}/newlib/libm
+echo "${bold}---------- ${newlib} libm make install-html${normal}"
 make install-html
+#echo "${bold}---------- ${newlib} libm make install-pdf${normal}"
 #make install-pdf
 cd ../../..
 export PATH=${savedPATH}
 export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
 cd ${top}
 
-echo "========== ${gcc} final =========="
+echo "${bold}********** ${gcc} final${normal}"
 mkdir -p ${buildNative}/${gcc}-final
 cd ${buildNative}/${gcc}-final
 savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
 savedCXXFLAGS_FOR_TARGET=${CXXFLAGS_FOR_TARGET-}
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
 export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
+echo "${bold}---------- ${gcc} final configure${normal}"
 ${top}/${sources}/${gcc}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -691,15 +731,19 @@ ${top}/${sources}/${gcc}/configure \
 	--with-isl=${top}/${buildNative}/${isl}/install \
 	"--with-pkgversion=${pkgversion}" \
 	--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
+echo "${bold}---------- ${gcc} final make${normal}"
 make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
+echo "${bold}---------- ${gcc} final make install${normal}"
 make install
+echo "${bold}---------- ${gcc} final make install-html${normal}"
 make install-html
+#echo "${bold}---------- ${gcc} final make install-pdf${normal}"
 #make install-pdf
 export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
 export CXXFLAGS_FOR_TARGET=${savedCXXFLAGS_FOR_TARGET}
 cd ${top}
 
-echo "========== ${gdb} =========="
+echo "${bold}********** ${gdb}${normal}"
 mkdir -p ${buildNative}/${gdb}
 cd ${buildNative}/${gdb}
 savedCFLAGS=${CFLAGS-}
@@ -708,6 +752,7 @@ savedLDFLAGS=${LDFLAGS-}
 export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
 export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
 export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+echo "${bold}---------- ${gdb} configure${normal}"
 ${top}/${sources}/${gdb}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
@@ -724,16 +769,20 @@ ${top}/${sources}/${gdb}/configure \
 	--with-python=yes \
 	"--with-gdb-datadir='\${prefix}'/${target}/share/gdb" \
 	"--with-pkgversion=${pkgversion}"
+echo "${bold}---------- ${gdb} make${normal}"
 make -j$(nproc)
+echo "${bold}---------- ${gdb} make install${normal}"
 make install
+echo "${bold}---------- ${gdb} make install-html${normal}"
 make install-html
+#echo "${bold}---------- ${gdb} make install-pdf${normal}"
 #make install-pdf
 export CFLAGS=${savedCFLAGS}
 export CPPFLAGS=${savedCPPFLAGS}
 export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
-echo "========== Post-cleanup =========="
+echo "${bold}********** Post-cleanup${normal}"
 find ${installNative} -name '*.la' -exec rm -rf {} +
 find ${installNative}/${target}/bin \
 	${installNative}/bin \
@@ -765,11 +814,11 @@ http://www.freddiechopin.info/
 EOF
 cp ${0} ${installNative}
 
-echo "========== Package =========="
+echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
 rm -rf ${packageArchive}
 XZ_OPT="-9e -T 0" tar -cJf ${packageArchive} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
 rm -rf ${package}
 
-echo "========== Done =========="
+echo "${bold}********** Done${normal}"
