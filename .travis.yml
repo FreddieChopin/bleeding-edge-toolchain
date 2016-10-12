@@ -1,0 +1,38 @@
+#
+# file: .travis.yml
+#
+# author: Copyright (C) 2016 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+# use container-based infrastructure
+sudo: false
+
+# texinfo is needed to build documentation
+addons:
+    apt:
+        packages:
+            - texinfo
+
+# use minimal environment
+language: generic
+
+script:
+    - "./build-bleeding-edge-toolchain.sh > >(tee stdout.log) 2> >(tee stderr.log >&2) | grep \"[*-]\\{10,10\\} \""
+    - "tar -xf *.tar.xz"
+    - "cd arm-none-eabi-gcc-*"
+    - "export PATH=$(pwd)/bin:${PATH}"
+    - "cd .."
+    - "find ./arm-none-eabi-gcc-*/bin -executable -type f -exec {} --version \\;"
+    - "curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz"
+    - "tar -xf master.tar.gz"
+    - "cd distortos-master"
+    - "./scripts/buildAllConfigurations.sh"
+
+after_failure:
+    - "echo \"********** stdout.log\""
+    - "tail -n 1000 stdout.log"
+    - "echo \"********** stderr.log\""
+    - "tail -n 1000 stderr.log"
