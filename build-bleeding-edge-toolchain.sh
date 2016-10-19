@@ -783,6 +783,7 @@ export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
 echo "${bold}********** Post-cleanup${normal}"
+rm -rf ${installNative}/include
 find ${installNative} -name '*.la' -exec rm -rf {} +
 find ${installNative}/${target}/bin \
 	${installNative}/bin \
