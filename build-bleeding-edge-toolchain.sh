@@ -594,7 +594,6 @@ ${top}/${sources}/${binutils}/configure \
 	--target=${target} \
 	--prefix=${top}/${installNative} \
 	--disable-nls \
-	--disable-werror \
 	--disable-sim \
 	--disable-gdb \
 	--disable-libdecnumber \
