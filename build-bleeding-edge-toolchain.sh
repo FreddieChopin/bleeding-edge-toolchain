@@ -491,8 +491,8 @@ cd ${top}
 echo "${bold}********** ${gmp}${normal}"
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
-savedCPPFLAGS=${CPPFLAGS-}
-export CPPFLAGS="-fexceptions"
+savedCFLAGS=${CFLAGS-}
+export CFLAGS="-fexceptions"
 echo "${bold}---------- ${gmp} configure${normal}"
 ${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
@@ -503,7 +503,7 @@ echo "${bold}---------- ${gmp} make${normal}"
 make -j$(nproc)
 echo "${bold}---------- ${gmp} make install${normal}"
 make install
-export CPPFLAGS=${savedCPPFLAGS}
+export CFLAGS=${savedCFLAGS}
 cd ${top}
 
 echo "${bold}********** ${mpfr}${normal}"
