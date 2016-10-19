@@ -599,6 +599,7 @@ ${top}/${sources}/${binutils}/configure \
 	--disable-libdecnumber \
 	--disable-readline \
 	--enable-interwork \
+	--enable-multilib \
 	--enable-plugins \
 	"--with-pkgversion=${pkgversion}"
 echo "${bold}---------- ${binutils} make${normal}"
