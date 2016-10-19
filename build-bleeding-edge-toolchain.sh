@@ -492,7 +492,7 @@ echo "${bold}********** ${gmp}${normal}"
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
 savedCFLAGS=${CFLAGS-}
-export CFLAGS="-fexceptions"
+export CFLAGS="-fexceptions ${CFLAGS-}"
 echo "${bold}---------- ${gmp} configure${normal}"
 ${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
@@ -586,9 +586,9 @@ cd ${buildNative}/${binutils}
 savedCFLAGS=${CFLAGS-}
 savedCPPFLAGS=${CPPFLAGS-}
 savedLDFLAGS=${LDFLAGS-}
-export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
-export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
-export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+export CFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CFLAGS-}"
+export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
+export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${binutils} configure${normal}"
 ${top}/${sources}/${binutils}/configure \
 	--target=${target} \
@@ -656,8 +656,8 @@ mkdir -p ${buildNative}/${newlib}
 cd ${buildNative}/${newlib}
 savedPATH=${PATH-}
 savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
-export PATH=${top}/${installNative}/bin:${PATH}
-export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections"
+export PATH=${top}/${installNative}/bin:${PATH-}
+export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
 echo "${bold}---------- ${newlib} configure${normal}"
 ${top}/${sources}/${newlib}/configure \
 	--target=${target} \
@@ -698,8 +698,8 @@ mkdir -p ${buildNative}/${gcc}-final
 cd ${buildNative}/${gcc}-final
 savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
 savedCXXFLAGS_FOR_TARGET=${CXXFLAGS_FOR_TARGET-}
-export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
-export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions"
+export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
+export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
 echo "${bold}---------- ${gcc} final configure${normal}"
 ${top}/${sources}/${gcc}/configure \
 	--target=${target} \
@@ -748,9 +748,9 @@ cd ${buildNative}/${gdb}
 savedCFLAGS=${CFLAGS-}
 savedCPPFLAGS=${CPPFLAGS-}
 savedLDFLAGS=${LDFLAGS-}
-export CFLAGS=-I${top}/${buildNative}/${zlib}/install/include
-export CPPFLAGS=-I${top}/${buildNative}/${zlib}/install/include
-export LDFLAGS=-L${top}/${buildNative}/${zlib}/install/lib
+export CFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CFLAGS-}"
+export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
+export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${gdb} configure${normal}"
 ${top}/${sources}/${gdb}/configure \
 	--target=${target} \
