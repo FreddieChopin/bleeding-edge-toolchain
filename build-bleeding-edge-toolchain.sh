@@ -597,6 +597,7 @@ ${top}/${sources}/${binutils}/configure \
 	--enable-interwork \
 	--enable-multilib \
 	--enable-plugins \
+	--with-system-zlib \
 	"--with-pkgversion=${pkgversion}"
 echo "${bold}---------- ${binutils} make${normal}"
 make -j$(nproc)
@@ -757,6 +758,7 @@ ${top}/${sources}/${gdb}/configure \
 	--with-libexpat \
 	--with-lzma=no \
 	--with-system-gdbinit=${top}/${installNative}/${target}/lib/gdbinit \
+	--with-system-zlib \
 	--with-libexpat-prefix=${top}/${buildNative}/${expat}/install \
 	--with-python=yes \
 	"--with-gdb-datadir='\${prefix}'/${target}/share/gdb" \
