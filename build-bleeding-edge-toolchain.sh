@@ -583,10 +583,8 @@ cd ${top}
 echo "${bold}********** ${binutils}${normal}"
 mkdir -p ${buildNative}/${binutils}
 cd ${buildNative}/${binutils}
-savedCFLAGS=${CFLAGS-}
 savedCPPFLAGS=${CPPFLAGS-}
 savedLDFLAGS=${LDFLAGS-}
-export CFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CFLAGS-}"
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${binutils} configure${normal}"
@@ -607,7 +605,6 @@ echo "${bold}---------- ${binutils} make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${binutils} make install-pdf${normal}"
 #make install-pdf
-export CFLAGS=${savedCFLAGS}
 export CPPFLAGS=${savedCPPFLAGS}
 export LDFLAGS=${savedLDFLAGS}
 cd ${top}
@@ -743,10 +740,8 @@ cd ${top}
 echo "${bold}********** ${gdb}${normal}"
 mkdir -p ${buildNative}/${gdb}
 cd ${buildNative}/${gdb}
-savedCFLAGS=${CFLAGS-}
 savedCPPFLAGS=${CPPFLAGS-}
 savedLDFLAGS=${LDFLAGS-}
-export CFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CFLAGS-}"
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${gdb} configure${normal}"
@@ -771,7 +766,6 @@ echo "${bold}---------- ${gdb} make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${gdb} make install-pdf${normal}"
 #make install-pdf
-export CFLAGS=${savedCFLAGS}
 export CPPFLAGS=${savedCPPFLAGS}
 export LDFLAGS=${savedLDFLAGS}
 cd ${top}
