@@ -612,6 +612,10 @@ cd ${top}
 echo "${bold}********** ${gcc}${normal}"
 mkdir -p ${buildNative}/${gcc}
 cd ${buildNative}/${gcc}
+savedCPPFLAGS=${CPPFLAGS-}
+savedLDFLAGS=${LDFLAGS-}
+export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
+export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${gcc} configure${normal}"
 ${top}/${sources}/${gcc}/configure \
 	--target=${target} \
@@ -634,6 +638,7 @@ ${top}/${sources}/${gcc}/configure \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-sysroot=${top}/${installNative}/${target} \
+	--with-system-zlib \
 	--with-gmp=${top}/${buildNative}/${gmp}/install \
 	--with-mpfr=${top}/${buildNative}/${mpfr}/install \
 	--with-mpc=${top}/${buildNative}/${mpc}/install \
@@ -644,6 +649,8 @@ echo "${bold}---------- ${gcc} make all-gcc${normal}"
 make -j$(nproc) all-gcc
 echo "${bold}---------- ${gcc} make install-gcc${normal}"
 make install-gcc
+export CPPFLAGS=${savedCPPFLAGS}
+export LDFLAGS=${savedLDFLAGS}
 cd ${top}
 
 echo "${bold}********** ${newlib}${normal}"
@@ -691,8 +698,12 @@ cd ${top}
 echo "${bold}********** ${gcc} final${normal}"
 mkdir -p ${buildNative}/${gcc}-final
 cd ${buildNative}/${gcc}-final
+savedCPPFLAGS=${CPPFLAGS-}
+savedLDFLAGS=${LDFLAGS-}
 savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
 savedCXXFLAGS_FOR_TARGET=${CXXFLAGS_FOR_TARGET-}
+export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
+export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
 export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
 echo "${bold}---------- ${gcc} final configure${normal}"
@@ -719,6 +730,7 @@ ${top}/${sources}/${gcc}/configure \
 	--with-newlib \
 	--with-headers=yes \
 	--with-sysroot=${top}/${installNative}/${target} \
+	--with-system-zlib \
 	--with-gmp=${top}/${buildNative}/${gmp}/install \
 	--with-mpfr=${top}/${buildNative}/${mpfr}/install \
 	--with-mpc=${top}/${buildNative}/${mpc}/install \
@@ -733,6 +745,8 @@ echo "${bold}---------- ${gcc} final make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${gcc} final make install-pdf${normal}"
 #make install-pdf
+export CPPFLAGS=${savedCPPFLAGS}
+export LDFLAGS=${savedLDFLAGS}
 export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
 export CXXFLAGS_FOR_TARGET=${savedCXXFLAGS_FOR_TARGET}
 cd ${top}
