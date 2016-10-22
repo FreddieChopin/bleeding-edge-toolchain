@@ -494,7 +494,6 @@ cd ${top}
 echo "${bold}********** ${gmp}${normal}"
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
-export CFLAGS="-fexceptions ${CFLAGS-}"
 echo "${bold}---------- ${gmp} configure${normal}"
 ${top}/${sources}/${gmp}/configure \
 	--prefix=$(pwd)/install \
