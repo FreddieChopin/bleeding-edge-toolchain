@@ -80,15 +80,15 @@ download() {
 		curl -L -o ${1} -C - ${2}
 	fi	
 }
-download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
+download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
 download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
-download ${gdbArchive} http://ftp.gnu.org/gnu/gdb/${gdbArchive}
-download ${gmpArchive} https://gmplib.org/download/gmp/${gmpArchive}
+download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
+download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
 download ${libelfArchive} http://www.mr511.de/software/${libelfArchive}
 download ${mpcArchive} ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
-download ${mpfrArchive} http://www.mpfr.org/mpfr-${mpfrVersion}/${mpfrArchive}
+download ${mpfrArchive} ftp://ftp.gnu.org/gnu/mpfr/${mpfrArchive}
 download ${newlibArchive} ftp://sourceware.org/pub/newlib/${newlibArchive}
 download ${zlibArchive} http://zlib.net/${zlibArchive}
 cd ${top}
