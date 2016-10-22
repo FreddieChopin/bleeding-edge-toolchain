@@ -477,6 +477,7 @@ diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
 EOF
 cd ${top}
 
+(
 echo "${bold}********** ${zlib}${normal}"
 cp -R ${sources}/${zlib} ${buildNative}
 cd ${buildNative}/${zlib}
@@ -487,11 +488,12 @@ make -j$(nproc)
 echo "${bold}---------- ${zlib} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${gmp}${normal}"
 mkdir -p ${buildNative}/${gmp}
 cd ${buildNative}/${gmp}
-savedCFLAGS=${CFLAGS-}
 export CFLAGS="-fexceptions ${CFLAGS-}"
 echo "${bold}---------- ${gmp} configure${normal}"
 ${top}/${sources}/${gmp}/configure \
@@ -503,9 +505,10 @@ echo "${bold}---------- ${gmp} make${normal}"
 make -j$(nproc)
 echo "${bold}---------- ${gmp} make install${normal}"
 make install
-export CFLAGS=${savedCFLAGS}
 cd ${top}
+)
 
+(
 echo "${bold}********** ${mpfr}${normal}"
 mkdir -p ${buildNative}/${mpfr}
 cd ${buildNative}/${mpfr}
@@ -520,7 +523,9 @@ make -j$(nproc)
 echo "${bold}---------- ${mpfr} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${mpc}${normal}"
 mkdir -p ${buildNative}/${mpc}
 cd ${buildNative}/${mpc}
@@ -536,7 +541,9 @@ make -j$(nproc)
 echo "${bold}---------- ${mpc} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${isl}${normal}"
 mkdir -p ${buildNative}/${isl}
 cd ${buildNative}/${isl}
@@ -551,7 +558,9 @@ make -j$(nproc)
 echo "${bold}---------- ${isl} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${libelf}${normal}"
 mkdir -p ${buildNative}/${libelf}
 cd ${buildNative}/${libelf}
@@ -565,7 +574,9 @@ make -j$(nproc)
 echo "${bold}---------- ${libelf} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${expat}${normal}"
 mkdir -p ${buildNative}/${expat}
 cd ${buildNative}/${expat}
@@ -579,12 +590,12 @@ make -j$(nproc)
 echo "${bold}---------- ${expat} make install${normal}"
 make install
 cd ${top}
+)
 
+(
 echo "${bold}********** ${binutils}${normal}"
 mkdir -p ${buildNative}/${binutils}
 cd ${buildNative}/${binutils}
-savedCPPFLAGS=${CPPFLAGS-}
-savedLDFLAGS=${LDFLAGS-}
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${binutils} configure${normal}"
@@ -605,15 +616,13 @@ echo "${bold}---------- ${binutils} make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${binutils} make install-pdf${normal}"
 #make install-pdf
-export CPPFLAGS=${savedCPPFLAGS}
-export LDFLAGS=${savedLDFLAGS}
 cd ${top}
+)
 
+(
 echo "${bold}********** ${gcc}${normal}"
 mkdir -p ${buildNative}/${gcc}
 cd ${buildNative}/${gcc}
-savedCPPFLAGS=${CPPFLAGS-}
-savedLDFLAGS=${LDFLAGS-}
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${gcc} configure${normal}"
@@ -649,15 +658,13 @@ echo "${bold}---------- ${gcc} make all-gcc${normal}"
 make -j$(nproc) all-gcc
 echo "${bold}---------- ${gcc} make install-gcc${normal}"
 make install-gcc
-export CPPFLAGS=${savedCPPFLAGS}
-export LDFLAGS=${savedLDFLAGS}
 cd ${top}
+)
 
+(
 echo "${bold}********** ${newlib}${normal}"
 mkdir -p ${buildNative}/${newlib}
 cd ${buildNative}/${newlib}
-savedPATH=${PATH-}
-savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
 export PATH=${top}/${installNative}/bin:${PATH-}
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
 echo "${bold}---------- ${newlib} configure${normal}"
@@ -691,17 +698,13 @@ make install-html
 #echo "${bold}---------- ${newlib} libm make install-pdf${normal}"
 #make install-pdf
 cd ../../..
-export PATH=${savedPATH}
-export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
 cd ${top}
+)
 
+(
 echo "${bold}********** ${gcc} final${normal}"
 mkdir -p ${buildNative}/${gcc}-final
 cd ${buildNative}/${gcc}-final
-savedCPPFLAGS=${CPPFLAGS-}
-savedLDFLAGS=${LDFLAGS-}
-savedCFLAGS_FOR_TARGET=${CFLAGS_FOR_TARGET-}
-savedCXXFLAGS_FOR_TARGET=${CXXFLAGS_FOR_TARGET-}
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
@@ -745,17 +748,13 @@ echo "${bold}---------- ${gcc} final make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${gcc} final make install-pdf${normal}"
 #make install-pdf
-export CPPFLAGS=${savedCPPFLAGS}
-export LDFLAGS=${savedLDFLAGS}
-export CFLAGS_FOR_TARGET=${savedCFLAGS_FOR_TARGET}
-export CXXFLAGS_FOR_TARGET=${savedCXXFLAGS_FOR_TARGET}
 cd ${top}
+)
 
+(
 echo "${bold}********** ${gdb}${normal}"
 mkdir -p ${buildNative}/${gdb}
 cd ${buildNative}/${gdb}
-savedCPPFLAGS=${CPPFLAGS-}
-savedLDFLAGS=${LDFLAGS-}
 export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
 export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
 echo "${bold}---------- ${gdb} configure${normal}"
@@ -780,9 +779,8 @@ echo "${bold}---------- ${gdb} make install-html${normal}"
 make install-html
 #echo "${bold}---------- ${gdb} make install-pdf${normal}"
 #make install-pdf
-export CPPFLAGS=${savedCPPFLAGS}
-export LDFLAGS=${savedLDFLAGS}
 cd ${top}
+)
 
 echo "${bold}********** Post-cleanup${normal}"
 rm -rf ${installNative}/include
