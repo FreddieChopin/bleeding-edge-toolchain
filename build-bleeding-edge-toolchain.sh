@@ -9,7 +9,6 @@ gccVersion=6.2.0
 gdbVersion=7.12
 gmpVersion=6.1.1
 islVersion=0.16
-libelfVersion=0.8.13
 mpcVersion=1.0.3
 mpfrVersion=3.1.5
 newlibVersion=2.4.0.20160923
@@ -32,8 +31,6 @@ gmp=gmp-${gmpVersion}
 gmpArchive=${gmp}.tar.xz
 isl=isl-${islVersion}
 islArchive=${isl}.tar.xz
-libelf=libelf-${libelfVersion}
-libelfArchive=${libelf}.tar.gz
 mpc=mpc-${mpcVersion}
 mpcArchive=${mpc}.tar.gz
 mpfr=mpfr-${mpfrVersion}
@@ -64,7 +61,6 @@ find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
 	! -name "${gdbArchive}" \
 	! -name "${gmpArchive}" \
 	! -name "${islArchive}" \
-	! -name "${libelfArchive}" \
 	! -name "${mpcArchive}" \
 	! -name "${mpfrArchive}" \
 	! -name "${newlibArchive}" \
@@ -86,7 +82,6 @@ download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
-download ${libelfArchive} http://www.mr511.de/software/${libelfArchive}
 download ${mpcArchive} ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
 download ${mpfrArchive} ftp://ftp.gnu.org/gnu/mpfr/${mpfrArchive}
 download ${newlibArchive} ftp://sourceware.org/pub/newlib/${newlibArchive}
@@ -107,8 +102,6 @@ echo "${bold}---------- Extracting ${gmpArchive}${normal}"
 tar -xf ${gmpArchive}
 echo "${bold}---------- Extracting ${islArchive}${normal}"
 tar -xf ${islArchive}
-echo "${bold}---------- Extracting ${libelfArchive}${normal}"
-tar -xf ${libelfArchive}
 echo "${bold}---------- Extracting ${mpcArchive}${normal}"
 tar -xf ${mpcArchive}
 echo "${bold}---------- Extracting ${mpfrArchive}${normal}"
@@ -560,22 +553,6 @@ cd ${top}
 )
 
 (
-echo "${bold}********** ${libelf}${normal}"
-mkdir -p ${buildNative}/${libelf}
-cd ${buildNative}/${libelf}
-echo "${bold}---------- ${libelf} configure${normal}"
-${top}/${sources}/${libelf}/configure \
-	--prefix=$(pwd)/install \
-	--disable-shared \
-	--disable-nls
-echo "${bold}---------- ${libelf} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${libelf} make install${normal}"
-make install
-cd ${top}
-)
-
-(
 echo "${bold}********** ${expat}${normal}"
 mkdir -p ${buildNative}/${expat}
 cd ${buildNative}/${expat}
@@ -804,7 +781,6 @@ Toolchain components:
 - ${expat}
 - ${gmp}
 - ${isl}
-- ${libelf}
 - ${mpc}
 - ${mpfr}
 - ${zlib}
