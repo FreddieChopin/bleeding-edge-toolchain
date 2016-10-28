@@ -48,6 +48,289 @@ packageArchiveNative=${package}.tar.xz
 bold=$(tput bold)
 normal=$(tput sgr0)
 
+buildZlib() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local makeOptions=${3}
+	local makeInstallOptions=${4}
+	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
+	cp -R ${sources}/${zlib} ${buildFolder}
+	cd ${buildFolder}/${zlib}
+	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
+	./configure --static --prefix=$(pwd)/install
+	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
+	eval "make ${makeOptions} -j$(nproc)"
+	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
+	eval "make ${makeInstallOptions} install"
+	cd ${top}
+	)
+}
+
+buildGmp() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local configureOptions=${3}
+	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
+	mkdir -p ${buildFolder}/${gmp}
+	cd ${buildFolder}/${gmp}
+	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
+	eval "${top}/${sources}/${gmp}/configure \
+		${configureOptions} \
+		--prefix=$(pwd)/install \
+		--enable-cxx \
+		--disable-shared \
+		--disable-nls"
+	echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
+	make install
+	cd ${top}
+	)
+}
+
+buildMpfr() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local configureOptions=${3}
+	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
+	mkdir -p ${buildFolder}/${mpfr}
+	cd ${buildFolder}/${mpfr}
+	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
+	eval "${top}/${sources}/${mpfr}/configure \
+		${configureOptions} \
+		--prefix=$(pwd)/install \
+		--disable-shared \
+		--disable-nls \
+		--with-gmp=${top}/${buildFolder}/${gmp}/install"
+	echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
+	make install
+	cd ${top}
+	)
+}
+
+buildMpc() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local configureOptions=${3}
+	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
+	mkdir -p ${buildFolder}/${mpc}
+	cd ${buildFolder}/${mpc}
+	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
+	eval "${top}/${sources}/${mpc}/configure \
+		${configureOptions} \
+		--prefix=$(pwd)/install \
+		--disable-shared \
+		--disable-nls \
+		--with-gmp=${top}/${buildFolder}/${gmp}/install \
+		--with-mpfr=${top}/${buildFolder}/${mpfr}/install"
+	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
+	make install
+	cd ${top}
+	)
+}
+
+buildIsl() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local configureOptions=${3}
+	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
+	mkdir -p ${buildFolder}/${isl}
+	cd ${buildFolder}/${isl}
+	echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
+	eval "${top}/${sources}/${isl}/configure \
+		${configureOptions} \
+		--prefix=$(pwd)/install \
+		--disable-shared \
+		--disable-nls \
+		--with-gmp-prefix=${top}/${buildFolder}/${gmp}/install"
+	echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
+	make install
+	cd ${top}
+	)
+}
+
+buildExpat() {
+	(
+	local buildFolder=${1}
+	local bannerPrefix=${2}
+	local configureOptions=${3}
+	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
+	mkdir -p ${buildFolder}/${expat}
+	cd ${buildFolder}/${expat}
+	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
+	eval "${top}/${sources}/${expat}/configure \
+		${configureOptions} \
+		--prefix=$(pwd)/install \
+		--disable-shared \
+		--disable-nls"
+	echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
+	make install
+	cd ${top}
+	)
+}
+
+buildBinutils() {
+	(
+	local buildFolder=${1}
+	local installFolder=${2}
+	local bannerPrefix=${3}
+	local configureOptions=${4}
+	local documentations=${5}
+	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
+	mkdir -p ${buildFolder}/${binutils}
+	cd ${buildFolder}/${binutils}
+	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
+	eval "${top}/${sources}/${binutils}/configure \
+		${configureOptions} \
+		--target=${target} \
+		--prefix=${top}/${installFolder} \
+		--disable-nls \
+		--enable-interwork \
+		--enable-multilib \
+		--enable-plugins \
+		--with-system-zlib \
+		\"--with-pkgversion=${pkgversion}\""
+	echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
+	make install
+	for documentation in ${documentations}; do
+		echo "${bold}---------- ${bannerPrefix}${binutils} make install-${documentation}${normal}"
+		make install-${documentation}
+	done
+	cd ${top}
+	)
+}
+
+buildGcc() {
+	(
+	local buildFolder=${1}
+	local installFolder=${2}
+	local bannerPrefix=${3}
+	local configureOptions=${4}
+	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
+	mkdir -p ${buildFolder}/${gcc}
+	cd ${buildFolder}/${gcc}
+	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
+	eval "${top}/${sources}/${gcc}/configure \
+		${configureOptions} \
+		--target=${target} \
+		--prefix=${top}/${installFolder} \
+		--libexecdir=${top}/${installFolder}/lib \
+		--disable-decimal-float \
+		--disable-libffi \
+		--disable-libgomp \
+		--disable-libmudflap \
+		--disable-libquadmath \
+		--disable-libssp \
+		--disable-libstdcxx-pch \
+		--disable-nls \
+		--disable-shared \
+		--disable-threads \
+		--disable-tls \
+		--with-newlib \
+		--with-gnu-as \
+		--with-gnu-ld \
+		--with-sysroot=${top}/${installFolder}/${target} \
+		--with-system-zlib \
+		--with-gmp=${top}/${buildFolder}/${gmp}/install \
+		--with-mpfr=${top}/${buildFolder}/${mpfr}/install \
+		--with-mpc=${top}/${buildFolder}/${mpc}/install \
+		--with-isl=${top}/${buildFolder}/${isl}/install \
+		\"--with-pkgversion=${pkgversion}\" \
+		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r"
+	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
+	make -j$(nproc) all-gcc
+	echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
+	make install-gcc
+	cd ${top}
+	)
+}
+
+buildGdb() {
+	(
+	local buildFolder=${1}
+	local installFolder=${2}
+	local bannerPrefix=${3}
+	local configureOptions=${4}
+	local documentations=${5}
+	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
+	mkdir -p ${buildFolder}/${gdb}
+	cd ${buildFolder}/${gdb}
+	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
+	eval "${top}/${sources}/${gdb}/configure \
+		${configureOptions} \
+		--target=${target} \
+		--prefix=${top}/${installFolder} \
+		--disable-nls \
+		--disable-sim \
+		--with-libexpat \
+		--with-lzma=no \
+		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
+		--with-system-zlib \
+		--with-libexpat-prefix=${top}/${buildFolder}/${expat}/install \
+		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
+		\"--with-pkgversion=${pkgversion}\""
+	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
+	make install
+	for documentation in ${documentations}; do
+		echo "${bold}---------- ${bannerPrefix}${gdb} make install-${documentation}${normal}"
+		make install-${documentation}
+	done
+	cd ${top}
+	)
+}
+
+postCleanup() {
+	local installFolder=${1}
+	local bannerPrefix=${2}
+	local hostSystem=${3}
+	local extraComponents=${4}
+	echo "${bold}********** ${bannerPrefix}Post-cleanup${normal}"
+	rm -rf ${installFolder}/include
+	find ${installFolder} -name '*.la' -exec rm -rf {} +
+	cat > ${installFolder}/info.txt <<- EOF
+	${pkgversion}
+	build date: $(date +'%Y-%m-%d')
+	build system: $(uname -srvmo)
+	host system: ${hostSystem}
+	target system: ${target}
+	compiler: ${CC-gcc} $(${CC-gcc} --version | grep -o '[0-9]\.[0-9]\.[0-9]')
+
+	Toolchain components:
+	- ${gcc} + multilib patch
+	- ${newlib}
+	- ${binutils}
+	- ${gdb}
+	$(echo -en "- ${expat}\n- ${gmp}\n- ${isl}\n- ${mpc}\n- ${mpfr}\n- ${zlib}\n${extraComponents}" | sort)
+
+	This package and info about it can be found on Freddie Chopin's website:
+	http://www.freddiechopin.info/
+	EOF
+	cp ${0} ${installFolder}
+}
+
 echo "${bold}********** Cleanup${normal}"
 rm -rf ${buildNative}
 mkdir -p ${buildNative}
@@ -470,172 +753,21 @@ diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
 EOF
 cd ${top}
 
-(
-echo "${bold}********** ${zlib}${normal}"
-cp -R ${sources}/${zlib} ${buildNative}
-cd ${buildNative}/${zlib}
-echo "${bold}---------- ${zlib} configure${normal}"
-./configure --static --prefix=$(pwd)/install
-echo "${bold}---------- ${zlib} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${zlib} make install${normal}"
-make install
-cd ${top}
-)
+buildZlib ${buildNative} "" "" ""
 
-(
-echo "${bold}********** ${gmp}${normal}"
-mkdir -p ${buildNative}/${gmp}
-cd ${buildNative}/${gmp}
-echo "${bold}---------- ${gmp} configure${normal}"
-${top}/${sources}/${gmp}/configure \
-	--prefix=$(pwd)/install \
-	--enable-cxx \
-	--disable-shared \
-	--disable-nls
-echo "${bold}---------- ${gmp} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${gmp} make install${normal}"
-make install
-cd ${top}
-)
+buildGmp ${buildNative} "" ""
 
-(
-echo "${bold}********** ${mpfr}${normal}"
-mkdir -p ${buildNative}/${mpfr}
-cd ${buildNative}/${mpfr}
-echo "${bold}---------- ${mpfr} configure${normal}"
-${top}/${sources}/${mpfr}/configure \
-	--prefix=$(pwd)/install \
-	--disable-shared \
-	--disable-nls \
-	--with-gmp=${top}/${buildNative}/${gmp}/install
-echo "${bold}---------- ${mpfr} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${mpfr} make install${normal}"
-make install
-cd ${top}
-)
+buildMpfr ${buildNative} "" ""
 
-(
-echo "${bold}********** ${mpc}${normal}"
-mkdir -p ${buildNative}/${mpc}
-cd ${buildNative}/${mpc}
-echo "${bold}---------- ${mpc} configure${normal}"
-${top}/${sources}/${mpc}/configure \
-	--prefix=$(pwd)/install \
-	--disable-shared \
-	--disable-nls \
-	--with-gmp=${top}/${buildNative}/${gmp}/install \
-	--with-mpfr=${top}/${buildNative}/${mpfr}/install
-echo "${bold}---------- ${mpc} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${mpc} make install${normal}"
-make install
-cd ${top}
-)
+buildMpc ${buildNative} "" ""
 
-(
-echo "${bold}********** ${isl}${normal}"
-mkdir -p ${buildNative}/${isl}
-cd ${buildNative}/${isl}
-echo "${bold}---------- ${isl} configure${normal}"
-${top}/${sources}/${isl}/configure \
-	--prefix=$(pwd)/install \
-	--disable-shared \
-	--disable-nls \
-	--with-gmp-prefix=${top}/${buildNative}/${gmp}/install
-echo "${bold}---------- ${isl} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${isl} make install${normal}"
-make install
-cd ${top}
-)
+buildIsl ${buildNative} "" ""
 
-(
-echo "${bold}********** ${expat}${normal}"
-mkdir -p ${buildNative}/${expat}
-cd ${buildNative}/${expat}
-echo "${bold}---------- ${expat} configure${normal}"
-${top}/${sources}/${expat}/configure \
-	--prefix=$(pwd)/install \
-	--disable-shared \
-	--disable-nls
-echo "${bold}---------- ${expat} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${expat} make install${normal}"
-make install
-cd ${top}
-)
+buildExpat ${buildNative} "" ""
 
-(
-echo "${bold}********** ${binutils}${normal}"
-mkdir -p ${buildNative}/${binutils}
-cd ${buildNative}/${binutils}
-export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
-export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
-echo "${bold}---------- ${binutils} configure${normal}"
-${top}/${sources}/${binutils}/configure \
-	--target=${target} \
-	--prefix=${top}/${installNative} \
-	--disable-nls \
-	--enable-interwork \
-	--enable-multilib \
-	--enable-plugins \
-	--with-system-zlib \
-	"--with-pkgversion=${pkgversion}"
-echo "${bold}---------- ${binutils} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${binutils} make install${normal}"
-make install
-echo "${bold}---------- ${binutils} make install-html${normal}"
-make install-html
-#echo "${bold}---------- ${binutils} make install-pdf${normal}"
-#make install-pdf
-cd ${top}
-)
+buildBinutils ${buildNative} ${installNative} "" "" "html"
 
-(
-echo "${bold}********** ${gcc}${normal}"
-mkdir -p ${buildNative}/${gcc}
-cd ${buildNative}/${gcc}
-export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
-export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
-echo "${bold}---------- ${gcc} configure${normal}"
-${top}/${sources}/${gcc}/configure \
-	--target=${target} \
-	--prefix=${top}/${installNative} \
-	--libexecdir=${top}/${installNative}/lib \
-	--enable-languages=c \
-	--disable-decimal-float \
-	--disable-libffi \
-	--disable-libgomp \
-	--disable-libmudflap \
-	--disable-libquadmath \
-	--disable-libssp \
-	--disable-libstdcxx-pch \
-	--disable-nls \
-	--disable-shared \
-	--disable-threads \
-	--disable-tls \
-	--with-newlib \
-	--without-headers \
-	--with-gnu-as \
-	--with-gnu-ld \
-	--with-sysroot=${top}/${installNative}/${target} \
-	--with-system-zlib \
-	--with-gmp=${top}/${buildNative}/${gmp}/install \
-	--with-mpfr=${top}/${buildNative}/${mpfr}/install \
-	--with-mpc=${top}/${buildNative}/${mpc}/install \
-	--with-isl=${top}/${buildNative}/${isl}/install \
-	"--with-pkgversion=${pkgversion}" \
-	--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
-echo "${bold}---------- ${gcc} make all-gcc${normal}"
-make -j$(nproc) all-gcc
-echo "${bold}---------- ${gcc} make install-gcc${normal}"
-make install-gcc
-cd ${top}
-)
+buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
 (
 echo "${bold}********** ${newlib}${normal}"
@@ -727,65 +859,10 @@ make install-html
 cd ${top}
 )
 
-(
-echo "${bold}********** ${gdb}${normal}"
-mkdir -p ${buildNative}/${gdb}
-cd ${buildNative}/${gdb}
-export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
-export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
-echo "${bold}---------- ${gdb} configure${normal}"
-${top}/${sources}/${gdb}/configure \
-	--target=${target} \
-	--prefix=${top}/${installNative} \
-	--disable-nls \
-	--disable-sim \
-	--with-libexpat \
-	--with-lzma=no \
-	--with-system-gdbinit=${top}/${installNative}/${target}/lib/gdbinit \
-	--with-system-zlib \
-	--with-libexpat-prefix=${top}/${buildNative}/${expat}/install \
-	--with-python=yes \
-	"--with-gdb-datadir='\${prefix}'/${target}/share/gdb" \
-	"--with-pkgversion=${pkgversion}"
-echo "${bold}---------- ${gdb} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${gdb} make install${normal}"
-make install
-echo "${bold}---------- ${gdb} make install-html${normal}"
-make install-html
-#echo "${bold}---------- ${gdb} make install-pdf${normal}"
-#make install-pdf
-cd ${top}
-)
+buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
 
-echo "${bold}********** Post-cleanup${normal}"
-rm -rf ${installNative}/include
-find ${installNative} -name '*.la' -exec rm -rf {} +
+postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true
-cat > ${installNative}/info.txt << EOF
-${pkgversion}
-build date: $(date +'%Y-%m-%d')
-build system: $(uname -srvmo)
-host system: $(uname -mo)
-target system: ${target}
-compiler: GCC $(gcc --version | grep -o '[0-9]\.[0-9]\.[0-9]')
-
-Toolchain components:
-- ${gcc} + multilib patch
-- ${newlib}
-- ${binutils}
-- ${gdb}
-- ${expat}
-- ${gmp}
-- ${isl}
-- ${mpc}
-- ${mpfr}
-- ${zlib}
-
-This package and info about it can be found on Freddie Chopin's website:
-http://www.freddiechopin.info/
-EOF
-cp ${0} ${installNative}
 
 echo "${bold}********** Package${normal}"
 rm -rf ${package}
