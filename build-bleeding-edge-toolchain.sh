@@ -785,7 +785,7 @@ Toolchain components:
 - ${mpfr}
 - ${zlib}
 
-This script and info about it can be found on Freddie Chopin's website:
+This package and info about it can be found on Freddie Chopin's website:
 http://www.freddiechopin.info/
 EOF
 cp ${0} ${installNative}
