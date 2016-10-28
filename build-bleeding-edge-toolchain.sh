@@ -43,7 +43,7 @@ zlibArchive=${zlib}.tar.xz
 pkgversion=bleeding-edge-toolchain
 target=arm-none-eabi
 package=${target}-${gcc}-$(date +'%y%m%d')
-packageArchive=${package}.tar.xz
+packageArchiveNative=${package}.tar.xz
 
 bold=$(tput bold)
 normal=$(tput sgr0)
@@ -793,8 +793,8 @@ cp ${0} ${installNative}
 echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
-rm -rf ${packageArchive}
-XZ_OPT="-9e -T 0" tar -cJf ${packageArchive} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+rm -rf ${packageArchiveNative}
+XZ_OPT="-9e -T 0" tar -cJf ${packageArchiveNative} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
 rm -rf ${package}
 
 echo "${bold}********** Done${normal}"
