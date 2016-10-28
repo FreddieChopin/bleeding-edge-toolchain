@@ -761,10 +761,7 @@ cd ${top}
 echo "${bold}********** Post-cleanup${normal}"
 rm -rf ${installNative}/include
 find ${installNative} -name '*.la' -exec rm -rf {} +
-find ${installNative}/${target}/bin \
-	${installNative}/bin \
-	${installNative}/lib/gcc/${target}/${gccVersion} \
-	-type f -and -executable -exec strip {} \; || true
+find ${installNative} -type f -executable -exec strip {} \; || true
 cat > ${installNative}/info.txt << EOF
 ${pkgversion}
 build date: $(date +'%Y-%m-%d')
