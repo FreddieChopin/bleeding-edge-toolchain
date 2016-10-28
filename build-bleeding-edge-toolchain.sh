@@ -404,7 +404,7 @@ download() {
 	if [ ! -e ${1} ]; then
 		echo "${bold}---------- Downloading ${1}${normal}"
 		curl -L -o ${1} -C - ${2}
-	fi	
+	fi
 }
 download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
