@@ -1,5 +1,14 @@
 #!/bin/sh
 
+#
+# file: build-bleeding-edge-toolchain.sh
+#
+# author: Copyright (C) 2016 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
 set -e
 set -u
 
