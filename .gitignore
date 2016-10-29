@@ -1,0 +1,16 @@
+# folders for build, install and sources
+buildNative/
+buildWin32/
+buildWin64/
+installNative/
+installWin32/
+installWin64/
+sources/
+
+# generated toolchain during packaging
+arm-none-eabi-gcc-*-*
+
+# generated packages
+arm-none-eabi-gcc-*-*.tar.xz
+arm-none-eabi-gcc-*-*-win32.7z
+arm-none-eabi-gcc-*-*-win64.7z
