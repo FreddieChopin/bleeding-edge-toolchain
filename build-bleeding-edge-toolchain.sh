@@ -1092,6 +1092,7 @@ buildMingw() {
 	done
 	find ${installFolder} -name '*.exe' -exec ${STRIP} {} \;
 	find ${installFolder} -name '*.dll' -exec ${STRIP} --strip-unneeded {} \;
+	sed -i 's/$/\r/' ${installFolder}/info.txt
 
 	echo "${bold}********** ${bannerPrefix}Package${normal}"
 	rm -rf ${package}
