@@ -3,74 +3,74 @@
 set -e
 set -u
 
-binutilsVersion=2.27
-expatVersion=2.2.0
-gccVersion=6.2.0
-gdbVersion=7.12
-gmpVersion=6.1.1
-islVersion=0.16
-libiconvVersion=1.14
-mpcVersion=1.0.3
-mpfrVersion=3.1.5
-newlibVersion=2.4.0.20160923
-pythonVersion=2.7.12
-zlibVersion=1.2.8
+binutilsVersion="2.27"
+expatVersion="2.2.0"
+gccVersion="6.2.0"
+gdbVersion="7.12"
+gmpVersion="6.1.1"
+islVersion="0.16"
+libiconvVersion="1.14"
+mpcVersion="1.0.3"
+mpfrVersion="3.1.5"
+newlibVersion="2.4.0.20160923"
+pythonVersion="2.7.12"
+zlibVersion="1.2.8"
 
-top=$(pwd)
-buildNative=buildNative
-buildWin32=buildWin32
-buildWin64=buildWin64
-installNative=installNative
-installWin32=installWin32
-installWin64=installWin64
-sources=sources
+top="$(pwd)"
+buildNative="buildNative"
+buildWin32="buildWin32"
+buildWin64="buildWin64"
+installNative="installNative"
+installWin32="installWin32"
+installWin64="installWin64"
+sources="sources"
 
-binutils=binutils-${binutilsVersion}
-binutilsArchive=${binutils}.tar.bz2
-expat=expat-${expatVersion}
-expatArchive=${expat}.tar.bz2
-gcc=gcc-${gccVersion}
-gccArchive=${gcc}.tar.bz2
-gdb=gdb-${gdbVersion}
-gdbArchive=${gdb}.tar.xz
-gmp=gmp-${gmpVersion}
-gmpArchive=${gmp}.tar.xz
-isl=isl-${islVersion}
-islArchive=${isl}.tar.xz
-libiconv=libiconv-${libiconvVersion}
-libiconvArchive=${libiconv}.tar.gz
-mpc=mpc-${mpcVersion}
-mpcArchive=${mpc}.tar.gz
-mpfr=mpfr-${mpfrVersion}
-mpfrArchive=${mpfr}.tar.xz
-newlib=newlib-${newlibVersion}
-newlibArchive=${newlib}.tar.gz
-pythonWin32=python-${pythonVersion}
-pythonArchiveWin32=${pythonWin32}.msi
-pythonWin64=python-${pythonVersion}.amd64
-pythonArchiveWin64=${pythonWin64}.msi
-zlib=zlib-${zlibVersion}
-zlibArchive=${zlib}.tar.xz
+binutils="binutils-${binutilsVersion}"
+binutilsArchive="${binutils}.tar.bz2"
+expat="expat-${expatVersion}"
+expatArchive="${expat}.tar.bz2"
+gcc="gcc-${gccVersion}"
+gccArchive="${gcc}.tar.bz2"
+gdb="gdb-${gdbVersion}"
+gdbArchive="${gdb}.tar.xz"
+gmp="gmp-${gmpVersion}"
+gmpArchive="${gmp}.tar.xz"
+isl="isl-${islVersion}"
+islArchive="${isl}.tar.xz"
+libiconv="libiconv-${libiconvVersion}"
+libiconvArchive="${libiconv}.tar.gz"
+mpc="mpc-${mpcVersion}"
+mpcArchive="${mpc}.tar.gz"
+mpfr="mpfr-${mpfrVersion}"
+mpfrArchive="${mpfr}.tar.xz"
+newlib="newlib-${newlibVersion}"
+newlibArchive="${newlib}.tar.gz"
+pythonWin32="python-${pythonVersion}"
+pythonArchiveWin32="${pythonWin32}.msi"
+pythonWin64="python-${pythonVersion}.amd64"
+pythonArchiveWin64="${pythonWin64}.msi"
+zlib="zlib-${zlibVersion}"
+zlibArchive="${zlib}.tar.xz"
 
-pkgversion=bleeding-edge-toolchain
-target=arm-none-eabi
-package=${target}-${gcc}-$(date +'%y%m%d')
-packageArchiveNative=${package}.tar.xz
-packageArchiveWin32=${package}-win32.7z
-packageArchiveWin64=${package}-win64.7z
+pkgversion="bleeding-edge-toolchain"
+target="arm-none-eabi"
+package="${target}-${gcc}-$(date +'%y%m%d')"
+packageArchiveNative="${package}.tar.xz"
+packageArchiveWin32="${package}-win32.7z"
+packageArchiveWin64="${package}-win64.7z"
 
-bold=$(tput bold)
-normal=$(tput sgr0)
+bold="$(tput bold)"
+normal="$(tput sgr0)"
 
-enableWin32=n
-enableWin64=n
+enableWin32="n"
+enableWin64="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
-			enableWin32=y
+			enableWin32="y"
 			;;
 		--enable-win64)
-			enableWin64=y
+			enableWin64="y"
 			;;
 
 		*)
@@ -82,10 +82,10 @@ done
 
 buildZlib() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local makeOptions=${3}
-	local makeInstallOptions=${4}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local makeOptions="${3}"
+	local makeInstallOptions="${4}"
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
 	cp -R ${sources}/${zlib} ${buildFolder}
 	cd ${buildFolder}/${zlib}
@@ -101,9 +101,9 @@ buildZlib() {
 
 buildGmp() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local configureOptions=${3}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
 	mkdir -p ${buildFolder}/${gmp}
 	cd ${buildFolder}/${gmp}
@@ -124,9 +124,9 @@ buildGmp() {
 
 buildMpfr() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local configureOptions=${3}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
 	mkdir -p ${buildFolder}/${mpfr}
 	cd ${buildFolder}/${mpfr}
@@ -147,9 +147,9 @@ buildMpfr() {
 
 buildMpc() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local configureOptions=${3}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
 	mkdir -p ${buildFolder}/${mpc}
 	cd ${buildFolder}/${mpc}
@@ -171,9 +171,9 @@ buildMpc() {
 
 buildIsl() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local configureOptions=${3}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
 	mkdir -p ${buildFolder}/${isl}
 	cd ${buildFolder}/${isl}
@@ -194,9 +194,9 @@ buildIsl() {
 
 buildExpat() {
 	(
-	local buildFolder=${1}
-	local bannerPrefix=${2}
-	local configureOptions=${3}
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
 	mkdir -p ${buildFolder}/${expat}
 	cd ${buildFolder}/${expat}
@@ -216,11 +216,11 @@ buildExpat() {
 
 buildBinutils() {
 	(
-	local buildFolder=${1}
-	local installFolder=${2}
-	local bannerPrefix=${3}
-	local configureOptions=${4}
-	local documentations=${5}
+	local buildFolder="${1}"
+	local installFolder="${2}"
+	local bannerPrefix="${3}"
+	local configureOptions="${4}"
+	local documentations="${5}"
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	mkdir -p ${buildFolder}/${binutils}
 	cd ${buildFolder}/${binutils}
@@ -251,10 +251,10 @@ buildBinutils() {
 
 buildGcc() {
 	(
-	local buildFolder=${1}
-	local installFolder=${2}
-	local bannerPrefix=${3}
-	local configureOptions=${4}
+	local buildFolder="${1}"
+	local installFolder="${2}"
+	local bannerPrefix="${3}"
+	local configureOptions="${4}"
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	mkdir -p ${buildFolder}/${gcc}
 	cd ${buildFolder}/${gcc}
@@ -298,11 +298,11 @@ buildGcc() {
 
 buildGdb() {
 	(
-	local buildFolder=${1}
-	local installFolder=${2}
-	local bannerPrefix=${3}
-	local configureOptions=${4}
-	local documentations=${5}
+	local buildFolder="${1}"
+	local installFolder="${2}"
+	local bannerPrefix="${3}"
+	local configureOptions="${4}"
+	local documentations="${5}"
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	mkdir -p ${buildFolder}/${gdb}
 	cd ${buildFolder}/${gdb}
@@ -335,10 +335,10 @@ buildGdb() {
 }
 
 postCleanup() {
-	local installFolder=${1}
-	local bannerPrefix=${2}
-	local hostSystem=${3}
-	local extraComponents=${4}
+	local installFolder="${1}"
+	local bannerPrefix="${2}"
+	local hostSystem="${3}"
+	local extraComponents="${4}"
 	echo "${bold}********** ${bannerPrefix}Post-cleanup${normal}"
 	rm -rf ${installFolder}/include
 	find ${installFolder} -name '*.la' -exec rm -rf {} +
@@ -841,7 +841,7 @@ buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-head
 echo "${bold}********** ${newlib}${normal}"
 mkdir -p ${buildNative}/${newlib}
 cd ${buildNative}/${newlib}
-export PATH=${top}/${installNative}/bin:${PATH-}
+export PATH="${top}/${installNative}/bin:${PATH-}"
 export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
 echo "${bold}---------- ${newlib} configure${normal}"
 ${top}/${sources}/${newlib}/configure \
@@ -943,28 +943,28 @@ if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
 
 buildMingw() {
 	(
-	local triplet=${1}
-	local flags=${2}
-	local buildFolder=${3}
-	local installFolder=${4}
-	local pythonFolder=${5}
-	local bannerPrefix=${6}
-	local packageArchive=${7}
+	local triplet="${1}"
+	local flags="${2}"
+	local buildFolder="${3}"
+	local installFolder="${4}"
+	local pythonFolder="${5}"
+	local bannerPrefix="${6}"
+	local packageArchive="${7}"
 
-	export AR=${triplet}-ar
-	export AS=${triplet}-as
-	export CC=${triplet}-gcc
-	export CC_FOR_BUILD=gcc
-	export CFLAGS=${flags} ${CFLAGS-}
-	export CXX=${triplet}-g++
-	export CXXFLAGS=${flags} ${CXXFLAGS-}
-	export NM=${triplet}-nm
-	export OBJDUMP=${triplet}-objdump
-	export PATH=${top}/${installNative}/bin:${PATH-}
-	export RANLIB=${triplet}-ranlib
-	export RC=${triplet}-windres
-	export STRIP=${triplet}-strip
-	export WINDRES=${triplet}-windres
+	export AR="${triplet}-ar"
+	export AS="${triplet}-as"
+	export CC="${triplet}-gcc"
+	export CC_FOR_BUILD="gcc"
+	export CFLAGS="${flags} ${CFLAGS-}"
+	export CXX="${triplet}-g++"
+	export CXXFLAGS="${flags} ${CXXFLAGS-}"
+	export NM="${triplet}-nm"
+	export OBJDUMP="${triplet}-objdump"
+	export PATH="${top}/${installNative}/bin:${PATH-}"
+	export RANLIB="${triplet}-ranlib"
+	export RC="${triplet}-windres"
+	export STRIP="${triplet}-strip"
+	export WINDRES="${triplet}-windres"
 
 	mkdir -p ${installFolder}/${target}
 	cp -R ${installNative}/${target}/include ${installFolder}/${target}/include
@@ -994,11 +994,11 @@ buildMingw() {
 	buildZlib \
 		${buildFolder} \
 		${bannerPrefix} \
-		"-f win32/Makefile.gcc PREFIX=${triplet}- CFLAGS=\"${CFLAGS}\"" \
+		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
 		"-f win32/Makefile.gcc \
-			BINARY_PATH=\$(pwd)/install/bin \
-			INCLUDE_PATH=\$(pwd)/install/include \
-			LIBRARY_PATH=\$(pwd)/install/lib"
+			BINARY_PATH=\"\$(pwd)/install/bin\" \
+			INCLUDE_PATH=\"\$(pwd)/install/include\" \
+			LIBRARY_PATH=\"\$(pwd)/install/lib\""
 
 	buildGmp \
 		${buildFolder} \
@@ -1086,7 +1086,7 @@ buildMingw() {
 	rm -rf ${installFolder}/lib/gcc/${target}/${gccVersion}/plugin
 	rm -rf ${installFolder}/share/info ${installFolder}/share/man
 	find ${installFolder} -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
-	dlls=$(find ${installFolder}/ -name '*.exe' -exec ${triplet}-objdump -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort | uniq)
+	dlls="$(find ${installFolder}/ -name '*.exe' -exec ${triplet}-objdump -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort | uniq)"
 	for dll in ${dlls}; do
 		cp /usr/${triplet}/bin/${dll} ${installFolder}/bin/ || true
 	done
