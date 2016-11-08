@@ -17,10 +17,19 @@ To build native toolchain for Linux just run the script with no arguments:
 
 `./build-bleeding-edge-toolchain.sh`
 
-Most of the tools required by the script should be already present in your system, the only exceptions are:
+Most of the tools required by the script should be already present in your system, but some may be missing. Generally
+the tools listed below should be enough to successfully execute this script:
+- obvious tools needed to compile anything - like `gcc`, `binutils`, `make` and `coreutils`,
+- `m4`, which is required to execute `configure` scripts,
+- `curl`, used to download the source tarballs of toolchain components,
+- `tar`, used to extract source tarballs and to compress compiled toolchain,
 - `makeinfo`, used to generate documentation - it is usually present in `texinfo` package,
 - `python`, required by GDB, may be either version 2 or 3, but should contain headers and libraries, so you may need
-some kind of "development" package, depending on your system.
+some kind of "development" and/or "library" package, depending on your system.
+
+Exact set of required packages will be different on each system, but on a fresh Ubuntu installation you are going to
+need just these packages: `build-essential`, `m4`, `curl`, `python2.7`, `python2.7-dev` and `libpython2.7-stdlib`
+(credits for checking that go to Alexandre - thanks!).
 
 Toolchain for Windows
 ---------------------
