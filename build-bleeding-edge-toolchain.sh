@@ -402,6 +402,26 @@ buildGccFinal() {
 	)
 }
 
+copyNanoLibs() {
+	local source="${1}"
+	local destination="${2}"
+	local multilibs="$(${destination}/bin/${target}-gcc -print-multi-lib)"
+	local sourcePrefix="${source}/${target}/lib"
+	local destinationPrefix="${destination}/${target}/lib"
+	local sourceDirectory
+	local destinationDirectory
+	for multilib in ${multilibs}; do
+		multilib="${multilib%%;*}"
+		sourceDirectory="${sourcePrefix}/${multilib}"
+		destinationDirectory="${destinationPrefix}/${multilib}"
+		cp "${sourceDirectory}/libc.a" "${destinationDirectory}/libc_nano.a"
+		cp "${sourceDirectory}/libg.a" "${destinationDirectory}/libg_nano.a"
+		cp "${sourceDirectory}/librdimon.a" "${destinationDirectory}/librdimon_nano.a"
+		cp "${sourceDirectory}/libstdc++.a" "${destinationDirectory}/libstdc++_nano.a"
+		cp "${sourceDirectory}/libsupc++.a" "${destinationDirectory}/libsupc++_nano.a"
+	done
+}
+
 buildGdb() {
 	(
 	local buildFolder="${1}"
@@ -964,6 +984,8 @@ buildNewlib \
 buildGccFinal "-final" "-O2" "${installNative}" "html"
 
 buildGccFinal "-nano" "-Os" "${buildNative}/nanoLibs" ""
+
+copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
 
