@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - More detailed info about requirements to build the toolchain in README.md.
+- Updated newlib to version 2.4.0.20161025.
 
 161029 - 2016-10-29
 -------------------
