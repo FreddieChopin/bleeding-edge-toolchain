@@ -963,6 +963,8 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "html"
 
+buildGccFinal "-nano" "-Os" "${buildNative}/nanoLibs" ""
+
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
