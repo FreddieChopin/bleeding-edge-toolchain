@@ -305,6 +305,47 @@ buildGcc() {
 	)
 }
 
+buildNewlib() {
+	(
+	local suffix="${1}"
+	local optimization="${2}"
+	local configureOptions="${3}"
+	local documentations="${4}"
+	echo "${bold}********** ${newlib}${suffix}${normal}"
+	mkdir -p ${buildNative}/${newlib}${suffix}
+	cd ${buildNative}/${newlib}${suffix}
+	export PATH="${top}/${installNative}/bin:${PATH-}"
+	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
+	echo "${bold}---------- ${newlib}${suffix} configure${normal}"
+	eval "${top}/${sources}/${newlib}/configure \
+		${configureOptions} \
+		--target=${target} \
+		--disable-newlib-supplied-syscalls \
+		--enable-newlib-reent-small \
+		--disable-newlib-fvwrite-in-streamio \
+		--disable-newlib-fseek-optimization \
+		--disable-newlib-wide-orient \
+		--disable-newlib-unbuf-stream-opt \
+		--enable-newlib-global-atexit \
+		--disable-nls"
+	echo "${bold}---------- ${newlib}${suffix} make${normal}"
+	make -j$(nproc)
+	echo "${bold}---------- ${newlib}${suffix} make install${normal}"
+	make install
+	for documentation in ${documentations}; do
+		cd ${target}/newlib/libc
+		echo "${bold}---------- ${newlib}${suffix} libc make install-${documentation}${normal}"
+		make install-${documentation}
+		cd ../../..
+		cd ${target}/newlib/libm
+		echo "${bold}---------- ${newlib}${suffix} libm make install-${documentation}${normal}"
+		make install-${documentation}
+		cd ../../..
+	done
+	cd ${top}
+	)
+}
+
 buildGdb() {
 	(
 	local buildFolder="${1}"
@@ -846,45 +887,14 @@ buildBinutils ${buildNative} ${installNative} "" "" "html"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
-(
-echo "${bold}********** ${newlib}${normal}"
-mkdir -p ${buildNative}/${newlib}
-cd ${buildNative}/${newlib}
-export PATH="${top}/${installNative}/bin:${PATH-}"
-export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
-echo "${bold}---------- ${newlib} configure${normal}"
-${top}/${sources}/${newlib}/configure \
-	--target=${target} \
-	--prefix=${top}/${installNative} \
-	--enable-newlib-io-c99-formats \
-	--enable-newlib-io-long-long \
-	--disable-newlib-supplied-syscalls \
-	--enable-newlib-reent-small \
-	--disable-newlib-atexit-dynamic-alloc \
-	--disable-newlib-fvwrite-in-streamio \
-	--disable-newlib-fseek-optimization \
-	--disable-newlib-wide-orient \
-	--disable-newlib-unbuf-stream-opt \
-	--enable-newlib-global-atexit \
-	--disable-nls
-echo "${bold}---------- ${newlib} make${normal}"
-make -j$(nproc)
-echo "${bold}---------- ${newlib} make install${normal}"
-make install
-cd ${target}/newlib/libc
-echo "${bold}---------- ${newlib} libc make install-html${normal}"
-make install-html
-#echo "${bold}---------- ${newlib} libc make install-pdf${normal}"
-#make install-pdf
-cd ../../..
-cd ${target}/newlib/libm
-echo "${bold}---------- ${newlib} libm make install-html${normal}"
-make install-html
-#echo "${bold}---------- ${newlib} libm make install-pdf${normal}"
-#make install-pdf
-cd ../../..
-cd ${top}
-)
+buildNewlib \
+	"" \
+	"-O2" \
+	"--prefix=${top}/${installNative} \
+		--enable-newlib-io-c99-formats \
+		--enable-newlib-io-long-long \
+		--disable-newlib-atexit-dynamic-alloc" \
+	"html"
 
 (
 echo "${bold}********** ${gcc} final${normal}"
