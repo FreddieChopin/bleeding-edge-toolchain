@@ -952,6 +952,15 @@ buildNewlib \
 		--disable-newlib-atexit-dynamic-alloc" \
 	"html"
 
+buildNewlib \
+	"-nano" \
+	"-Os" \
+	"--prefix=${top}/${buildNative}/nanoLibs \
+		--enable-newlib-nano-malloc \
+		--enable-lite-exit \
+		--enable-newlib-nano-formatted-io" \
+	""
+
 buildGccFinal "-final" "-O2" "${installNative}" "html"
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
