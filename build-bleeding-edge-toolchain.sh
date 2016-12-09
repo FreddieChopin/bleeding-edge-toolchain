@@ -963,14 +963,8 @@ buildBinutils ${buildNative} ${installNative} "" "" "html"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
-buildNewlib \
-	"" \
-	"-O2" \
-	"--prefix=${top}/${installNative} \
-		--enable-newlib-io-c99-formats \
-		--enable-newlib-io-long-long \
-		--disable-newlib-atexit-dynamic-alloc" \
-	"html"
+(
+export PATH="${top}/${installNative}/bin:${PATH-}"
 
 buildNewlib \
 	"-nano" \
@@ -981,9 +975,19 @@ buildNewlib \
 		--enable-newlib-nano-formatted-io" \
 	""
 
-buildGccFinal "-final" "-O2" "${installNative}" "html"
-
 buildGccFinal "-nano" "-Os" "${buildNative}/nanoLibs" ""
+)
+
+buildNewlib \
+	"" \
+	"-O2" \
+	"--prefix=${top}/${installNative} \
+		--enable-newlib-io-c99-formats \
+		--enable-newlib-io-long-long \
+		--disable-newlib-atexit-dynamic-alloc" \
+	"html"
+
+buildGccFinal "-final" "-O2" "${installNative}" "html"
 
 copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
 
