@@ -346,6 +346,62 @@ buildNewlib() {
 	)
 }
 
+buildGccFinal() {
+	(
+	local suffix="${1}"
+	local optimization="${2}"
+	local installFolder="${3}"
+	local documentations="${4}"
+	echo "${bold}********** ${gcc}${suffix}${normal}"
+	mkdir -p ${buildNative}/${gcc}${suffix}
+	cd ${buildNative}/${gcc}${suffix}
+	export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
+	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
+	export CXXFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
+	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
+	${top}/${sources}/${gcc}/configure \
+		--target=${target} \
+		--prefix=${top}/${installFolder} \
+		--libexecdir=${top}/${installFolder}/lib \
+		--enable-languages=c,c++ \
+		--disable-libstdcxx-verbose \
+		--enable-plugins \
+		--disable-decimal-float \
+		--disable-libffi \
+		--disable-libgomp \
+		--disable-libmudflap \
+		--disable-libquadmath \
+		--disable-libssp \
+		--disable-libstdcxx-pch \
+		--disable-nls \
+		--disable-shared \
+		--disable-threads \
+		--disable-tls \
+		--with-gnu-as \
+		--with-gnu-ld \
+		--with-newlib \
+		--with-headers=yes \
+		--with-sysroot=${top}/${installFolder}/${target} \
+		--with-system-zlib \
+		--with-gmp=${top}/${buildNative}/${gmp}/install \
+		--with-mpfr=${top}/${buildNative}/${mpfr}/install \
+		--with-mpc=${top}/${buildNative}/${mpc}/install \
+		--with-isl=${top}/${buildNative}/${isl}/install \
+		"--with-pkgversion=${pkgversion}" \
+		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
+	echo "${bold}---------- ${gcc}${suffix} make${normal}"
+	make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
+	echo "${bold}---------- ${gcc}${suffix} make install${normal}"
+	make install
+	for documentation in ${documentations}; do
+		echo "${bold}---------- ${gcc}${suffix} make install-${documentation}${normal}"
+		make install-${documentation}
+	done
+	cd ${top}
+	)
+}
+
 buildGdb() {
 	(
 	local buildFolder="${1}"
@@ -896,55 +952,7 @@ buildNewlib \
 		--disable-newlib-atexit-dynamic-alloc" \
 	"html"
 
-(
-echo "${bold}********** ${gcc} final${normal}"
-mkdir -p ${buildNative}/${gcc}-final
-cd ${buildNative}/${gcc}-final
-export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
-export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
-export CFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
-export CXXFLAGS_FOR_TARGET="-g -O2 -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
-echo "${bold}---------- ${gcc} final configure${normal}"
-${top}/${sources}/${gcc}/configure \
-	--target=${target} \
-	--prefix=${top}/${installNative} \
-	--libexecdir=${top}/${installNative}/lib \
-	--enable-languages=c,c++ \
-	--disable-libstdcxx-verbose \
-	--enable-plugins \
-	--disable-decimal-float \
-	--disable-libffi \
-	--disable-libgomp \
-	--disable-libmudflap \
-	--disable-libquadmath \
-	--disable-libssp \
-	--disable-libstdcxx-pch \
-	--disable-nls \
-	--disable-shared \
-	--disable-threads \
-	--disable-tls \
-	--with-gnu-as \
-	--with-gnu-ld \
-	--with-newlib \
-	--with-headers=yes \
-	--with-sysroot=${top}/${installNative}/${target} \
-	--with-system-zlib \
-	--with-gmp=${top}/${buildNative}/${gmp}/install \
-	--with-mpfr=${top}/${buildNative}/${mpfr}/install \
-	--with-mpc=${top}/${buildNative}/${mpc}/install \
-	--with-isl=${top}/${buildNative}/${isl}/install \
-	"--with-pkgversion=${pkgversion}" \
-	--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
-echo "${bold}---------- ${gcc} final make${normal}"
-make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
-echo "${bold}---------- ${gcc} final make install${normal}"
-make install
-echo "${bold}---------- ${gcc} final make install-html${normal}"
-make install-html
-#echo "${bold}---------- ${gcc} final make install-pdf${normal}"
-#make install-pdf
-cd ${top}
-)
+buildGccFinal "-final" "-O2" "${installNative}" "html"
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
 
