@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/161029...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Added
+
+- Support for "nano" variant of libraries.
+
 ### Changed
 
 - More detailed info about requirements to build the toolchain in README.md.
