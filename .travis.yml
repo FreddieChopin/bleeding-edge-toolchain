@@ -20,7 +20,7 @@ addons:
 language: generic
 
 script:
-    - "./build-bleeding-edge-toolchain.sh > >(tee stdout.log) 2> >(tee stderr.log >&2) | grep \"[*-]\\{10,10\\} \""
+    - "./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> >(tee /tmp/stderr.log >&2) | grep \"[*-]\\{10,10\\} \""
     - "tar -xf *.tar.xz"
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
@@ -32,7 +32,7 @@ script:
     - "./scripts/buildAllConfigurations.sh"
 
 after_failure:
-    - "echo \"********** stdout.log\""
-    - "tail -n 1000 stdout.log"
-    - "echo \"********** stderr.log\""
-    - "tail -n 1000 stderr.log"
+    - "echo \"********** /tmp/stdout.log\""
+    - "tail -n 1000 /tmp/stdout.log"
+    - "echo \"********** /tmp/stderr.log\""
+    - "tail -n 1000 /tmp/stderr.log"
