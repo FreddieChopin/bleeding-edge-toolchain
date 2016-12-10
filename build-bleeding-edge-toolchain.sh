@@ -496,13 +496,13 @@ mkdir -p ${buildNative}
 mkdir -p ${installNative}
 rm -rf ${buildWin32}
 rm -rf ${installWin32}
-if [ "${enableWin32}" == "y" ]; then
+if [ "${enableWin32}" = "y" ]; then
 	mkdir -p ${buildWin32}
 	mkdir -p ${installWin32}
 fi
 rm -rf ${buildWin64}
 rm -rf ${installWin64}
-if [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin64}" = "y" ]; then
 	mkdir -p ${buildWin64}
 	mkdir -p ${installWin64}
 fi
@@ -538,16 +538,16 @@ download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
-if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	download ${libiconvArchive} ftp://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}
 fi
 download ${mpcArchive} ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
 download ${mpfrArchive} ftp://ftp.gnu.org/gnu/mpfr/${mpfrArchive}
 download ${newlibArchive} ftp://sourceware.org/pub/newlib/${newlibArchive}
-if [ "${enableWin32}" == "y" ]; then
+if [ "${enableWin32}" = "y" ]; then
 	download ${pythonArchiveWin32} https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin32}
 fi
-if [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin64}" = "y" ]; then
 	download ${pythonArchiveWin64} https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin64}
 fi
 download ${zlibArchive} http://zlib.net/${zlibArchive}
@@ -567,7 +567,7 @@ echo "${bold}---------- Extracting ${gmpArchive}${normal}"
 tar -xf ${gmpArchive}
 echo "${bold}---------- Extracting ${islArchive}${normal}"
 tar -xf ${islArchive}
-if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	echo "${bold}---------- Extracting ${libiconvArchive}${normal}"
 	tar -xf ${libiconvArchive}
 fi
@@ -577,11 +577,11 @@ echo "${bold}---------- Extracting ${mpfrArchive}${normal}"
 tar -xf ${mpfrArchive}
 echo "${bold}---------- Extracting ${newlibArchive}${normal}"
 tar -xf ${newlibArchive}
-if [ "${enableWin32}" == "y" ]; then
+if [ "${enableWin32}" = "y" ]; then
 	echo "${bold}---------- Extracting ${pythonArchiveWin32}${normal}"
 	7za x ${pythonArchiveWin32} -o${pythonWin32}
 fi
-if [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin64}" = "y" ]; then
 	echo "${bold}---------- Extracting ${pythonArchiveWin64}${normal}"
 	7za x ${pythonArchiveWin64} -o${pythonWin64}
 fi
@@ -1003,7 +1003,7 @@ rm -rf ${packageArchiveNative}
 XZ_OPT="-9e -T 0 -v" tar -cJf ${packageArchiveNative} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
 rm -rf ${package}
 
-if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
 buildMingw() {
 	(
@@ -1167,7 +1167,7 @@ buildMingw() {
 	)
 }
 
-if [ "${enableWin32}" == "y" ]; then
+if [ "${enableWin32}" = "y" ]; then
 	buildMingw \
 		"i686-w64-mingw32" \
 		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
@@ -1178,7 +1178,7 @@ if [ "${enableWin32}" == "y" ]; then
 		${packageArchiveWin32}
 fi
 
-if [ "${enableWin64}" == "y" ]; then
+if [ "${enableWin64}" = "y" ]; then
 	buildMingw \
 		"x86_64-w64-mingw32" \
 		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
@@ -1189,6 +1189,6 @@ if [ "${enableWin64}" == "y" ]; then
 		${packageArchiveWin64}
 fi
 
-fi	# if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
+fi	# if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
 echo "${bold}********** Done${normal}"
