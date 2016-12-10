@@ -1000,7 +1000,7 @@ echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
 rm -rf ${packageArchiveNative}
-XZ_OPT="-9e -T 0" tar -cJf ${packageArchiveNative} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+XZ_OPT="-9e -T 0 -v" tar -cJf ${packageArchiveNative} --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
 rm -rf ${package}
 
 if [ "${enableWin32}" == "y" ] || [ "${enableWin64}" == "y" ]; then
