@@ -20,7 +20,11 @@ addons:
 language: generic
 
 script:
+    - "{ while true; do sleep 300; echo -n '.'; done } &"
+    - "keepAlivePid=\"${!}\""
     - "./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> >(tee /tmp/stderr.log >&2) | grep \"[*-]\\{10,10\\} \""
+    - "kill \"${keepAlivePid}\""
+    - "wait \"${keepAlivePid}\" || true"
     - "tar -xf *.tar.xz"
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
