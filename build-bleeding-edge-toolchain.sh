@@ -14,7 +14,7 @@ set -u
 
 binutilsVersion="2.27"
 expatVersion="2.2.0"
-gccVersion="6.2.0"
+gccVersion="6.3.0"
 gdbVersion="7.12"
 gmpVersion="6.1.1"
 islVersion="0.16.1"
@@ -592,9 +592,9 @@ cd ${top}
 echo "${bold}********** Patch${normal}"
 cd ${sources}/${gcc}
 patch -p1 << 'EOF'
-diff -ruN gcc-6.2.0-original/gcc/config/arm/t-baremetal gcc-6.2.0/gcc/config/arm/t-baremetal
---- gcc-6.2.0-original/gcc/config/arm/t-baremetal	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.2.0/gcc/config/arm/t-baremetal	2016-10-06 21:54:25.735579948 +0200
+diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm/t-baremetal
+--- gcc-6.3.0-original/gcc/config/arm/t-baremetal	1970-01-01 01:00:00.000000000 +0100
++++ gcc-6.3.0/gcc/config/arm/t-baremetal	2016-12-21 13:45:16.570939667 +0100
 @@ -0,0 +1,260 @@
 +# A set of predefined MULTILIB which can be used for different ARM targets.
 +# Via the configure option --with-multilib-list, user can customize the
@@ -856,10 +856,10 @@ diff -ruN gcc-6.2.0-original/gcc/config/arm/t-baremetal gcc-6.2.0/gcc/config/arm
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16
 +endif
-diff -ruN gcc-6.2.0-original/gcc/config.gcc gcc-6.2.0/gcc/config.gcc
---- gcc-6.2.0-original/gcc/config.gcc	2016-06-08 15:34:25.000000000 +0200
-+++ gcc-6.2.0/gcc/config.gcc	2016-10-06 21:54:25.735579948 +0200
-@@ -1108,7 +1108,7 @@
+diff -ruN gcc-6.3.0-original/gcc/config.gcc gcc-6.3.0/gcc/config.gcc
+--- gcc-6.3.0-original/gcc/config.gcc	2016-11-07 22:38:43.000000000 +0100
++++ gcc-6.3.0/gcc/config.gcc	2016-12-21 13:45:16.570939667 +0100
+@@ -1119,7 +1119,7 @@
  	case ${target} in
  	arm*-*-eabi*)
  	  tm_file="$tm_file newlib-stdint.h"
@@ -868,7 +868,7 @@ diff -ruN gcc-6.2.0-original/gcc/config.gcc gcc-6.2.0/gcc/config.gcc
  	  use_gcc_stdint=wrap
  	  ;;
  	arm*-*-rtems*)
-@@ -3792,42 +3792,6 @@
+@@ -3803,42 +3803,6 @@
  			exit 1
  		fi
  
@@ -911,9 +911,9 @@ diff -ruN gcc-6.2.0-original/gcc/config.gcc gcc-6.2.0/gcc/config.gcc
  		;;
  
  	fr*-*-*linux*)
-diff -ruN gcc-6.2.0-original/gcc/configure gcc-6.2.0/gcc/configure
---- gcc-6.2.0-original/gcc/configure	2016-06-08 15:34:25.000000000 +0200
-+++ gcc-6.2.0/gcc/configure	2016-10-06 21:54:25.732246640 +0200
+diff -ruN gcc-6.3.0-original/gcc/configure gcc-6.3.0/gcc/configure
+--- gcc-6.3.0-original/gcc/configure	2016-12-11 17:23:04.000000000 +0100
++++ gcc-6.3.0/gcc/configure	2016-12-21 13:45:16.574273078 +0100
 @@ -767,6 +767,7 @@
  LN_S
  AWK
@@ -922,20 +922,20 @@ diff -ruN gcc-6.2.0-original/gcc/configure gcc-6.2.0/gcc/configure
  accel_dir_suffix
  real_target_noncanonical
  enable_as_accelerator
-diff -ruN gcc-6.2.0-original/gcc/configure.ac gcc-6.2.0/gcc/configure.ac
---- gcc-6.2.0-original/gcc/configure.ac	2016-06-08 15:34:25.000000000 +0200
-+++ gcc-6.2.0/gcc/configure.ac	2016-10-06 21:54:25.732246640 +0200
-@@ -981,6 +981,7 @@
+diff -ruN gcc-6.3.0-original/gcc/configure.ac gcc-6.3.0/gcc/configure.ac
+--- gcc-6.3.0-original/gcc/configure.ac	2016-12-11 17:23:04.000000000 +0100
++++ gcc-6.3.0/gcc/configure.ac	2016-12-21 13:45:16.574273078 +0100
+@@ -988,6 +988,7 @@
  [AS_HELP_STRING([--with-multilib-list], [select multilibs (AArch64, SH and x86-64 only)])],
  :,
  with_multilib_list=default)
 +AC_SUBST(with_multilib_list)
  
- #---------------
+ # -------------------------
  # Checks for other programs
-diff -ruN gcc-6.2.0-original/gcc/Makefile.in gcc-6.2.0/gcc/Makefile.in
---- gcc-6.2.0-original/gcc/Makefile.in	2016-04-15 13:49:39.000000000 +0200
-+++ gcc-6.2.0/gcc/Makefile.in	2016-10-06 21:54:25.735579948 +0200
+diff -ruN gcc-6.3.0-original/gcc/Makefile.in gcc-6.3.0/gcc/Makefile.in
+--- gcc-6.3.0-original/gcc/Makefile.in	2016-11-22 18:33:07.000000000 +0100
++++ gcc-6.3.0/gcc/Makefile.in	2016-12-21 13:45:16.574273078 +0100
 @@ -546,6 +546,7 @@
  lang_specs_files=@lang_specs_files@
  lang_tree_files=@lang_tree_files@
