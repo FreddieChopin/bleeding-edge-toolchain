@@ -602,7 +602,7 @@ diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm
 +
 +comma := ,
 +
-+with_multilib_list := $(subst $(comma), ,$(with_multilib_list))))
++with_multilib_list := $(subst $(comma), ,$(with_multilib_list))
 +
 +MULTILIB_OPTIONS   = mthumb/marm
 +MULTILIB_DIRNAMES  = thumb arm
