@@ -17,6 +17,11 @@ All notable changes to this project will be documented in this file.
 - Updated newlib to version 2.5.0.
 - Updated isl to version 0.16.1.
 
+### Fixed
+
+- Removed duplicate content in gcc multilib patch (by Jiri Dobry).
+- Fixed brackets in gcc multilib patch, which restores libraries for *ARMv7-R* targets (by Jiri Dobry).
+
 161029 - 2016-10-29
 -------------------
 
