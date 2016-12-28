@@ -595,7 +595,7 @@ patch -p1 << 'EOF'
 diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm/t-baremetal
 --- gcc-6.3.0-original/gcc/config/arm/t-baremetal	1970-01-01 01:00:00.000000000 +0100
 +++ gcc-6.3.0/gcc/config/arm/t-baremetal	2016-12-21 13:45:16.570939667 +0100
-@@ -0,0 +1,130 @@
+@@ -0,0 +1,143 @@
 +# A set of predefined MULTILIB which can be used for different ARM targets.
 +# Via the configure option --with-multilib-list, user can customize the
 +# final MULTILIB implementation.
@@ -612,6 +612,8 @@ diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm
 +MULTILIB_DIRNAMES += softfp fpu
 +MULTILIB_OPTIONS  += mfpu=fpv5-sp-d16/mfpu=fpv5-d16/mfpu=fpv4-sp-d16/mfpu=vfpv3-d16
 +MULTILIB_DIRNAMES += fpv5-sp-d16 fpv5-d16 fpv4-sp-d16 vfpv3-d16
++MULTILIB_OPTIONS  += mbig-endian
++MULTILIB_DIRNAMES += be
 +
 +MULTILIB_MATCHES   = march?armv6s-m=mcpu?cortex-m0
 +MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m0.small-multiply
@@ -719,12 +721,23 @@ diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm
 +MULTILIB_REQUIRED   += mthumb/march=armv7
 +MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=softfp/mfpu=vfpv3-d16
 +MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=hard/mfpu=vfpv3-d16
++MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian
++MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=softfp/mfpu=vfpv3-d16/mbig-endian
++MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=hard/mfpu=vfpv3-d16/mbig-endian
 +MULTILIB_OSDIRNAMES += mthumb/march.armv7=!armv7-ar/thumb
 +MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/thumb/fpu
 +MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/thumb/softfp
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian=!armv7-ar/thumb/be
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian=!armv7-ar/thumb/fpu/be
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian=!armv7-ar/thumb/softfp/be
 +MULTILIB_REUSE      += mthumb/march.armv7=marm/march.armv7
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16
++MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian=marm/march.armv7/mbig-endian
++MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian
++MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian
++
++MULTILIB_MATCHES    += mbig-endian=mbe
 +endif
 diff -ruN gcc-6.3.0-original/gcc/config.gcc gcc-6.3.0/gcc/config.gcc
 --- gcc-6.3.0-original/gcc/config.gcc	2016-11-07 22:38:43.000000000 +0100
