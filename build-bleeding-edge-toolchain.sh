@@ -608,12 +608,12 @@ diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm
 +MULTILIB_DIRNAMES  = thumb arm
 +MULTILIB_OPTIONS  += march=armv6s-m/march=armv7-m/march=armv7e-m/march=armv7/march=armv8-m.base/march=armv8-m.main
 +MULTILIB_DIRNAMES += armv6-m armv7-m armv7e-m armv7-ar armv8-m.base armv8-m.main
++MULTILIB_OPTIONS  += mlittle-endian/mbig-endian
++MULTILIB_DIRNAMES += le/be
 +MULTILIB_OPTIONS  += mfloat-abi=softfp/mfloat-abi=hard
 +MULTILIB_DIRNAMES += softfp fpu
 +MULTILIB_OPTIONS  += mfpu=fpv5-sp-d16/mfpu=fpv5-d16/mfpu=fpv4-sp-d16/mfpu=vfpv3-d16
 +MULTILIB_DIRNAMES += fpv5-sp-d16 fpv5-d16 fpv4-sp-d16 vfpv3-d16
-+MULTILIB_OPTIONS  += mbig-endian
-+MULTILIB_DIRNAMES += be
 +
 +MULTILIB_MATCHES   = march?armv6s-m=mcpu?cortex-m0
 +MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m0.small-multiply
@@ -722,20 +722,20 @@ diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm
 +MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=softfp/mfpu=vfpv3-d16
 +MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=hard/mfpu=vfpv3-d16
 +MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=softfp/mfpu=vfpv3-d16/mbig-endian
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=hard/mfpu=vfpv3-d16/mbig-endian
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7=!armv7-ar/thumb
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/thumb/fpu
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/thumb/softfp
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian=!armv7-ar/thumb/be
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian=!armv7-ar/thumb/fpu/be
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian=!armv7-ar/thumb/softfp/be
++MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian/mfloat-abi=softfp/mfpu=vfpv3-d16
++MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian/mfloat-abi=hard/mfpu=vfpv3-d16
++MULTILIB_OSDIRNAMES += mthumb/march.armv7=!armv7-ar/le/thumb
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/le/thumb/fpu
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/le/thumb/softfp
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian=!armv7-ar/be/thumb
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/be/thumb/fpu
++MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/be/thumb/softfp
 +MULTILIB_REUSE      += mthumb/march.armv7=marm/march.armv7
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16
 +MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16
 +MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian=marm/march.armv7/mbig-endian
-+MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16/mbig-endian
-+MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16/mbig-endian
++MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16
++MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16
 +
 +MULTILIB_MATCHES    += mbig-endian=mbe
 +endif
