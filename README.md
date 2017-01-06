@@ -49,3 +49,18 @@ Such compilation has more dependencies:
 with their own dependencies (binutils, headers, ...),
 - `libtermcap` and `libwinpthread` compiled for `Mingw-w64`,
 - `p7zip`, used to compress the toolchain into an archive in `.7z` format.
+
+Minimalistic how-to compile for fresh Ubuntu or Mint instalation
+----------------------------------------------------------------
+
+```
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+sudo apt-get install build-essential m4 curl texinfo \
+  python2.7 python2.7-dev mingw-w64 libncurses5-dev p7zip-full git
+
+git clone https://github.com/FreddieChopin/bleeding-edge-toolchain.git
+cd bleeding-edge-toolchain
+./build-bleeding-edge-toolchain.sh --enable-win32 --enable-win64
+```
