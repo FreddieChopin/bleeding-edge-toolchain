@@ -15,7 +15,7 @@ addons:
     apt:
         packages:
             - texinfo
-            - texlive-base
+            - texlive-latex-base
 
 # use minimal environment
 language: generic
