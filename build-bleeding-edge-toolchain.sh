@@ -926,6 +926,7 @@ buildMingw() {
 	cp -R ${installNative}/lib/gcc ${installFolder}/lib/gcc
 	mkdir -p ${installFolder}/share
 	cp -R ${installNative}/share/doc ${installFolder}/share/doc
+	cp -R ${installNative}/share/${gcc} ${installFolder}/share/${gcc}
 
 	(
 		echo "${bold}********** ${bannerPrefix}${libiconv}${normal}"

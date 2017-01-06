@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 
 - Removed duplicate content in gcc multilib patch (by Jiri Dobry).
 - Fixed brackets in gcc multilib patch, which restores libraries for *ARMv7-R* targets (by Jiri Dobry).
+- Fixed missing libstdc++ "pretty printers" in Windows packages.
 
 161029 - 2016-10-29
 -------------------
