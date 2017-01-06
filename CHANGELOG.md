@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - More detailed info about requirements to build the toolchain in README.md.
 - Updated gcc to version 6.3.0.
 - Updated newlib to version 2.5.0.
+- Updated gmp to version 6.1.2.
 - Updated isl to version 0.16.1.
 - Updated zlib to version 1.2.10.
 - Download zlib from sourceforge, as zlib's official website seems to host only the most recent version.
