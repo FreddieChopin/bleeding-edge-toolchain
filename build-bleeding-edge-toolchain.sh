@@ -240,6 +240,7 @@ buildBinutils() {
 		${configureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
+		--docdir=${top}/${installFolder}/share/doc \
 		--disable-nls \
 		--enable-interwork \
 		--enable-multilib \
@@ -363,6 +364,7 @@ buildGccFinal() {
 	${top}/${sources}/${gcc}/configure \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
+		--docdir=${top}/${installFolder}/share/doc \
 		--libexecdir=${top}/${installFolder}/lib \
 		--enable-languages=c,c++ \
 		--disable-libstdcxx-verbose \
@@ -439,6 +441,7 @@ buildGdb() {
 		${configureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
+		--docdir=${top}/${installFolder}/share/doc \
 		--disable-nls \
 		--disable-sim \
 		--with-libexpat \
@@ -866,6 +869,7 @@ buildNewlib \
 	"" \
 	"-O2" \
 	"--prefix=${top}/${installNative} \
+		--docdir=${top}/${installNative}/share/doc \
 		--enable-newlib-io-c99-formats \
 		--enable-newlib-io-long-long \
 		--disable-newlib-atexit-dynamic-alloc" \
@@ -879,6 +883,7 @@ buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true
+find ${installNative}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installNative}/share/doc \;
 
 echo "${bold}********** Package${normal}"
 rm -rf ${package}
