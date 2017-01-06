@@ -843,7 +843,7 @@ buildIsl ${buildNative} "" ""
 
 buildExpat ${buildNative} "" ""
 
-buildBinutils ${buildNative} ${installNative} "" "" "html"
+buildBinutils ${buildNative} ${installNative} "" "" "html pdf"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
@@ -869,13 +869,13 @@ buildNewlib \
 		--enable-newlib-io-c99-formats \
 		--enable-newlib-io-long-long \
 		--disable-newlib-atexit-dynamic-alloc" \
-	"html"
+	"html pdf"
 
-buildGccFinal "-final" "-O2" "${installNative}" "html"
+buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
 copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
 
-buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html"
+buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true

@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Support for "nano" variant of libraries.
 - Big-endian version of multilib for *ARMv7-R* targets (by Jiri Dobry).
+- Re-enabled PDF documentation for all components.
 
 ### Changed
 
