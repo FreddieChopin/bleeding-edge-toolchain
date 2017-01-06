@@ -24,12 +24,13 @@ the tools listed below should be enough to successfully execute this script:
 - `curl`, used to download the source tarballs of toolchain components,
 - `tar`, used to extract source tarballs and to compress compiled toolchain,
 - `makeinfo`, used to generate documentation - it is usually present in `texinfo` package,
+- `pdftex`, used to generate PDF documentation - most likely contained in `texlive` package,
 - `python`, required by GDB, may be either version 2 or 3, but should contain headers and libraries, so you may need
 some kind of "development" and/or "library" package, depending on your system.
 
 Exact set of required packages will be different on each system, but on a fresh Ubuntu installation you are going to
-need just these packages: `build-essential`, `m4`, `curl`, `python2.7`, `python2.7-dev` and `libpython2.7-stdlib`
-(credits for checking that go to Alexandre - thanks!).
+need just these packages: `build-essential`, `m4`, `curl`, `python2.7`, `python2.7-dev`, `libpython2.7-stdlib` and
+`texlive-latex-base` (credits for checking that go to Alexandre - thanks!).
 
 Toolchain for Windows
 ---------------------
