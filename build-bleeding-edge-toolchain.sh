@@ -119,7 +119,7 @@ buildGmp() {
 	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
 	eval "${top}/${sources}/${gmp}/configure \
 		${configureOptions} \
-		--prefix=$(pwd)/install \
+		--prefix=${top}/${buildFolder}/prerequisites/${gmp} \
 		--enable-cxx \
 		--disable-shared \
 		--disable-nls"
@@ -145,7 +145,7 @@ buildMpfr() {
 		--prefix=$(pwd)/install \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/${gmp}/install"
+		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
@@ -168,7 +168,7 @@ buildMpc() {
 		--prefix=$(pwd)/install \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/${gmp}/install \
+		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
 		--with-mpfr=${top}/${buildFolder}/${mpfr}/install"
 	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
 	make -j$(nproc)
@@ -192,7 +192,7 @@ buildIsl() {
 		--prefix=$(pwd)/install \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp-prefix=${top}/${buildFolder}/${gmp}/install"
+		--with-gmp-prefix=${top}/${buildFolder}/prerequisites/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
@@ -292,7 +292,7 @@ buildGcc() {
 		--with-gnu-ld \
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
-		--with-gmp=${top}/${buildFolder}/${gmp}/install \
+		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
 		--with-mpfr=${top}/${buildFolder}/${mpfr}/install \
 		--with-mpc=${top}/${buildFolder}/${mpc}/install \
 		--with-isl=${top}/${buildFolder}/${isl}/install \
@@ -386,7 +386,7 @@ buildGccFinal() {
 		--with-headers=yes \
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
-		--with-gmp=${top}/${buildNative}/${gmp}/install \
+		--with-gmp=${top}/${buildNative}/prerequisites/${gmp} \
 		--with-mpfr=${top}/${buildNative}/${mpfr}/install \
 		--with-mpc=${top}/${buildNative}/${mpc}/install \
 		--with-isl=${top}/${buildNative}/${isl}/install \
