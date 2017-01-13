@@ -422,6 +422,9 @@ copyNanoLibs() {
 		cp "${sourceDirectory}/libstdc++.a" "${destinationDirectory}/libstdc++_nano.a"
 		cp "${sourceDirectory}/libsupc++.a" "${destinationDirectory}/libsupc++_nano.a"
 	done
+
+	mkdir -p ${destination}/arm-none-eabi/include/newlib-nano
+	cp ${source}/arm-none-eabi/include/newlib.h ${destination}/arm-none-eabi/include/newlib-nano
 }
 
 buildGdb() {
