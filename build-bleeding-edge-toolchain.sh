@@ -99,7 +99,7 @@ buildZlib() {
 	cp -R ${sources}/${zlib} ${buildFolder}
 	cd ${buildFolder}/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
-	./configure --static --prefix=$(pwd)/install
+	./configure --static --prefix=${top}/${buildFolder}/prerequisites/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
 	eval "make ${makeOptions} -j$(nproc)"
 	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
@@ -233,8 +233,8 @@ buildBinutils() {
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	mkdir -p ${buildFolder}/${binutils}
 	cd ${buildFolder}/${binutils}
-	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
 	eval "${top}/${sources}/${binutils}/configure \
 		${configureOptions} \
@@ -268,8 +268,8 @@ buildGcc() {
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	mkdir -p ${buildFolder}/${gcc}
 	cd ${buildFolder}/${gcc}
-	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 	eval "${top}/${sources}/${gcc}/configure \
 		${configureOptions} \
@@ -356,8 +356,8 @@ buildGccFinal() {
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	mkdir -p ${buildNative}/${gcc}${suffix}
 	cd ${buildNative}/${gcc}${suffix}
-	export CPPFLAGS="-I${top}/${buildNative}/${zlib}/install/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildNative}/${zlib}/install/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildNative}/prerequisites/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildNative}/prerequisites/${zlib}/lib ${LDFLAGS-}"
 	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
 	export CXXFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
@@ -437,8 +437,8 @@ buildGdb() {
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	mkdir -p ${buildFolder}/${gdb}
 	cd ${buildFolder}/${gdb}
-	export CPPFLAGS="-I${top}/${buildFolder}/${zlib}/install/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${zlib}/install/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 	eval "${top}/${sources}/${gdb}/configure \
 		${configureOptions} \
@@ -953,9 +953,9 @@ buildMingw() {
 		${bannerPrefix} \
 		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
 		"-f win32/Makefile.gcc \
-			BINARY_PATH=\"\$(pwd)/install/bin\" \
-			INCLUDE_PATH=\"\$(pwd)/install/include\" \
-			LIBRARY_PATH=\"\$(pwd)/install/lib\""
+			BINARY_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/bin\" \
+			INCLUDE_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/include\" \
+			LIBRARY_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/lib\""
 
 	buildGmp \
 		${buildFolder} \
