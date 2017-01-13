@@ -21,11 +21,7 @@ addons:
 language: generic
 
 script:
-    - "{ while true; do sleep 300; echo -n '.'; done } &"
-    - "keepAlivePid=\"${!}\""
-    - "./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \""
-    - "kill \"${keepAlivePid}\""
-    - "wait \"${keepAlivePid}\" || true"
+    - "travis_wait 120 { ./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \"; }"
     - "tar -xf *.tar.xz"
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
