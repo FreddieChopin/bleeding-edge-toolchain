@@ -20,12 +20,14 @@ addons:
 # use minimal environment
 language: generic
 
-script:
+install:
     - "travis_wait 120 { ./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \"; }"
     - "tar -xf *.tar.xz"
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
     - "cd .."
+
+script:
     - "find ./arm-none-eabi-gcc-*/bin -executable -type f -exec {} --version \\;"
     - "curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz"
     - "tar -xf master.tar.gz"
