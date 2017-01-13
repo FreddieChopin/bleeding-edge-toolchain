@@ -938,7 +938,7 @@ buildMingw() {
 		echo "${bold}---------- ${bannerPrefix}${libiconv} configure${normal}"
 		${top}/${sources}/${libiconv}/configure \
 			--host=${triplet} \
-			--prefix=$(pwd)/install \
+			--prefix=${top}/${buildFolder}/prerequisites/${libiconv} \
 			--disable-shared \
 			--disable-nls
 		echo "${bold}---------- ${bannerPrefix}${libiconv} make${normal}"
@@ -996,7 +996,7 @@ buildMingw() {
 		"--host=${triplet} \
 			--enable-languages=c,c++ \
 			--with-headers=yes \
-			--with-libiconv-prefix=${top}/${buildFolder}/${libiconv}/install"
+			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}"
 
 	cat > ${buildFolder}/python.sh <<- END
 	#!/bin/sh
@@ -1026,7 +1026,7 @@ buildMingw() {
 			--with-python=${top}/${buildFolder}/python.sh \
 			--program-prefix=${target}- \
 			--program-suffix=-py \
-			--with-libiconv-prefix=${top}/${buildFolder}/${libiconv}/install" \
+			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}" \
 		""
 	mv ${buildFolder}/${gdb} ${buildFolder}/${gdb}-py
 
@@ -1036,7 +1036,7 @@ buildMingw() {
 		${bannerPrefix} \
 		"--host=${triplet} \
 			--with-python=no \
-			--with-libiconv-prefix=${top}/${buildFolder}/${libiconv}/install" \
+			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}" \
 		""
 
 	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "- ${libiconv}\n- python-${pythonVersion}\n"
