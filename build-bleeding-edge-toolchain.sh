@@ -142,7 +142,7 @@ buildMpfr() {
 	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
 	eval "${top}/${sources}/${mpfr}/configure \
 		${configureOptions} \
-		--prefix=$(pwd)/install \
+		--prefix=${top}/${buildFolder}/prerequisites/${mpfr} \
 		--disable-shared \
 		--disable-nls \
 		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp}"
@@ -169,7 +169,7 @@ buildMpc() {
 		--disable-shared \
 		--disable-nls \
 		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/${mpfr}/install"
+		--with-mpfr=${top}/${buildFolder}/prerequisites/${mpfr}"
 	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
@@ -293,7 +293,7 @@ buildGcc() {
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
 		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/${mpfr}/install \
+		--with-mpfr=${top}/${buildFolder}/prerequisites/${mpfr} \
 		--with-mpc=${top}/${buildFolder}/${mpc}/install \
 		--with-isl=${top}/${buildFolder}/${isl}/install \
 		\"--with-pkgversion=${pkgversion}\" \
@@ -387,7 +387,7 @@ buildGccFinal() {
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
 		--with-gmp=${top}/${buildNative}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildNative}/${mpfr}/install \
+		--with-mpfr=${top}/${buildNative}/prerequisites/${mpfr} \
 		--with-mpc=${top}/${buildNative}/${mpc}/install \
 		--with-isl=${top}/${buildNative}/${isl}/install \
 		"--with-pkgversion=${pkgversion}" \
