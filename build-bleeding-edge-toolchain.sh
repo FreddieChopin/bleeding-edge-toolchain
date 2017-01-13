@@ -212,7 +212,7 @@ buildExpat() {
 	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
 	eval "${top}/${sources}/${expat}/configure \
 		${configureOptions} \
-		--prefix=$(pwd)/install \
+		--prefix=${top}/${buildFolder}/prerequisites/${expat} \
 		--disable-shared \
 		--disable-nls"
 	echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
@@ -451,7 +451,7 @@ buildGdb() {
 		--with-lzma=no \
 		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
 		--with-system-zlib \
-		--with-libexpat-prefix=${top}/${buildFolder}/${expat}/install \
+		--with-libexpat-prefix=${top}/${buildFolder}/prerequisites/${expat} \
 		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
