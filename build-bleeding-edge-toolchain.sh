@@ -165,7 +165,7 @@ buildMpc() {
 	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
 	eval "${top}/${sources}/${mpc}/configure \
 		${configureOptions} \
-		--prefix=$(pwd)/install \
+		--prefix=${top}/${buildFolder}/prerequisites/${mpc} \
 		--disable-shared \
 		--disable-nls \
 		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
@@ -294,7 +294,7 @@ buildGcc() {
 		--with-system-zlib \
 		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
 		--with-mpfr=${top}/${buildFolder}/prerequisites/${mpfr} \
-		--with-mpc=${top}/${buildFolder}/${mpc}/install \
+		--with-mpc=${top}/${buildFolder}/prerequisites/${mpc} \
 		--with-isl=${top}/${buildFolder}/${isl}/install \
 		\"--with-pkgversion=${pkgversion}\" \
 		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r"
@@ -388,7 +388,7 @@ buildGccFinal() {
 		--with-system-zlib \
 		--with-gmp=${top}/${buildNative}/prerequisites/${gmp} \
 		--with-mpfr=${top}/${buildNative}/prerequisites/${mpfr} \
-		--with-mpc=${top}/${buildNative}/${mpc}/install \
+		--with-mpc=${top}/${buildNative}/prerequisites/${mpc} \
 		--with-isl=${top}/${buildNative}/${isl}/install \
 		"--with-pkgversion=${pkgversion}" \
 		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
