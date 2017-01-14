@@ -112,6 +112,7 @@ buildZlib() {
 	eval "make ${makeInstallOptions} install"
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${zlib} remove build folder${normal}"
 		rm -rf ${buildFolder}/${zlib}
 	fi
 	)
@@ -138,6 +139,7 @@ buildGmp() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${gmp} remove build folder${normal}"
 		rm -rf ${buildFolder}/${gmp}
 	fi
 	)
@@ -164,6 +166,7 @@ buildMpfr() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${mpfr} remove build folder${normal}"
 		rm -rf ${buildFolder}/${mpfr}
 	fi
 	)
@@ -191,6 +194,7 @@ buildMpc() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${mpc} remove build folder${normal}"
 		rm -rf ${buildFolder}/${mpc}
 	fi
 	)
@@ -217,6 +221,7 @@ buildIsl() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${isl} remove build folder${normal}"
 		rm -rf ${buildFolder}/${isl}
 	fi
 	)
@@ -242,6 +247,7 @@ buildExpat() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${expat} remove build folder${normal}"
 		rm -rf ${buildFolder}/${expat}
 	fi
 	)
@@ -281,6 +287,7 @@ buildBinutils() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${binutils} remove build folder${normal}"
 		rm -rf ${buildFolder}/${binutils}
 	fi
 	)
@@ -331,6 +338,7 @@ buildGcc() {
 	make install-gcc
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${gcc} remove build folder${normal}"
 		rm -rf ${buildFolder}/${gcc}
 	fi
 	)
@@ -375,6 +383,7 @@ buildNewlib() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${newlib}${suffix} remove build folder${normal}"
 		rm -rf ${buildNative}/${newlib}${suffix}
 	fi
 	)
@@ -435,6 +444,7 @@ buildGccFinal() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${gcc}${suffix} remove build folder${normal}"
 		rm -rf ${buildNative}/${gcc}${suffix}
 	fi
 	)
@@ -501,6 +511,7 @@ buildGdb() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
 		rm -rf ${buildFolder}/${gdb}
 	fi
 	)
@@ -922,6 +933,7 @@ buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
 copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
 if [ "${keepBuildFolders}" = "n" ]; then
+	echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
 	rm -rf ${top}/${buildNative}/${nanoLibraries}
 fi
 
@@ -990,6 +1002,7 @@ buildMingw() {
 		make install
 		cd ${top}
 		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${libiconv} remove build folder${normal}"
 			rm -rf ${top}/${buildFolder}/${libiconv}
 		fi
 	)
