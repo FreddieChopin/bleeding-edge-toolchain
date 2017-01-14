@@ -440,7 +440,7 @@ buildGccFinal() {
 	)
 }
 
-copyNanoLibs() {
+copyNanoLibraries() {
 	local source="${1}"
 	local destination="${2}"
 	local multilibs="$(${destination}/bin/${target}-gcc -print-multi-lib)"
@@ -919,7 +919,7 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
-copyNanoLibs "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
 if [ "${keepBuildFolders}" = "n" ]; then
 	rm -rf ${top}/${buildNative}/${nanoLibraries}
 fi
