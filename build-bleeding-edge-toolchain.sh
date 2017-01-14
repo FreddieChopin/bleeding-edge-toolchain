@@ -32,6 +32,7 @@ buildWin64="buildWin64"
 installNative="installNative"
 installWin32="installWin32"
 installWin64="installWin64"
+prerequisites="prerequisites"
 sources="sources"
 
 binutils="binutils-${binutilsVersion}"
@@ -103,7 +104,7 @@ buildZlib() {
 	cp -R ${sources}/${zlib} ${buildFolder}
 	cd ${buildFolder}/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
-	./configure --static --prefix=${top}/${buildFolder}/prerequisites/${zlib}
+	./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
 	eval "make ${makeOptions} -j$(nproc)"
 	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
@@ -126,7 +127,7 @@ buildGmp() {
 	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
 	eval "${top}/${sources}/${gmp}/configure \
 		${configureOptions} \
-		--prefix=${top}/${buildFolder}/prerequisites/${gmp} \
+		--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
 		--enable-cxx \
 		--disable-shared \
 		--disable-nls"
@@ -152,10 +153,10 @@ buildMpfr() {
 	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
 	eval "${top}/${sources}/${mpfr}/configure \
 		${configureOptions} \
-		--prefix=${top}/${buildFolder}/prerequisites/${mpfr} \
+		--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp}"
+		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
@@ -178,11 +179,11 @@ buildMpc() {
 	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
 	eval "${top}/${sources}/${mpc}/configure \
 		${configureOptions} \
-		--prefix=${top}/${buildFolder}/prerequisites/${mpc} \
+		--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/prerequisites/${mpfr}"
+		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
 	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
@@ -205,10 +206,10 @@ buildIsl() {
 	echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
 	eval "${top}/${sources}/${isl}/configure \
 		${configureOptions} \
-		--prefix=${top}/${buildFolder}/prerequisites/${isl} \
+		--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
 		--disable-shared \
 		--disable-nls \
-		--with-gmp-prefix=${top}/${buildFolder}/prerequisites/${gmp}"
+		--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
 	make -j$(nproc)
 	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
@@ -231,7 +232,7 @@ buildExpat() {
 	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
 	eval "${top}/${sources}/${expat}/configure \
 		${configureOptions} \
-		--prefix=${top}/${buildFolder}/prerequisites/${expat} \
+		--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
 		--disable-shared \
 		--disable-nls"
 	echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
@@ -255,8 +256,8 @@ buildBinutils() {
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	mkdir -p ${buildFolder}/${binutils}
 	cd ${buildFolder}/${binutils}
-	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
 	eval "${top}/${sources}/${binutils}/configure \
 		${configureOptions} \
@@ -293,8 +294,8 @@ buildGcc() {
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	mkdir -p ${buildFolder}/${gcc}
 	cd ${buildFolder}/${gcc}
-	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 	eval "${top}/${sources}/${gcc}/configure \
 		${configureOptions} \
@@ -317,10 +318,10 @@ buildGcc() {
 		--with-gnu-ld \
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
-		--with-gmp=${top}/${buildFolder}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/prerequisites/${mpfr} \
-		--with-mpc=${top}/${buildFolder}/prerequisites/${mpc} \
-		--with-isl=${top}/${buildFolder}/prerequisites/${isl} \
+		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+		--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
+		--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
 		\"--with-pkgversion=${pkgversion}\" \
 		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r"
 	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
@@ -387,8 +388,8 @@ buildGccFinal() {
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	mkdir -p ${buildNative}/${gcc}${suffix}
 	cd ${buildNative}/${gcc}${suffix}
-	export CPPFLAGS="-I${top}/${buildNative}/prerequisites/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildNative}/prerequisites/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
 	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
 	export CXXFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
@@ -417,10 +418,10 @@ buildGccFinal() {
 		--with-headers=yes \
 		--with-sysroot=${top}/${installFolder}/${target} \
 		--with-system-zlib \
-		--with-gmp=${top}/${buildNative}/prerequisites/${gmp} \
-		--with-mpfr=${top}/${buildNative}/prerequisites/${mpfr} \
-		--with-mpc=${top}/${buildNative}/prerequisites/${mpc} \
-		--with-isl=${top}/${buildNative}/prerequisites/${isl} \
+		--with-gmp=${top}/${buildNative}/${prerequisites}/${gmp} \
+		--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
+		--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
+		--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
 		"--with-pkgversion=${pkgversion}" \
 		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
 	echo "${bold}---------- ${gcc}${suffix} make${normal}"
@@ -471,8 +472,8 @@ buildGdb() {
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	mkdir -p ${buildFolder}/${gdb}
 	cd ${buildFolder}/${gdb}
-	export CPPFLAGS="-I${top}/${buildFolder}/prerequisites/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/prerequisites/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 	eval "${top}/${sources}/${gdb}/configure \
 		${configureOptions} \
@@ -485,7 +486,7 @@ buildGdb() {
 		--with-lzma=no \
 		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
 		--with-system-zlib \
-		--with-libexpat-prefix=${top}/${buildFolder}/prerequisites/${expat} \
+		--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
 		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
@@ -978,7 +979,7 @@ buildMingw() {
 		echo "${bold}---------- ${bannerPrefix}${libiconv} configure${normal}"
 		${top}/${sources}/${libiconv}/configure \
 			--host=${triplet} \
-			--prefix=${top}/${buildFolder}/prerequisites/${libiconv} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${libiconv} \
 			--disable-shared \
 			--disable-nls
 		echo "${bold}---------- ${bannerPrefix}${libiconv} make${normal}"
@@ -996,9 +997,9 @@ buildMingw() {
 		${bannerPrefix} \
 		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
 		"-f win32/Makefile.gcc \
-			BINARY_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/bin\" \
-			INCLUDE_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/include\" \
-			LIBRARY_PATH=\"${top}/${buildFolder}/prerequisites/${zlib}/lib\""
+			BINARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/bin\" \
+			INCLUDE_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" \
+			LIBRARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\""
 
 	buildGmp \
 		${buildFolder} \
@@ -1039,7 +1040,7 @@ buildMingw() {
 		"--host=${triplet} \
 			--enable-languages=c,c++ \
 			--with-headers=yes \
-			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}"
+			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
 
 	cat > ${buildFolder}/python.sh <<- END
 	#!/bin/sh
@@ -1069,7 +1070,7 @@ buildMingw() {
 			--with-python=${top}/${buildFolder}/python.sh \
 			--program-prefix=${target}- \
 			--program-suffix=-py \
-			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}" \
+			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}" \
 		""
 	if [ "${keepBuildFolders}" = "y" ]; then
 		mv ${buildFolder}/${gdb} ${buildFolder}/${gdb}-py
@@ -1081,7 +1082,7 @@ buildMingw() {
 		${bannerPrefix} \
 		"--host=${triplet} \
 			--with-python=no \
-			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}" \
+			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}" \
 		""
 
 	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "- ${libiconv}\n- python-${pythonVersion}\n"
