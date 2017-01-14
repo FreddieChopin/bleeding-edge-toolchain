@@ -110,7 +110,7 @@ buildZlib() {
 	eval "make ${makeInstallOptions} install"
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${zlib}
+		rm -rf ${buildFolder}/${zlib}
 	fi
 	)
 }
@@ -136,7 +136,7 @@ buildGmp() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${gmp}
+		rm -rf ${buildFolder}/${gmp}
 	fi
 	)
 }
@@ -162,7 +162,7 @@ buildMpfr() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${mpfr}
+		rm -rf ${buildFolder}/${mpfr}
 	fi
 	)
 }
@@ -189,7 +189,7 @@ buildMpc() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${mpc}
+		rm -rf ${buildFolder}/${mpc}
 	fi
 	)
 }
@@ -215,7 +215,7 @@ buildIsl() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${isl}
+		rm -rf ${buildFolder}/${isl}
 	fi
 	)
 }
@@ -240,7 +240,7 @@ buildExpat() {
 	make install
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${expat}
+		rm -rf ${buildFolder}/${expat}
 	fi
 	)
 }
@@ -279,7 +279,7 @@ buildBinutils() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${binutils}
+		rm -rf ${buildFolder}/${binutils}
 	fi
 	)
 }
@@ -329,7 +329,7 @@ buildGcc() {
 	make install-gcc
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${gcc}
+		rm -rf ${buildFolder}/${gcc}
 	fi
 	)
 }
@@ -373,7 +373,7 @@ buildNewlib() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildNative}/${newlib}${suffix}
+		rm -rf ${buildNative}/${newlib}${suffix}
 	fi
 	)
 }
@@ -433,7 +433,7 @@ buildGccFinal() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildNative}/${gcc}${suffix}
+		rm -rf ${buildNative}/${gcc}${suffix}
 	fi
 	)
 }
@@ -498,7 +498,7 @@ buildGdb() {
 	done
 	cd ${top}
 	if [ "${keepBuildFolders}" = "n" ]; then
-		rm -r ${buildFolder}/${gdb}
+		rm -rf ${buildFolder}/${gdb}
 	fi
 	)
 }
@@ -919,7 +919,7 @@ buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
 copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
 if [ "${keepBuildFolders}" = "n" ]; then
-	rm -r ${top}/${buildNative}/nanoLibs
+	rm -rf ${top}/${buildNative}/nanoLibs
 fi
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
@@ -987,7 +987,7 @@ buildMingw() {
 		make install
 		cd ${top}
 		if [ "${keepBuildFolders}" = "n" ]; then
-			rm -r ${top}/${buildFolder}/${libiconv}
+			rm -rf ${top}/${buildFolder}/${libiconv}
 		fi
 	)
 
