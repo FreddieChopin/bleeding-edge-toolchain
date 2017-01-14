@@ -443,6 +443,7 @@ buildGccFinal() {
 copyNanoLibraries() {
 	local source="${1}"
 	local destination="${2}"
+	echo "${bold}********** \"nano\" libraries copy${normal}"
 	local multilibs="$(${destination}/bin/${target}-gcc -print-multi-lib)"
 	local sourcePrefix="${source}/${target}/lib"
 	local destinationPrefix="${destination}/${target}/lib"
