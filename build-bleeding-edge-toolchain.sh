@@ -32,6 +32,7 @@ buildWin64="buildWin64"
 installNative="installNative"
 installWin32="installWin32"
 installWin64="installWin64"
+nanoLibraries="nanoLibraries"
 prerequisites="prerequisites"
 sources="sources"
 
@@ -897,13 +898,13 @@ export PATH="${top}/${installNative}/bin:${PATH-}"
 buildNewlib \
 	"-nano" \
 	"-Os" \
-	"--prefix=${top}/${buildNative}/nanoLibs \
+	"--prefix=${top}/${buildNative}/${nanoLibraries} \
 		--enable-newlib-nano-malloc \
 		--enable-lite-exit \
 		--enable-newlib-nano-formatted-io" \
 	""
 
-buildGccFinal "-nano" "-Os" "${buildNative}/nanoLibs" ""
+buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
 )
 
 buildNewlib \
@@ -918,9 +919,9 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
-copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
+copyNanoLibs "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
 if [ "${keepBuildFolders}" = "n" ]; then
-	rm -rf ${top}/${buildNative}/nanoLibs
+	rm -rf ${top}/${buildNative}/${nanoLibraries}
 fi
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
