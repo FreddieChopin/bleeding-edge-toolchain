@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170107...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Added
+
+- `--keep-build-folders` option, which will disable removal of unneeded build folders.
+
+### Changed
+
+- Build folders are deleted as soon as they are not needed anymore.
+
 ### Fixed
 
 - Fixed missing `newlib.h` when using `nano.specs`.

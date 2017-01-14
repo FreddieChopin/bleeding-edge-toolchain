@@ -3,7 +3,7 @@
 #
 # file: build-bleeding-edge-toolchain.sh
 #
-# author: Copyright (C) 2016 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+# author: Copyright (C) 2016-2017 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -73,6 +73,7 @@ normal="$(tput sgr0)"
 
 enableWin32="n"
 enableWin64="n"
+keepBuildFolders="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
@@ -80,6 +81,9 @@ while [ ${#} -gt 0 ]; do
 			;;
 		--enable-win64)
 			enableWin64="y"
+			;;
+		--keep-build-folders)
+			keepBuildFolders="y"
 			;;
 
 		*)
@@ -105,6 +109,9 @@ buildZlib() {
 	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
 	eval "make ${makeInstallOptions} install"
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${zlib}
+	fi
 	)
 }
 
@@ -128,6 +135,9 @@ buildGmp() {
 	echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
 	make install
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${gmp}
+	fi
 	)
 }
 
@@ -151,6 +161,9 @@ buildMpfr() {
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
 	make install
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${mpfr}
+	fi
 	)
 }
 
@@ -175,6 +188,9 @@ buildMpc() {
 	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
 	make install
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${mpc}
+	fi
 	)
 }
 
@@ -198,6 +214,9 @@ buildIsl() {
 	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
 	make install
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${isl}
+	fi
 	)
 }
 
@@ -220,6 +239,9 @@ buildExpat() {
 	echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
 	make install
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${expat}
+	fi
 	)
 }
 
@@ -256,6 +278,9 @@ buildBinutils() {
 		make install-${documentation}
 	done
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${binutils}
+	fi
 	)
 }
 
@@ -303,6 +328,9 @@ buildGcc() {
 	echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
 	make install-gcc
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${gcc}
+	fi
 	)
 }
 
@@ -344,6 +372,9 @@ buildNewlib() {
 		cd ../../..
 	done
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildNative}/${newlib}${suffix}
+	fi
 	)
 }
 
@@ -401,6 +432,9 @@ buildGccFinal() {
 		make install-${documentation}
 	done
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildNative}/${gcc}${suffix}
+	fi
 	)
 }
 
@@ -463,6 +497,9 @@ buildGdb() {
 		make install-${documentation}
 	done
 	cd ${top}
+	if [ "${keepBuildFolders}" = "n" ]; then
+		rm -r ${buildFolder}/${gdb}
+	fi
 	)
 }
 
@@ -881,6 +918,9 @@ buildNewlib \
 buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
 copyNanoLibs "${top}/${buildNative}/nanoLibs" "${top}/${installNative}"
+if [ "${keepBuildFolders}" = "n" ]; then
+	rm -r ${top}/${buildNative}/nanoLibs
+fi
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
 
@@ -946,6 +986,9 @@ buildMingw() {
 		echo "${bold}---------- ${bannerPrefix}${libiconv} make install${normal}"
 		make install
 		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			rm -r ${top}/${buildFolder}/${libiconv}
+		fi
 	)
 
 	buildZlib \
@@ -1028,7 +1071,9 @@ buildMingw() {
 			--program-suffix=-py \
 			--with-libiconv-prefix=${top}/${buildFolder}/prerequisites/${libiconv}" \
 		""
-	mv ${buildFolder}/${gdb} ${buildFolder}/${gdb}-py
+	if [ "${keepBuildFolders}" = "y" ]; then
+		mv ${buildFolder}/${gdb} ${buildFolder}/${gdb}-py
+	fi
 
 	buildGdb \
 		${buildFolder} \

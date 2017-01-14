@@ -50,3 +50,9 @@ Such compilation has more dependencies:
 with their own dependencies (binutils, headers, ...),
 - `libtermcap` and `libwinpthread` compiled for `Mingw-w64`,
 - `p7zip`, used to compress the toolchain into an archive in `.7z` format.
+
+Additional options
+------------------
+
+- `--keep-build-folders` will cause all build folders to be left intact after the build, by default - if this option is
+not provided - all build folders are removed as soon as they are not needed anymore;
