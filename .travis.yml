@@ -1,7 +1,7 @@
 #
 # file: .travis.yml
 #
-# author: Copyright (C) 2016 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+# author: Copyright (C) 2016-2017 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -20,7 +20,7 @@ addons:
 # use minimal environment
 language: generic
 
-install:
+script:
     - "{ while true; do sleep 300; echo -n '.'; done } &"
     - "keepAlivePid=\"${!}\""
     - "./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \""
@@ -30,8 +30,6 @@ install:
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
     - "cd .."
-
-script:
     - "find ./arm-none-eabi-gcc-*/bin -executable -type f -exec {} --version \\;"
     - "curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz"
     - "tar -xf master.tar.gz"
