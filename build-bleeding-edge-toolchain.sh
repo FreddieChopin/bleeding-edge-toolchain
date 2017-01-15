@@ -472,6 +472,11 @@ copyNanoLibraries() {
 
 	mkdir -p "${destination}/arm-none-eabi/include/newlib-nano"
 	cp "${source}/arm-none-eabi/include/newlib.h" "${destination}/arm-none-eabi/include/newlib-nano"
+
+	if [ "${keepBuildFolders}" = "n" ]; then
+		echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
+		rm -rf ${top}/${buildNative}/${nanoLibraries}
+	fi
 }
 
 buildGdb() {
@@ -932,10 +937,6 @@ buildNewlib \
 buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
 
 copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
-if [ "${keepBuildFolders}" = "n" ]; then
-	echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
-	rm -rf ${top}/${buildNative}/${nanoLibraries}
-fi
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
 
