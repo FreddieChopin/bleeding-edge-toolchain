@@ -47,7 +47,7 @@ gdbArchive="${gdb}.tar.xz"
 gmp="gmp-${gmpVersion}"
 gmpArchive="${gmp}.tar.xz"
 isl="isl-${islVersion}"
-islArchive="${isl}.tar.xz"
+islArchive="${isl}.tar.bz2"
 libiconv="libiconv-${libiconvVersion}"
 libiconvArchive="${libiconv}.tar.gz"
 mpc="mpc-${mpcVersion}"
@@ -594,7 +594,7 @@ download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${ex
 download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
-download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
+download ${islArchive} ftp://gcc.gnu.org/pub/gcc/infrastructure/${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	download ${libiconvArchive} ftp://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}
 fi

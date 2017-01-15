@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Build folders are deleted as soon as they are not needed anymore.
+- Download isl from gcc's ftp, as it is more reliable.
 
 ### Fixed
 
