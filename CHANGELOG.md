@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Build folders are deleted as soon as they are not needed anymore.
 - Download isl from gcc's ftp, as it is more reliable.
+- Updated zlib to version 1.2.11.
 
 ### Fixed
 
