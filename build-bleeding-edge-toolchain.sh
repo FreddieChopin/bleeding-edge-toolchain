@@ -463,6 +463,7 @@ copyNanoLibraries() {
 		multilib="${multilib%%;*}"
 		sourceDirectory="${sourcePrefix}/${multilib}"
 		destinationDirectory="${destinationPrefix}/${multilib}"
+		mkdir -p "${destinationDirectory}"
 		cp "${sourceDirectory}/libc.a" "${destinationDirectory}/libc_nano.a"
 		cp "${sourceDirectory}/libg.a" "${destinationDirectory}/libg_nano.a"
 		cp "${sourceDirectory}/librdimon.a" "${destinationDirectory}/librdimon_nano.a"
@@ -923,6 +924,8 @@ buildNewlib \
 buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
 )
 
+copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+
 buildNewlib \
 	"" \
 	"-O2" \
@@ -934,8 +937,6 @@ buildNewlib \
 	"html pdf"
 
 buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
-
-copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
 
 buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
 
