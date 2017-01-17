@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed missing `newlib.h` when using `nano.specs`.
+- Fixed download location for zlib.
 
 [170107](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/161029...170107) - 2017-01-07
 -------------------------------------------------------------------------------------------------------
