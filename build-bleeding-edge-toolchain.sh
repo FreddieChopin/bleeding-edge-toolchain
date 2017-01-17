@@ -612,7 +612,6 @@ fi
 if [ "${enableWin64}" = "y" ]; then
 	download ${pythonArchiveWin64} https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin64}
 fi
-download ${zlibArchive} http://zlib.net/${zlibArchive}
 download ${zlibArchive} https://sourceforge.net/projects/libpng/files/zlib/${zlibVersion}/${zlibArchive}
 cd ${top}
 
