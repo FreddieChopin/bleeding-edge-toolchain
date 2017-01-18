@@ -21,7 +21,7 @@ addons:
 language: generic
 
 script:
-    - "{ while true; do sleep 300; echo -n '.'; done } &"
+    - "{ time=\"0\"; while true; do sleep 60; time=\"$((${time} + 1))\"; echo \"${time} minute(s)...\"; done } &"
     - "keepAlivePid=\"${!}\""
     - "./build-bleeding-edge-toolchain.sh > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \""
     - "kill \"${keepAlivePid}\""
