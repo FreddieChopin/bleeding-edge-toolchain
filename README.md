@@ -56,3 +56,5 @@ Additional options
 
 - `--keep-build-folders` will cause all build folders to be left intact after the build, by default - if this option is
 not provided - all build folders are removed as soon as they are not needed anymore;
+- `--skip-nano-libraries` will skip building of "nano" libraries, by default - if this option is not provided - "nano"
+libraries will be built, making the whole process significantly longer;

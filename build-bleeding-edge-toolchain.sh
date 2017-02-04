@@ -76,6 +76,7 @@ normal="$(tput sgr0)"
 enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
+skipNanoLibraries="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
@@ -87,9 +88,12 @@ while [ ${#} -gt 0 ]; do
 		--keep-build-folders)
 			keepBuildFolders="y"
 			;;
+		--skip-nano-libraries)
+			skipNanoLibraries="y"
+			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-nano-libraries]" >&2
 			exit 1
 	esac
 	shift
@@ -909,22 +913,24 @@ buildBinutils ${buildNative} ${installNative} "" "" "html pdf"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
-(
-export PATH="${top}/${installNative}/bin:${PATH-}"
+if [ "${skipNanoLibraries}" = "n" ]; then
+	(
+	export PATH="${top}/${installNative}/bin:${PATH-}"
 
-buildNewlib \
-	"-nano" \
-	"-Os" \
-	"--prefix=${top}/${buildNative}/${nanoLibraries} \
-		--enable-newlib-nano-malloc \
-		--enable-lite-exit \
-		--enable-newlib-nano-formatted-io" \
-	""
+	buildNewlib \
+		"-nano" \
+		"-Os" \
+		"--prefix=${top}/${buildNative}/${nanoLibraries} \
+			--enable-newlib-nano-malloc \
+			--enable-lite-exit \
+			--enable-newlib-nano-formatted-io" \
+		""
 
-buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
-)
+	buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
+	)
 
-copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+	copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+fi
 
 buildNewlib \
 	"" \

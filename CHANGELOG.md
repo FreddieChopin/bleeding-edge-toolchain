@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `--keep-build-folders` option, which will disable removal of unneeded build folders.
+- `--skip-nano-libraries` option, which will skip building of "nano" libraries, making the build much shorter.
 
 ### Changed
 
