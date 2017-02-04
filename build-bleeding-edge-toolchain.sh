@@ -89,7 +89,7 @@ while [ ${#} -gt 0 ]; do
 			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders]" >&2
 			exit 1
 	esac
 	shift
