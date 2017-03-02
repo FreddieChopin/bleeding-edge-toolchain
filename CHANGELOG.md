@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Build folders are deleted as soon as they are not needed anymore.
 - Download isl from gcc's ftp, as it is more reliable.
 - Updated gdb to version 7.12.1.
+- Updated libiconv to version 1.15.
 - Updated zlib to version 1.2.11.
 - Allow overriding `XZ_OPT` when calling the script.
 
