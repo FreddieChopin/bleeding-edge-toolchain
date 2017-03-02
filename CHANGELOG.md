@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Updated libiconv to version 1.15.
 - Updated zlib to version 1.2.11.
 - Allow overriding `XZ_OPT` when calling the script.
+- Both newlib and newlib-nano are built with the new `--enable-newlib-retargetable-locking` option.
 
 ### Fixed
 

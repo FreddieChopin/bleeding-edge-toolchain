@@ -370,6 +370,7 @@ buildNewlib() {
 		--disable-newlib-wide-orient \
 		--disable-newlib-unbuf-stream-opt \
 		--enable-newlib-global-atexit \
+		--enable-newlib-retargetable-locking \
 		--disable-nls"
 	echo "${bold}---------- ${newlib}${suffix} make${normal}"
 	make -j$(nproc)
