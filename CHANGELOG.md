@@ -3,6 +3,13 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170314...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Changed
+
+- Updated newlib to version 2.5.0.20170323.
+
 [170314](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170107...170314) - 2017-03-14
 -------------------------------------------------------------------------------------------------------
 
