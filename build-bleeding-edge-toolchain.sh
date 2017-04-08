@@ -14,7 +14,7 @@ set -u
 
 binutilsVersion="2.28"
 expatVersion="2.2.0"
-gccVersion="6.3.0"
+gccVersion="7-20170402"
 gdbVersion="7.12.1"
 gmpVersion="6.1.2"
 islVersion="0.16.1"
@@ -335,7 +335,7 @@ buildGcc() {
 		--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
 		--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
 		\"--with-pkgversion=${pkgversion}\" \
-		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r"
+		--with-multilib-list=rmprofile"
 	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
 	make -j$(nproc) all-gcc
 	echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
@@ -438,7 +438,7 @@ buildGccFinal() {
 		--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
 		--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
 		"--with-pkgversion=${pkgversion}" \
-		--with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r
+		--with-multilib-list=rmprofile
 	echo "${bold}---------- ${gcc}${suffix} make${normal}"
 	make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
 	echo "${bold}---------- ${gcc}${suffix} make install${normal}"
@@ -602,7 +602,7 @@ download() {
 }
 download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
-download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
+download ${gccArchive} ftp://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} ftp://gcc.gnu.org/pub/gcc/infrastructure/${islArchive}
@@ -655,247 +655,6 @@ if [ "${enableWin64}" = "y" ]; then
 fi
 echo "${bold}---------- Extracting ${zlibArchive}${normal}"
 tar -xf ${zlibArchive}
-cd ${top}
-
-echo "${bold}********** Patch${normal}"
-cd ${sources}/${gcc}
-patch -p1 << 'EOF'
-diff -ruN gcc-6.3.0-original/gcc/config/arm/t-baremetal gcc-6.3.0/gcc/config/arm/t-baremetal
---- gcc-6.3.0-original/gcc/config/arm/t-baremetal	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0/gcc/config/arm/t-baremetal	2016-12-21 13:45:16.570939667 +0100
-@@ -0,0 +1,143 @@
-+# A set of predefined MULTILIB which can be used for different ARM targets.
-+# Via the configure option --with-multilib-list, user can customize the
-+# final MULTILIB implementation.
-+
-+comma := ,
-+
-+with_multilib_list := $(subst $(comma), ,$(with_multilib_list))
-+
-+MULTILIB_OPTIONS   = mthumb/marm
-+MULTILIB_DIRNAMES  = thumb arm
-+MULTILIB_OPTIONS  += march=armv6s-m/march=armv7-m/march=armv7e-m/march=armv7/march=armv8-m.base/march=armv8-m.main
-+MULTILIB_DIRNAMES += armv6-m armv7-m armv7e-m armv7-ar armv8-m.base armv8-m.main
-+MULTILIB_OPTIONS  += mlittle-endian/mbig-endian
-+MULTILIB_DIRNAMES += le/be
-+MULTILIB_OPTIONS  += mfloat-abi=softfp/mfloat-abi=hard
-+MULTILIB_DIRNAMES += softfp fpu
-+MULTILIB_OPTIONS  += mfpu=fpv5-sp-d16/mfpu=fpv5-d16/mfpu=fpv4-sp-d16/mfpu=vfpv3-d16
-+MULTILIB_DIRNAMES += fpv5-sp-d16 fpv5-d16 fpv4-sp-d16 vfpv3-d16
-+
-+MULTILIB_MATCHES   = march?armv6s-m=mcpu?cortex-m0
-+MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m0.small-multiply
-+MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m0plus
-+MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m0plus.small-multiply
-+MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m1
-+MULTILIB_MATCHES  += march?armv6s-m=mcpu?cortex-m1.small-multiply
-+MULTILIB_MATCHES  += march?armv6s-m=march?armv6-m
-+MULTILIB_MATCHES  += march?armv7-m=mcpu?cortex-m3
-+MULTILIB_MATCHES  += march?armv7e-m=mcpu?cortex-m4
-+MULTILIB_MATCHES  += march?armv7e-m=mcpu?cortex-m7
-+MULTILIB_MATCHES  += march?armv7e-m=mcpu?marvell-pj4
-+MULTILIB_MATCHES  += march?armv7=march?armv7-r
-+MULTILIB_MATCHES  += march?armv7=march?armv7-a
-+MULTILIB_MATCHES  += march?armv7=march?armv8-a
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-r4
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-r4f
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-r5
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-r7
-+MULTILIB_MATCHES  += march?armv7=mcpu?generic-armv7-a
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a5
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a7
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a8
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a9
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a12
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a15
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a17
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a15.cortex-a7
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a17.cortex-a7
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a53
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a57
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a72
-+MULTILIB_MATCHES  += march?armv7=mcpu?exynos-m1
-+MULTILIB_MATCHES  += march?armv7=mcpu?xgene1
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a57.cortex-a53
-+MULTILIB_MATCHES  += march?armv7=mcpu?cortex-a72.cortex-a53
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv3
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv3-fp16
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv3-d16-fp16
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv3xd
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv3xd-fp16
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv4
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?vfpv4-d16
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?neon
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?neon-fp16
-+MULTILIB_MATCHES  += mfpu?vfpv3-d16=mfpu?neon-vfpv4
-+
-+MULTILIB_EXCEPTIONS =
-+MULTILIB_REUSE =
-+
-+MULTILIB_REQUIRED  = mthumb
-+MULTILIB_REQUIRED += marm
-+MULTILIB_REQUIRED += mfloat-abi=hard
-+
-+MULTILIB_OSDIRNAMES  = mthumb=!thumb
-+MULTILIB_OSDIRNAMES += marm=!arm
-+MULTILIB_OSDIRNAMES += mfloat-abi.hard=!fpu
-+
-+ifneq (,$(findstring armv6-m,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv6s-m
-+MULTILIB_OSDIRNAMES += mthumb/march.armv6s-m=!armv6-m
-+endif
-+
-+ifneq (,$(findstring armv8-m.base,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.base
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.base=!armv8-m.base
-+endif
-+
-+ifneq (,$(findstring armv7-m,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv7-m
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7-m=!armv7-m
-+endif
-+
-+ifneq (,$(findstring armv7e-m,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=softfp/mfpu=fpv4-sp-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=hard/mfpu=fpv4-sp-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=softfp/mfpu=fpv5-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=hard/mfpu=fpv5-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=softfp/mfpu=fpv5-sp-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7e-m/mfloat-abi=hard/mfpu=fpv5-sp-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m=!armv7e-m
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.hard/mfpu.fpv4-sp-d16=!armv7e-m/fpu
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.softfp/mfpu.fpv4-sp-d16=!armv7e-m/softfp
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.hard/mfpu.fpv5-d16=!armv7e-m/fpu/fpv5-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.softfp/mfpu.fpv5-d16=!armv7e-m/softfp/fpv5-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.hard/mfpu.fpv5-sp-d16=!armv7e-m/fpu/fpv5-sp-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7e-m/mfloat-abi.softfp/mfpu.fpv5-sp-d16=!armv7e-m/softfp/fpv5-sp-d16
-+endif
-+
-+ifneq (,$(findstring armv8-m.main,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.main
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.main/mfloat-abi=softfp/mfpu=fpv5-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.main/mfloat-abi=hard/mfpu=fpv5-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.main/mfloat-abi=softfp/mfpu=fpv5-sp-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv8-m.main/mfloat-abi=hard/mfpu=fpv5-sp-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.main=!armv8-m.main
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.main/mfloat-abi.hard/mfpu.fpv5-d16=!armv8-m.main/fpu/fpv5-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.main/mfloat-abi.softfp/mfpu.fpv5-d16=!armv8-m.main/softfp/fpv5-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.main/mfloat-abi.hard/mfpu.fpv5-sp-d16=!armv8-m.main/fpu/fpv5-sp-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv8-m.main/mfloat-abi.softfp/mfpu.fpv5-sp-d16=!armv8-m.main/softfp/fpv5-sp-d16
-+endif
-+
-+ifneq (,$(filter armv7 armv7-r armv7-a,$(with_multilib_list)))
-+MULTILIB_REQUIRED   += mthumb/march=armv7
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=softfp/mfpu=vfpv3-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mfloat-abi=hard/mfpu=vfpv3-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian/mfloat-abi=softfp/mfpu=vfpv3-d16
-+MULTILIB_REQUIRED   += mthumb/march=armv7/mbig-endian/mfloat-abi=hard/mfpu=vfpv3-d16
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7=!armv7-ar/le/thumb
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/le/thumb/fpu
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/le/thumb/softfp
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian=!armv7-ar/be/thumb
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16=!armv7-ar/be/thumb/fpu
-+MULTILIB_OSDIRNAMES += mthumb/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16=!armv7-ar/be/thumb/softfp
-+MULTILIB_REUSE      += mthumb/march.armv7=marm/march.armv7
-+MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.softfp/mfpu.vfpv3-d16
-+MULTILIB_REUSE      += mthumb/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mfloat-abi.hard/mfpu.vfpv3-d16
-+MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian=marm/march.armv7/mbig-endian
-+MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16=marm/march.armv7/mbig-endian/mfloat-abi.softfp/mfpu.vfpv3-d16
-+MULTILIB_REUSE      += mthumb/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16=marm/march.armv7/mbig-endian/mfloat-abi.hard/mfpu.vfpv3-d16
-+
-+MULTILIB_MATCHES    += mbig-endian=mbe
-+endif
-diff -ruN gcc-6.3.0-original/gcc/config.gcc gcc-6.3.0/gcc/config.gcc
---- gcc-6.3.0-original/gcc/config.gcc	2016-11-07 22:38:43.000000000 +0100
-+++ gcc-6.3.0/gcc/config.gcc	2016-12-21 13:45:16.570939667 +0100
-@@ -1119,7 +1119,7 @@
- 	case ${target} in
- 	arm*-*-eabi*)
- 	  tm_file="$tm_file newlib-stdint.h"
--	  tmake_file="${tmake_file} arm/t-bpabi"
-+	  tmake_file="${tmake_file} arm/t-bpabi arm/t-baremetal"
- 	  use_gcc_stdint=wrap
- 	  ;;
- 	arm*-*-rtems*)
-@@ -3803,42 +3803,6 @@
- 			exit 1
- 		fi
- 
--		# Add extra multilibs
--		if test "x$with_multilib_list" != x; then
--			arm_multilibs=`echo $with_multilib_list | sed -e 's/,/ /g'`
--			for arm_multilib in ${arm_multilibs}; do
--				case ${arm_multilib} in
--				aprofile)
--				# Note that arm/t-aprofile is a
--				# stand-alone make file fragment to be
--				# used only with itself.  We do not
--				# specifically use the
--				# TM_MULTILIB_OPTION framework because
--				# this shorthand is more
--				# pragmatic. Additionally it is only
--				# designed to work without any
--				# with-cpu, with-arch with-mode
--				# with-fpu or with-float options.
--					if test "x$with_arch" != x \
--					    || test "x$with_cpu" != x \
--					    || test "x$with_float" != x \
--					    || test "x$with_fpu" != x \
--					    || test "x$with_mode" != x ; then
--					    echo "Error: You cannot use any of --with-arch/cpu/fpu/float/mode with --with-multilib-list=aprofile" 1>&2
--					    exit 1
--					fi
--					tmake_file="${tmake_file} arm/t-aprofile"
--					break
--					;;
--				default)
--					;;
--				*)
--					echo "Error: --with-multilib-list=${with_multilib_list} not supported." 1>&2
--					exit 1
--					;;
--				esac
--			done
--		fi
- 		;;
- 
- 	fr*-*-*linux*)
-diff -ruN gcc-6.3.0-original/gcc/configure gcc-6.3.0/gcc/configure
---- gcc-6.3.0-original/gcc/configure	2016-12-11 17:23:04.000000000 +0100
-+++ gcc-6.3.0/gcc/configure	2016-12-21 13:45:16.574273078 +0100
-@@ -767,6 +767,7 @@
- LN_S
- AWK
- SET_MAKE
-+with_multilib_list
- accel_dir_suffix
- real_target_noncanonical
- enable_as_accelerator
-diff -ruN gcc-6.3.0-original/gcc/configure.ac gcc-6.3.0/gcc/configure.ac
---- gcc-6.3.0-original/gcc/configure.ac	2016-12-11 17:23:04.000000000 +0100
-+++ gcc-6.3.0/gcc/configure.ac	2016-12-21 13:45:16.574273078 +0100
-@@ -988,6 +988,7 @@
- [AS_HELP_STRING([--with-multilib-list], [select multilibs (AArch64, SH and x86-64 only)])],
- :,
- with_multilib_list=default)
-+AC_SUBST(with_multilib_list)
- 
- # -------------------------
- # Checks for other programs
-diff -ruN gcc-6.3.0-original/gcc/Makefile.in gcc-6.3.0/gcc/Makefile.in
---- gcc-6.3.0-original/gcc/Makefile.in	2016-11-22 18:33:07.000000000 +0100
-+++ gcc-6.3.0/gcc/Makefile.in	2016-12-21 13:45:16.574273078 +0100
-@@ -546,6 +546,7 @@
- lang_specs_files=@lang_specs_files@
- lang_tree_files=@lang_tree_files@
- target_cpu_default=@target_cpu_default@
-+with_multilib_list=@with_multilib_list@
- OBJC_BOEHM_GC=@objc_boehm_gc@
- extra_modes_file=@extra_modes_file@
- extra_opt_files=@extra_opt_files@
-EOF
 cd ${top}
 
 buildZlib ${buildNative} "" "" ""

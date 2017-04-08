@@ -8,7 +8,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated gcc to version 7-20170402 (experimental).
 - Updated newlib to version 2.5.0.20170323.
+
+### Removed
+
+- Big-endian version of multilib for *ARMv7-R* targets, as now multilib configuration is part of the mainline GCC.
 
 [170314](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170107...170314) - 2017-03-14
 -------------------------------------------------------------------------------------------------------
