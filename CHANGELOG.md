@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated gcc to version 7-20170402 (experimental).
+- Updated gcc to version 7-20170409 (experimental).
 - Updated newlib to version 2.5.0.20170323.
 
 ### Removed
