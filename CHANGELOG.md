@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 - Updated gcc to version 7-20170409 (experimental).
 - Updated newlib to version 2.5.0.20170323.
 
+### Fixed
+
+- Fixed Windows builds of GCC snapshots, which failed because GCC's version (e.g. *7.0.1*) doesn't match snapshot
+version (e.g. *7-20170409*).
+
 ### Removed
 
 - Big-endian version of multilib for *ARMv7-R* targets, as now multilib configuration is part of the mainline GCC.
