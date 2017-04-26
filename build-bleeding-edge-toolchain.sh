@@ -17,7 +17,7 @@ expatVersion="2.2.0"
 gccVersion="7-20170409"
 gdbVersion="7.12.1"
 gmpVersion="6.1.2"
-islVersion="0.16.1"
+islVersion="0.18"
 libiconvVersion="1.15"
 mpcVersion="1.0.3"
 mpfrVersion="3.1.5"
@@ -47,7 +47,7 @@ gdbArchive="${gdb}.tar.xz"
 gmp="gmp-${gmpVersion}"
 gmpArchive="${gmp}.tar.xz"
 isl="isl-${islVersion}"
-islArchive="${isl}.tar.bz2"
+islArchive="${isl}.tar.xz"
 libiconv="libiconv-${libiconvVersion}"
 libiconvArchive="${libiconv}.tar.gz"
 mpc="mpc-${mpcVersion}"
@@ -605,7 +605,7 @@ download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${ex
 download ${gccArchive} ftp://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
-download ${islArchive} ftp://gcc.gnu.org/pub/gcc/infrastructure/${islArchive}
+download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	download ${libiconvArchive} ftp://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}
 fi

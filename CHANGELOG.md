@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 
 - Updated gcc to version 7-20170409 (experimental).
 - Updated newlib to version 2.5.0.20170421.
+- Updated isl to version 0.18.
+- Download isl from project's website, as gcc's ftp doesn't have the most recent version.
 
 ### Fixed
 
