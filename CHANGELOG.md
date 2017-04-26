@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated newlib to version 2.5.0.20170323.
+- Updated newlib to version 2.5.0.20170421.
 
 [170314](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170107...170314) - 2017-03-14
 -------------------------------------------------------------------------------------------------------
