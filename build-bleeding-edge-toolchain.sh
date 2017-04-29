@@ -14,7 +14,7 @@ set -u
 
 binutilsVersion="2.28"
 expatVersion="2.2.0"
-gccVersion="7-20170427"
+gccVersion="7.0.1-RC-20170428"
 gdbVersion="7.12.1"
 gmpVersion="6.1.2"
 islVersion="0.18"
