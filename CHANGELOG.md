@@ -8,7 +8,19 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated gcc to version 7.1.0.
 - Updated newlib to version 2.5.0.20170421.
+- Updated isl to version 0.18.
+- Download isl from project's website, as gcc's ftp doesn't have the most recent version.
+
+### Fixed
+
+- Fixed Windows builds of GCC snapshots, which failed because GCC's version (e.g. *7.0.1*) doesn't match snapshot
+version (e.g. *7-20170409*).
+
+### Removed
+
+- Big-endian version of multilib for *ARMv7-R* targets, as now multilib configuration is part of the mainline GCC.
 
 [170314](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170107...170314) - 2017-03-14
 -------------------------------------------------------------------------------------------------------
