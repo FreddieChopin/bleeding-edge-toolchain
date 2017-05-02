@@ -546,7 +546,7 @@ postCleanup() {
 	compiler: ${CC-gcc} $(${CC-gcc} --version | grep -o '[0-9]\.[0-9]\.[0-9]')
 
 	Toolchain components:
-	- ${gcc} + multilib patch
+	- ${gcc}
 	- ${newlib}
 	- ${binutils}
 	- ${gdb}
