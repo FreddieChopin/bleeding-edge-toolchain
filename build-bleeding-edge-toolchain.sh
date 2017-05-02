@@ -507,6 +507,7 @@ buildGdb() {
 		--disable-sim \
 		--with-libexpat \
 		--with-lzma=no \
+		--with-guile=no \
 		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
 		--with-system-zlib \
 		--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \

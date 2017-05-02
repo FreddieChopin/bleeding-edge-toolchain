@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Updated newlib to version 2.5.0.20170421.
 - Updated isl to version 0.18.
 - Download isl from project's website, as gcc's ftp doesn't have the most recent version.
+- Explicitly disabled guile support in gdb, as recent versions of these projects are incompatible (see
+[bug 21104](https://sourceware.org/bugzilla/show_bug.cgi?id=21104)).
 
 ### Fixed
 
