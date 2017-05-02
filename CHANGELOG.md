@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated gcc to version 7.0.1-RC-20170428 (prerelease).
+- Updated gcc to version 7.1.0.
 - Updated newlib to version 2.5.0.20170421.
 - Updated isl to version 0.18.
 - Download isl from project's website, as gcc's ftp doesn't have the most recent version.

@@ -14,7 +14,7 @@ set -u
 
 binutilsVersion="2.28"
 expatVersion="2.2.0"
-gccVersion="7.0.1-RC-20170428"
+gccVersion="7.1.0"
 gdbVersion="7.12.1"
 gmpVersion="6.1.2"
 islVersion="0.18"
@@ -602,7 +602,7 @@ download() {
 }
 download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
-download ${gccArchive} ftp://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}
+download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
 download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
