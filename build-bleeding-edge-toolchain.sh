@@ -108,6 +108,11 @@ if [ ${buildDocumentation} = "y" ]; then
 	documentationTypes="html pdf"
 fi
 
+BASE_CPPFLAGS="-pipe"
+BASE_LDFLAGS=
+BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
+BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
+
 buildZlib() {
 	(
 	local buildFolder="${1}"
@@ -117,6 +122,8 @@ buildZlib() {
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
 	cp -R ${sources}/${zlib} ${buildFolder}
 	cd ${buildFolder}/${zlib}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
 	./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
@@ -139,6 +146,8 @@ buildGmp() {
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
 	mkdir -p ${buildFolder}/${gmp}
 	cd ${buildFolder}/${gmp}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
 	eval "${top}/${sources}/${gmp}/configure \
 		${configureOptions} \
@@ -166,6 +175,8 @@ buildMpfr() {
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
 	mkdir -p ${buildFolder}/${mpfr}
 	cd ${buildFolder}/${mpfr}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
 	eval "${top}/${sources}/${mpfr}/configure \
 		${configureOptions} \
@@ -193,6 +204,8 @@ buildMpc() {
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
 	mkdir -p ${buildFolder}/${mpc}
 	cd ${buildFolder}/${mpc}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
 	eval "${top}/${sources}/${mpc}/configure \
 		${configureOptions} \
@@ -221,6 +234,8 @@ buildIsl() {
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
 	mkdir -p ${buildFolder}/${isl}
 	cd ${buildFolder}/${isl}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
 	eval "${top}/${sources}/${isl}/configure \
 		${configureOptions} \
@@ -248,6 +263,8 @@ buildExpat() {
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
 	mkdir -p ${buildFolder}/${expat}
 	cd ${buildFolder}/${expat}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
 	eval "${top}/${sources}/${expat}/configure \
 		${configureOptions} \
@@ -276,8 +293,8 @@ buildBinutils() {
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	mkdir -p ${buildFolder}/${binutils}
 	cd ${buildFolder}/${binutils}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
 	eval "${top}/${sources}/${binutils}/configure \
 		${configureOptions} \
@@ -315,8 +332,8 @@ buildGcc() {
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	mkdir -p ${buildFolder}/${gcc}
 	cd ${buildFolder}/${gcc}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 	eval "${top}/${sources}/${gcc}/configure \
 		${configureOptions} \
@@ -366,8 +383,10 @@ buildNewlib() {
 	echo "${bold}********** ${newlib}${suffix}${normal}"
 	mkdir -p ${buildNative}/${newlib}${suffix}
 	cd ${buildNative}/${newlib}${suffix}
+	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
-	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections ${CFLAGS_FOR_TARGET-}"
+	export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${newlib}${suffix} configure${normal}"
 	eval "${top}/${sources}/${newlib}/configure \
 		${configureOptions} \
@@ -412,10 +431,10 @@ buildGccFinal() {
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	mkdir -p ${buildNative}/${gcc}${suffix}
 	cd ${buildNative}/${gcc}${suffix}
-	export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
-	export CFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CFLAGS_FOR_TARGET-}"
-	export CXXFLAGS_FOR_TARGET="-g ${optimization} -ffunction-sections -fdata-sections -fno-exceptions ${CXXFLAGS_FOR_TARGET-}"
+	export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+	export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
+	export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
 	${top}/${sources}/${gcc}/configure \
 		--target=${target} \
@@ -504,8 +523,8 @@ buildGdb() {
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	mkdir -p ${buildFolder}/${gdb}
 	cd ${buildFolder}/${gdb}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
+	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 	eval "${top}/${sources}/${gdb}/configure \
 		${configureOptions} \
