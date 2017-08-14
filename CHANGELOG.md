@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 --------------------------------------------------------------------------------------------
 
 - Updated binutils to version 2.29.
+- Updated expat to version 2.2.3.
 
 [170503](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170314...170503) - 2017-05-03
 -------------------------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ set -e
 set -u
 
 binutilsVersion="2.29"
-expatVersion="2.2.0"
+expatVersion="2.2.3"
 gccVersion="7.1.0"
 gdbVersion="7.12.1"
 gmpVersion="6.1.2"
