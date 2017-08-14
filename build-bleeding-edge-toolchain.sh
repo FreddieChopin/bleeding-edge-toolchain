@@ -21,7 +21,7 @@ islVersion="0.18"
 libiconvVersion="1.15"
 mpcVersion="1.0.3"
 mpfrVersion="3.1.5"
-newlibVersion="2.5.0.20170421"
+newlibVersion="2.5.0.20170623"
 pythonVersion="2.7.13"
 zlibVersion="1.2.11"
 
