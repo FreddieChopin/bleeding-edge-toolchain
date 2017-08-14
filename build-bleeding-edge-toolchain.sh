@@ -12,7 +12,7 @@
 set -e
 set -u
 
-binutilsVersion="2.28"
+binutilsVersion="2.29"
 expatVersion="2.2.0"
 gccVersion="7.1.0"
 gdbVersion="7.12.1"
@@ -37,7 +37,7 @@ prerequisites="prerequisites"
 sources="sources"
 
 binutils="binutils-${binutilsVersion}"
-binutilsArchive="${binutils}.tar.bz2"
+binutilsArchive="${binutils}.tar.xz"
 expat="expat-${expatVersion}"
 expatArchive="${expat}.tar.bz2"
 gcc="gcc-${gccVersion}"
