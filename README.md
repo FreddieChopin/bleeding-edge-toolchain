@@ -1,4 +1,4 @@
-bleeding-edge-toolchain [![Build Status](https://travis-ci.org/FreddieChopin/bleeding-edge-toolchain.svg?branch=master)](https://travis-ci.org/FreddieChopin/bleeding-edge-toolchain)
+bleeding-edge-toolchain
 =======================
 
 All-in-one script to build bleeding-edge-toolchain for ARM microcontrollers.
