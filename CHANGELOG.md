@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 --------------------------------------------------------------------------------------------
 
 - Updated gcc to version 7.2.0.
-- Updated newlib to version 2.5.0.20170623.
+- Updated newlib to version 2.5.0.20170818.
 - Updated binutils to version 2.29.
 - Updated gdb to version 8.0.
 - Updated expat to version 2.2.4.
