@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - Updated newlib to version 2.5.0.20170623.
 - Updated binutils to version 2.29.
 - Updated gdb to version 8.0.
-- Updated expat to version 2.2.3.
+- Updated expat to version 2.2.4.
 - Use *trusty* for Travis CI, as new gdb requires more recent version of gcc.
 
 [170503](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170314...170503) - 2017-05-03
