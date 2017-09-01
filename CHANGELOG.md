@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170503...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Changed
+
 - Updated gcc to version 7.2.0.
 - Updated newlib to version 2.5.0.20170818.
 - Updated binutils to version 2.29.
