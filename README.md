@@ -23,12 +23,12 @@ the tools listed below should be enough to successfully execute this script:
 - `m4`, which is required to execute `configure` scripts,
 - `curl`, used to download the source tarballs of toolchain components,
 - `tar`, used to extract source tarballs and to compress compiled toolchain,
-- `texinfo` and `texlive`, used to generate documentation,
+- `texinfo` and `texlive`, (optional) used to generate documentation,
 - `python`, required by GDB, may be either version 2 or 3, but should contain headers and libraries, so you may need
 some kind of "development" and/or "library" package, depending on your system.
 
 Exact set of required packages will be different on each system, but on a fresh Ubuntu installation you are going to
-need just these packages: `curl`, `m4`, `python2.7-dev`, `texinfo` and `texlive`.
+need just these packages: `curl`, `m4`, `python2.7-dev` and optionally: `texinfo` and `texlive`.
 
 Toolchain for Windows
 ---------------------
@@ -54,5 +54,6 @@ Additional options
 
 - `--keep-build-folders` will cause all build folders to be left intact after the build, by default - if this option is
 not provided - all build folders are removed as soon as they are not needed anymore;
+- `--skip-documentation` will skip building html/pdf documentation in the subprojects, by default - if this option is not provided - the documentation is built, requiring texlive/texinfo;
 - `--skip-nano-libraries` will skip building of "nano" libraries, by default - if this option is not provided - "nano"
 libraries will be built, making the whole process significantly longer;
