@@ -11,20 +11,13 @@
 dist: trusty
 sudo: false
 
-# texinfo is needed to build documentation
-addons:
-    apt:
-        packages:
-            - texinfo
-            - texlive
-
 # use minimal environment
 language: generic
 
 script:
     - "{ time=\"0\"; while true; do sleep 60; time=\"$((${time} + 1))\"; echo \"${time} minute(s)...\"; done } &"
     - "keepAlivePid=\"${!}\""
-    - "XZ_OPT=\"-0 -T 0 -v\" timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \""
+    - "XZ_OPT=\"-0 -T 0 -v\" timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-documentation --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep \"[*-]\\{10,10\\} \""
     - "kill \"${keepAlivePid}\""
     - "wait \"${keepAlivePid}\" || true"
     - "tar -xf *.tar.xz"
