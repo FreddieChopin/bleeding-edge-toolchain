@@ -77,6 +77,7 @@ enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
+buildDocumentation="y"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
@@ -88,16 +89,24 @@ while [ ${#} -gt 0 ]; do
 		--keep-build-folders)
 			keepBuildFolders="y"
 			;;
+		--skip-documentation)
+			buildDocumentation="n"
+			;;
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
 			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-nano-libraries]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries]" >&2
 			exit 1
 	esac
 	shift
 done
+
+documentationTypes=""
+if [ ${buildDocumentation} = "y" ]; then
+	documentationTypes="html pdf"
+fi
 
 buildZlib() {
 	(
@@ -670,7 +679,7 @@ buildIsl ${buildNative} "" ""
 
 buildExpat ${buildNative} "" ""
 
-buildBinutils ${buildNative} ${installNative} "" "" "html pdf"
+buildBinutils ${buildNative} ${installNative} "" "" "${documentationTypes}"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
@@ -701,15 +710,17 @@ buildNewlib \
 		--enable-newlib-io-c99-formats \
 		--enable-newlib-io-long-long \
 		--disable-newlib-atexit-dynamic-alloc" \
-	"html pdf"
+	"${documentationTypes}"
 
-buildGccFinal "-final" "-O2" "${installNative}" "html pdf"
+buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "html pdf"
+buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "${documentationTypes}"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true
-find ${installNative}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installNative}/share/doc \;
+if [ ${buildDocumentation} = "y" ]; then
+	find ${installNative}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installNative}/share/doc \;
+fi
 
 echo "${bold}********** Package${normal}"
 rm -rf ${package}
@@ -751,7 +762,9 @@ buildMingw() {
 	mkdir -p ${installFolder}/lib
 	cp -R ${installNative}/lib/gcc ${installFolder}/lib/gcc
 	mkdir -p ${installFolder}/share
-	cp -R ${installNative}/share/doc ${installFolder}/share/doc
+	if [ ${buildDocumentation} = "y" ]; then
+		cp -R ${installNative}/share/doc ${installFolder}/share/doc
+	fi
 	cp -R ${installNative}/share/gcc-* ${installFolder}/share/
 
 	(
