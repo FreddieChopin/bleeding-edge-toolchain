@@ -610,18 +610,18 @@ download() {
 		curl -L -o ${1} -C - ${2}
 	fi
 }
-download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
+download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
-download ${gccArchive} ftp://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
-download ${gdbArchive} ftp://ftp.gnu.org/gnu/gdb/${gdbArchive}
-download ${gmpArchive} ftp://ftp.gnu.org/gnu/gmp/${gmpArchive}
+download ${gccArchive} http://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
+download ${gdbArchive} http://ftp.gnu.org/gnu/gdb/${gdbArchive}
+download ${gmpArchive} http://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
-	download ${libiconvArchive} ftp://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}
+	download ${libiconvArchive} http://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}
 fi
-download ${mpcArchive} ftp://ftp.gnu.org/gnu/mpc/${mpcArchive}
-download ${mpfrArchive} ftp://ftp.gnu.org/gnu/mpfr/${mpfrArchive}
-download ${newlibArchive} ftp://sourceware.org/pub/newlib/${newlibArchive}
+download ${mpcArchive} http://ftp.gnu.org/gnu/mpc/${mpcArchive}
+download ${mpfrArchive} http://ftp.gnu.org/gnu/mpfr/${mpfrArchive}
+download ${newlibArchive} http://sourceware.org/pub/newlib/${newlibArchive}
 if [ "${enableWin32}" = "y" ]; then
 	download ${pythonArchiveWin32} https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin32}
 fi
