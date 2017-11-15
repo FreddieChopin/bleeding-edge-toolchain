@@ -605,9 +605,18 @@ echo "${bold}********** Download${normal}"
 mkdir -p ${sources}
 cd ${sources}
 download() {
-	if [ ! -e ${1} ]; then
-		echo "${bold}---------- Downloading ${1}${normal}"
-		curl -L -o ${1} -C - ${2}
+	echo "${bold}---------- Downloading ${1}${normal}"
+	RET=0
+	curl -L -o ${1} -C - ${2} || RET=$?
+	if [ $RET -eq 0 ]
+	then
+		true
+	elif [ $RET -ne 33 ]
+	then
+		echo $RET
+		exit $RET
+	else
+		echo This happens if the file is complete, continuing
 	fi
 }
 download ${binutilsArchive} ftp://ftp.gnu.org/gnu/binutils/${binutilsArchive}
