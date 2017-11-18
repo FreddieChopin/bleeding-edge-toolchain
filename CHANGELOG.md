@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 - `--skip-documentation` option, which will disable building html/pdf documentation in the subprojects.
 
+### Changed
+
+- Use HTTP for all downloads, since FTP may cause problems in some network configurations.
+
 [170901](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170503...170901) - 2017-09-01
 -------------------------------------------------------------------------------------------------------
 
