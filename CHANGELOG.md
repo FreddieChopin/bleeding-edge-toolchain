@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 
 - Use HTTP for all downloads, since FTP may cause problems in some network configurations.
 
+### Fixed
+
+- Always try to resume downloads. This fixes the problem which occured when the file is downloaded only partially.
+
 [170901](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170503...170901) - 2017-09-01
 -------------------------------------------------------------------------------------------------------
 
