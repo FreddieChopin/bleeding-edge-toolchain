@@ -289,9 +289,11 @@ buildBinutils() {
 		--enable-multilib \
 		--enable-plugins \
 		--with-system-zlib \
+		--with-build-libsubdir=${top}/${buildFolder}/${prerequisites} \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
-	make -j$(nproc)
+	make -j$(nproc) configure-host
+	make -j$(nproc) LDFLAGS=-all-static
 	echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
 	make install
 	for documentation in ${documentations}; do
@@ -343,6 +345,8 @@ buildGcc() {
 		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
 		--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
 		--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
+		LDFLAGS=\"-static -lstdc++ -lm\" \
+		--with-host-libstdcxx=\"-static-libgcc -Wl,-Bstatic,-lstdc++ -lm\" \
 		\"--with-pkgversion=${pkgversion}\" \
 		--with-multilib-list=rmprofile"
 	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
@@ -446,6 +450,8 @@ buildGccFinal() {
 		--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
 		--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
 		--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
+		LDFLAGS="-static -lstdc++ -lm" \
+		--with-host-libstdcxx="-static-libgcc -Wl,-Bstatic,-lstdc++ -lm" \
 		"--with-pkgversion=${pkgversion}" \
 		--with-multilib-list=rmprofile
 	echo "${bold}---------- ${gcc}${suffix} make${normal}"
@@ -505,7 +511,7 @@ buildGdb() {
 	mkdir -p ${buildFolder}/${gdb}
 	cd ${buildFolder}/${gdb}
 	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-}"
+	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${LDFLAGS-} -static"
 	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 	eval "${top}/${sources}/${gdb}/configure \
 		${configureOptions} \
