@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Use HTTP for all downloads, since FTP may cause problems in some network configurations.
+- Updated binutils to version 2.29.1.
 
 ### Fixed
 
