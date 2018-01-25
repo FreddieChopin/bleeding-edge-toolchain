@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Use HTTP for all downloads, since FTP may cause problems in some network configurations.
 - Updated binutils to version 2.29.1.
+- Updated expat to version 2.2.5.
 
 ### Fixed
 
