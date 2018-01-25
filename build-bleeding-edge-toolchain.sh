@@ -765,19 +765,21 @@ index 564f291..6467e54 100644
 EOF
 cd ${top}
 
+hostTriplet=$(${sources}/${newlib}/config.guess)
+
 buildZlib ${buildNative} "" "" ""
 
-buildGmp ${buildNative} "" ""
+buildGmp ${buildNative} "" "--host=${hostTriplet}"
 
-buildMpfr ${buildNative} "" ""
+buildMpfr ${buildNative} "" "--host=${hostTriplet}"
 
-buildMpc ${buildNative} "" ""
+buildMpc ${buildNative} "" "--host=${hostTriplet}"
 
-buildIsl ${buildNative} "" ""
+buildIsl ${buildNative} "" "--host=${hostTriplet}"
 
-buildExpat ${buildNative} "" ""
+buildExpat ${buildNative} "" "--host=${hostTriplet}"
 
-buildBinutils ${buildNative} ${installNative} "" "" "${documentationTypes}"
+buildBinutils ${buildNative} ${installNative} "" "--host=${hostTriplet}" "${documentationTypes}"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
@@ -812,7 +814,7 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-buildGdb ${buildNative} ${installNative} "" "--with-python=yes" "${documentationTypes}"
+buildGdb ${buildNative} ${installNative} "" "--host=${hostTriplet} --with-python=yes" "${documentationTypes}"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true

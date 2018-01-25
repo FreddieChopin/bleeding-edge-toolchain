@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Always try to resume downloads. This fixes the problem which occured when the file is downloaded only partially.
+- For native build, compile libraries (especially gmp) and other components for exactly the same host as detected by
+gcc's `config.guess`.
 
 [170901](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170503...170901) - 2017-09-01
 -------------------------------------------------------------------------------------------------------
