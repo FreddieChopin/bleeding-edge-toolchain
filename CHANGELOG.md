@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Updated expat to version 2.2.5.
 - Updated mpc to version 1.1.0.
 - Updated mpfr to version 4.0.0.
+- Updated python to version 2.7.14.
 
 ### Fixed
 
