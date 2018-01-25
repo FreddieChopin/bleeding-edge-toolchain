@@ -936,7 +936,7 @@ buildMingw() {
 			--with-headers=yes \
 			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
 
-	cat > ${buildFolder}/python.sh <<- END
+	cat > ${buildFolder}/python.sh <<- EOF
 	#!/bin/sh
 	shift
 	while [ \${#} -gt 0 ]; do
@@ -953,7 +953,7 @@ buildMingw() {
 		esac
 		shift
 	done
-	END
+	EOF
 	chmod +x ${buildFolder}/python.sh
 
 	buildGdb \
