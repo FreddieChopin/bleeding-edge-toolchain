@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - Updated binutils to version 2.29.1.
 - Updated gdb to version 8.0.1.
 - Updated expat to version 2.2.5.
+- Updated mpc to version 1.1.0.
+- Updated mpfr to version 4.0.0.
 
 ### Fixed
 
