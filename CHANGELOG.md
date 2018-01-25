@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Use HTTP for all downloads, since FTP may cause problems in some network configurations.
 - Updated gcc to version 7.3.0.
 - Updated binutils to version 2.29.1.
+- Updated gdb to version 8.0.1.
 - Updated expat to version 2.2.5.
 
 ### Fixed
