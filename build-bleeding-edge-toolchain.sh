@@ -677,17 +677,17 @@ hostTriplet=$(${sources}/${newlib}/config.guess)
 
 buildZlib ${buildNative} "" "" ""
 
-buildGmp ${buildNative} "" "--host=${hostTriplet}"
+buildGmp ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildMpfr ${buildNative} "" "--host=${hostTriplet}"
+buildMpfr ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildMpc ${buildNative} "" "--host=${hostTriplet}"
+buildMpc ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildIsl ${buildNative} "" "--host=${hostTriplet}"
+buildIsl ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildExpat ${buildNative} "" "--host=${hostTriplet}"
+buildExpat ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildBinutils ${buildNative} ${installNative} "" "--host=${hostTriplet}" "${documentationTypes}"
+buildBinutils ${buildNative} ${installNative} "" "--build=${hostTriplet} --host=${hostTriplet}" "${documentationTypes}"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
@@ -722,7 +722,12 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-buildGdb ${buildNative} ${installNative} "" "--host=${hostTriplet} --with-python=yes" "${documentationTypes}"
+buildGdb \
+	${buildNative} \
+	${installNative} \
+	"" \
+	"--build=${hostTriplet} --host=${hostTriplet} --with-python=yes" \
+	"${documentationTypes}"
 
 postCleanup ${installNative} "" "$(uname -mo)" ""
 find ${installNative} -type f -executable -exec strip {} \; || true
@@ -781,6 +786,7 @@ buildMingw() {
 		cd ${buildFolder}/${libiconv}
 		echo "${bold}---------- ${bannerPrefix}${libiconv} configure${normal}"
 		${top}/${sources}/${libiconv}/configure \
+			--build=${hostTriplet} \
 			--host=${triplet} \
 			--prefix=${top}/${buildFolder}/${prerequisites}/${libiconv} \
 			--disable-shared \
@@ -808,40 +814,40 @@ buildMingw() {
 	buildGmp \
 		${buildFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}"
+		"--build=${hostTriplet} --host=${triplet}"
 
 	buildMpfr \
 		${buildFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}"
+		"--build=${hostTriplet} --host=${triplet}"
 
 	buildMpc \
 		${buildFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}"
+		"--build=${hostTriplet} --host=${triplet}"
 
 	buildIsl \
 		${buildFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}"
+		"--build=${hostTriplet} --host=${triplet}"
 
 	buildExpat \
 		${buildFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}"
+		"--build=${hostTriplet} --host=${triplet}"
 
 	buildBinutils \
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
-		"--host=${triplet}" \
+		"--build=${hostTriplet} --host=${triplet}" \
 		""
 
 	buildGcc \
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
-		"--host=${triplet} \
+		"--build=${hostTriplet} --host=${triplet} \
 			--enable-languages=c,c++ \
 			--with-headers=yes \
 			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
@@ -870,7 +876,7 @@ buildMingw() {
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
-		"--host=${triplet} \
+		"--build=${hostTriplet} --host=${triplet} \
 			--with-python=${top}/${buildFolder}/python.sh \
 			--program-prefix=${target}- \
 			--program-suffix=-py \
@@ -884,7 +890,7 @@ buildMingw() {
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
-		"--host=${triplet} \
+		"--build=${hostTriplet} --host=${triplet} \
 			--with-python=no \
 			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}" \
 		""
