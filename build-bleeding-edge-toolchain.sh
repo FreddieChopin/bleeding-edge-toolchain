@@ -15,7 +15,7 @@ set -u
 binutilsVersion="2.30"
 expatVersion="2.2.5"
 gccVersion="7.3.0"
-gdbVersion="8.0.1"
+gdbVersion="8.1"
 gmpVersion="6.1.2"
 islVersion="0.19"
 libiconvVersion="1.15"
@@ -514,12 +514,14 @@ buildGdb() {
 		--docdir=${top}/${installFolder}/share/doc \
 		--disable-nls \
 		--disable-sim \
-		--with-libexpat \
 		--with-lzma=no \
 		--with-guile=no \
 		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
 		--with-system-zlib \
+		--with-expat=yes \
 		--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+		--with-mpfr=yes \
+		--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
 		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
