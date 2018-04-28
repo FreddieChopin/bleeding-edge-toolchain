@@ -21,7 +21,7 @@ islVersion="0.19"
 libiconvVersion="1.15"
 mpcVersion="1.1.0"
 mpfrVersion="4.0.1"
-newlibVersion="3.0.0"
+newlibVersion="3.0.0.20180226"
 pythonVersion="2.7.14"
 zlibVersion="1.2.11"
 
@@ -669,100 +669,6 @@ if [ "${enableWin64}" = "y" ]; then
 fi
 echo "${bold}---------- Extracting ${zlibArchive}${normal}"
 tar -xf ${zlibArchive}
-cd ${top}
-
-echo "${bold}********** Patch${normal}"
-cd ${sources}/${newlib}
-# https://sourceware.org/ml/newlib/2018/msg00025.html
-patch -p1 << \EOF
-diff -ruN newlib-3.0.0-original/newlib/libc/stdlib/exit.c newlib-3.0.0/newlib/libc/stdlib/exit.c
---- newlib-3.0.0-original/newlib/libc/stdlib/exit.c	2018-01-18 19:07:45.000000000 +0100
-+++ newlib-3.0.0/newlib/libc/stdlib/exit.c	2018-01-25 16:01:16.363259397 +0100
-@@ -54,7 +54,7 @@
- {
- #ifdef _LITE_EXIT
-   /* Refer to comments in __atexit.c for more details of lite exit.  */
--  void __call_exitprocs (int, void *)) __attribute__((weak);
-+  void __call_exitprocs (int, void *) __attribute__((weak));
-   if (__call_exitprocs)
- #endif
-     __call_exitprocs (code, NULL);
-EOF
-# revert https://sourceware.org/ml/newlib/2017/msg01302.html
-patch -p1 -R << \EOF
-diff --git a/newlib/libc/stdio/nano-vfprintf.c b/newlib/libc/stdio/nano-vfprintf.c
-index e6604e7..663eb71 100644
---- a/newlib/libc/stdio/nano-vfprintf.c
-+++ b/newlib/libc/stdio/nano-vfprintf.c
-@@ -168,6 +168,16 @@ static char *rcsid = "$Id$";
- #include "vfieeefp.h"
- #include "nano-vfprintf_local.h"
-
-+
-+/* GCC PR 14577 at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=14557 */
-+#if __STDC_VERSION__ >= 201112L
-+#define va_ptr(ap) _Generic(&(ap), va_list *: &(ap), default: (va_list *)(ap))
-+#elif __GNUC__ >= 4
-+#define va_ptr(ap) __builtin_choose_expr(__builtin_types_compatible_p(__typeof__(&(ap)), va_list *), &(ap), (va_list *)(ap))
-+#else
-+#define va_ptr(ap) (sizeof(ap) == sizeof(va_list) ? (va_list *)&(ap) : (va_list *)(ap))
-+#endif
-+
- /* The __ssputs_r function is shared between all versions of vfprintf
-    and vfwprintf.  */
- #ifdef STRING_ONLY
-@@ -633,12 +643,12 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
- 	    }
- 	  else
- 	    {
--	      n = _printf_float (data, &prt_data, fp, pfunc, &ap);
-+	      n = _printf_float (data, &prt_data, fp, pfunc, va_ptr(ap));
- 	    }
- 	}
-       else
- #endif
--	n = _printf_i (data, &prt_data, fp, pfunc, &ap);
-+	n = _printf_i (data, &prt_data, fp, pfunc, va_ptr(ap));
-
-       if (n == -1)
- 	goto error;
-diff --git a/newlib/libc/stdio/nano-vfscanf.c b/newlib/libc/stdio/nano-vfscanf.c
-index 564f291..6467e54 100644
---- a/newlib/libc/stdio/nano-vfscanf.c
-+++ b/newlib/libc/stdio/nano-vfscanf.c
-@@ -119,6 +119,15 @@ Supporting OS subroutines required:
- #include "../stdlib/local.h"
- #include "nano-vfscanf_local.h"
-
-+/* GCC PR 14577 at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=14557 */
-+#if __STDC_VERSION__ >= 201112L
-+#define va_ptr(ap) _Generic(&(ap), va_list *: &(ap), default: (va_list *)(ap))
-+#elif __GNUC__ >= 4
-+#define va_ptr(ap) __builtin_choose_expr(__builtin_types_compatible_p(__typeof__(&(ap)), va_list *), &(ap), (va_list *)(ap))
-+#else
-+#define va_ptr(ap) (sizeof(ap) == sizeof(va_list) ? (va_list *)&(ap) : (va_list *)(ap))
-+#endif
-+
- #define VFSCANF vfscanf
- #define _VFSCANF_R _vfscanf_r
- #define __SVFSCANF __svfscanf
-@@ -424,12 +433,12 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
- 	}
-       ret = 0;
-       if (scan_data.code < CT_INT)
--	ret = _scanf_chars (rptr, &scan_data, fp, &ap);
-+	ret = _scanf_chars (rptr, &scan_data, fp, va_ptr(ap));
-       else if (scan_data.code < CT_FLOAT)
--	ret = _scanf_i (rptr, &scan_data, fp, &ap);
-+	ret = _scanf_i (rptr, &scan_data, fp, va_ptr(ap));
- #ifdef FLOATING_POINT
-       else if (_scanf_float)
--	ret = _scanf_float (rptr, &scan_data, fp, &ap);
-+	ret = _scanf_float (rptr, &scan_data, fp, va_ptr(ap));
- #endif
-
-       if (ret == MATCH_FAILURE)
-EOF
 cd ${top}
 
 hostTriplet=$(${sources}/${newlib}/config.guess)
