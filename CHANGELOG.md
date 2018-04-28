@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated binutils to version 2.30.
+- Updated isl to version 0.19.
 
 [180127](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/170901...180127) - 2018-01-27
 -------------------------------------------------------------------------------------------------------
