@@ -637,7 +637,11 @@ download() {
 }
 download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
 download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
-download ${gccArchive} http://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
+if [ ${gccVersion#*-} = ${gccVersion} ]; then
+	download ${gccArchive} http://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
+else
+	download ${gccArchive} https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}
+fi
 download ${gdbArchive} http://ftp.gnu.org/gnu/gdb/${gdbArchive}
 download ${gmpArchive} http://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}

@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180127...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Added
+
+- Support for building gcc snapshots (including release candidates).
+
 ### Changed
 
 - Updated binutils to version 2.30.
