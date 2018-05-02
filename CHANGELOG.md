@@ -3,8 +3,8 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180127...HEAD)
---------------------------------------------------------------------------------------------
+[180502](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180127...180502) - 2018-05-02
+-------------------------------------------------------------------------------------------------------
 
 ### Added
 
