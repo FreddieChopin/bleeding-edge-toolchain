@@ -12,7 +12,7 @@
 set -e
 set -u
 
-binutilsVersion="2.30"
+binutilsVersion="2.31.1"
 expatVersion="2.2.5"
 gccVersion="8.2.0-RC-20180719"
 gdbVersion="8.1"
