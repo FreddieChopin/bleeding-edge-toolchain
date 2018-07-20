@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Updated gcc to version 8.2.0-RC-20180719.
 - Updated binutils to version 2.31.1.
 - Updated python to version 2.7.15.
+- Updated newlib to version 3.0.0.20180720.
 
 [180502](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180127...180502) - 2018-05-02
 -------------------------------------------------------------------------------------------------------
