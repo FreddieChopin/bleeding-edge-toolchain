@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated newlib to version 3.0.0.20180802.
+- Use [`--enable-newlib-global-stdio-streams`](https://sourceware.org/ml/newlib/2017/msg00516.html) option for both
+newlib and newlib-nano.
 
 [180726](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180502...180726) - 2018-07-26
 -------------------------------------------------------------------------------------------------------
