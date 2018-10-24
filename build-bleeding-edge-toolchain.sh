@@ -71,8 +71,12 @@ packageArchiveNative="${package}.tar.xz"
 packageArchiveWin32="${package}-win32.7z"
 packageArchiveWin64="${package}-win64.7z"
 
-bold="$(tput bold)"
-normal="$(tput sgr0)"
+bold=
+normal=
+if [ -n "${TERM-}" ]; then
+	bold="$(tput bold)"
+	normal="$(tput sgr0)"
+fi
 uname="$(uname)"
 
 if [ "${uname}" = "Darwin" ]; then
