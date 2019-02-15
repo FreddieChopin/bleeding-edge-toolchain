@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated gcc to version 8.3.0-RC-20190215.
 - Updated binutils to version 2.32.
-- Updated newlib to version 3.0.0.20180802.
+- Updated newlib to version 3.1.0.
 - Updated gdb to version 8.2.1.
 - Updated expat to version 2.2.6.
 - Updated isl to version 0.20.
