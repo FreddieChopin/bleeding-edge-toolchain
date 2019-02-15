@@ -1,15 +1,14 @@
 #
 # file: .travis.yml
 #
-# author: Copyright (C) 2016-2017 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+# author: Copyright (C) 2016-2019 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-# use "trusty", container-based infrastructure
-dist: trusty
-sudo: false
+dist: xenial
+sudo: required
 
 # use minimal environment
 language: generic
