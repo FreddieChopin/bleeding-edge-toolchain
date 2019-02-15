@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Updated gdb to version 8.2.1.
 - Updated expat to version 2.2.6.
 - Updated isl to version 0.20.
+- Updated mpfr to version 4.0.2.
 - Use [`--enable-newlib-global-stdio-streams`](https://sourceware.org/ml/newlib/2017/msg00516.html) option for both
 newlib and newlib-nano.
 
