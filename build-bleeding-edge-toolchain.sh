@@ -61,7 +61,7 @@ pythonArchiveWin32="${pythonWin32}.msi"
 pythonWin64="python-${pythonVersion}.amd64"
 pythonArchiveWin64="${pythonWin64}.msi"
 zlib="zlib-${zlibVersion}"
-zlibArchive="${zlib}.tar.xz"
+zlibArchive="${zlib}.tar.gz"
 
 pkgversion="bleeding-edge-toolchain"
 target="arm-none-eabi"
@@ -658,7 +658,7 @@ fi
 if [ "${enableWin64}" = "y" ]; then
 	download ${pythonArchiveWin64} https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin64}
 fi
-download ${zlibArchive} https://sourceforge.net/projects/libpng/files/zlib/${zlibVersion}/${zlibArchive}
+download ${zlibArchive} https://www.zlib.net/fossils/${zlibArchive}
 cd ${top}
 
 echo "${bold}********** Extract${normal}"

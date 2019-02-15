@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Use [`--enable-newlib-global-stdio-streams`](https://sourceware.org/ml/newlib/2017/msg00516.html) option for both
 newlib and newlib-nano.
 - Download expat from github, as sourceforge is not reliable.
+- Download zlib from project's website, as sourceforge is not reliable.
 
 [180726](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180502...180726) - 2018-07-26
 -------------------------------------------------------------------------------------------------------
