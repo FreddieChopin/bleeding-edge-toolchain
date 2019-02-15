@@ -637,7 +637,7 @@ download() {
 	fi
 }
 download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
-download ${expatArchive} https://sourceforge.net/projects/expat/files/expat/${expatVersion}/${expatArchive}
+download ${expatArchive} https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}
 if [ ${gccVersion#*-} = ${gccVersion} ]; then
 	download ${gccArchive} http://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
 else
