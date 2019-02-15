@@ -3,7 +3,7 @@
 #
 # file: build-bleeding-edge-toolchain.sh
 #
-# author: Copyright (C) 2016-2018 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+# author: Copyright (C) 2016-2019 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -14,7 +14,7 @@ set -u
 
 binutilsVersion="2.31.1"
 expatVersion="2.2.5"
-gccVersion="8.2.0"
+gccVersion="8.3.0-RC-20190215"
 gdbVersion="8.1.1"
 gmpVersion="6.1.2"
 islVersion="0.19"

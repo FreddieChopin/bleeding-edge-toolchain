@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated gcc to version 8.3.0-RC-20190215.
 - Updated newlib to version 3.0.0.20180802.
 - Updated gdb to version 8.1.1.
 - Use [`--enable-newlib-global-stdio-streams`](https://sourceware.org/ml/newlib/2017/msg00516.html) option for both
