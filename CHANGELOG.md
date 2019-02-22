@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated gcc to version 8.3.0-RC-20190215.
+- Updated gcc to version 8.3.0.
 - Updated binutils to version 2.32.
 - Updated newlib to version 3.1.0.
 - Updated gdb to version 8.2.1.
