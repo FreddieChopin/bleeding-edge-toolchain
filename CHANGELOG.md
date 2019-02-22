@@ -22,6 +22,7 @@ newlib and newlib-nano.
 - Compress Linux package using single thread only - this is slower, but produces smaller file. The default can be
 overriden with `XZ_OPT` environment variable: `XZ_OPT="-9e -T 0 -v" ./build-bleeding-edge-toolchain.sh ...`.
 - Make all files in Linux package read-only.
+- Compress Linux package without timestamps.
 
 [180726](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180502...180726) - 2018-07-26
 -------------------------------------------------------------------------------------------------------
