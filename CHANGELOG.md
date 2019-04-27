@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated gcc to version 9.0.1-RC-20190426.
 - Updated isl to version 0.21.
+- Updated libiconv to version 1.16.
 
 [190223](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/180726...190223) - 2019-02-23
 -------------------------------------------------------------------------------------------------------
