@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated gcc to version 9.0.1-RC-20190426.
+- Updated gcc to version 9.0.1-RC-20190430.
 - Updated isl to version 0.21.
 - Updated libiconv to version 1.16.
 - Updated python to version 2.7.16.
