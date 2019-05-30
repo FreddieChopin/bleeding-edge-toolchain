@@ -130,6 +130,8 @@ if [ ${quiet} = "y" ]; then
 	export GNUMAKEFLAGS="--quiet"
 fi
 
+export AR="gcc-ar"
+export RANLIB="gcc-ranlib"
 BASE_CPPFLAGS="-pipe"
 BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
@@ -912,17 +914,17 @@ buildMingw() {
 	local bannerPrefix="${6}"
 	local packageArchive="${7}"
 
-	export AR="${triplet}-ar"
+	export AR="${triplet}-gcc-ar"
 	export AS="${triplet}-as"
 	export CC="${triplet}-gcc"
 	export CC_FOR_BUILD="gcc"
 	export CFLAGS="${flags} ${CFLAGS-}"
 	export CXX="${triplet}-g++"
 	export CXXFLAGS="${flags} ${CXXFLAGS-}"
-	export NM="${triplet}-nm"
+	export NM="${triplet}-gcc-nm"
 	export OBJDUMP="${triplet}-objdump"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
-	export RANLIB="${triplet}-ranlib"
+	export RANLIB="${triplet}-gcc-ranlib"
 	export RC="${triplet}-windres"
 	export STRIP="${triplet}-strip"
 	export WINDRES="${triplet}-windres"
