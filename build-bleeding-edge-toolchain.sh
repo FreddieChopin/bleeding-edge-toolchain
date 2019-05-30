@@ -132,6 +132,8 @@ fi
 
 export AR="gcc-ar"
 export RANLIB="gcc-ranlib"
+export AR_FOR_TARGET=arm-none-eabi-gcc-ar
+export RANLIB_FOR_TARGET=arm-none-eabi-gcc-ranlib
 BASE_CPPFLAGS="-pipe"
 BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
