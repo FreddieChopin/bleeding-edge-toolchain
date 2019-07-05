@@ -706,38 +706,36 @@ cd ${top}
 
 echo "${bold}********** Extract${normal}"
 cd ${sources}
-echo "${bold}---------- Extracting ${binutilsArchive}${normal}"
-tar -xf ${binutilsArchive}
-echo "${bold}---------- Extracting ${expatArchive}${normal}"
-tar -xf ${expatArchive}
-echo "${bold}---------- Extracting ${gccArchive}${normal}"
-tar -xf ${gccArchive}
-echo "${bold}---------- Extracting ${gdbArchive}${normal}"
-tar -xf ${gdbArchive}
-echo "${bold}---------- Extracting ${gmpArchive}${normal}"
-tar -xf ${gmpArchive}
-echo "${bold}---------- Extracting ${islArchive}${normal}"
-tar -xf ${islArchive}
+extract() {
+	if [ ! -f "${1}_extracted" ]; then
+		echo "${bold}---------- Extracting ${1}${normal}"
+		tar -xf ${1}
+		touch "${1}_extracted"
+	fi
+}
+extract ${binutilsArchive}
+extract ${expatArchive}
+extract ${gccArchive}
+extract ${gdbArchive}
+extract ${gmpArchive}
+extract ${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
-	echo "${bold}---------- Extracting ${libiconvArchive}${normal}"
-	tar -xf ${libiconvArchive}
+	extract ${libiconvArchive}
 fi
-echo "${bold}---------- Extracting ${mpcArchive}${normal}"
-tar -xf ${mpcArchive}
-echo "${bold}---------- Extracting ${mpfrArchive}${normal}"
-tar -xf ${mpfrArchive}
-echo "${bold}---------- Extracting ${newlibArchive}${normal}"
-tar -xf ${newlibArchive}
-if [ "${enableWin32}" = "y" ]; then
+extract ${mpcArchive}
+extract ${mpfrArchive}
+extract ${newlibArchive}
+if [ ! -f "${pythonArchiveWin32}_extracted" ] && [ "${enableWin32}" = "y" ]; then
 	echo "${bold}---------- Extracting ${pythonArchiveWin32}${normal}"
 	7za x ${pythonArchiveWin32} -o${pythonWin32}
+	touch "${pythonArchiveWin32}_extracted"
 fi
-if [ "${enableWin64}" = "y" ]; then
+if [ ! -f "${pythonArchiveWin64}_extracted" ] && [ "${enableWin64}" = "y" ]; then
 	echo "${bold}---------- Extracting ${pythonArchiveWin64}${normal}"
 	7za x ${pythonArchiveWin64} -o${pythonWin64}
+	touch "${pythonArchiveWin64}_extracted"
 fi
-echo "${bold}---------- Extracting ${zlibArchive}${normal}"
-tar -xf ${zlibArchive}
+extract ${zlibArchive}
 cd ${top}
 
 hostTriplet=$(${sources}/${newlib}/config.guess)
