@@ -880,7 +880,11 @@ buildGdb \
 
 find ${installNative} -type f -exec chmod a+w {} +
 postCleanup ${installNative} "" ${hostSystem} ""
-find ${installNative} -type f -executable -exec strip {} \; || true
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	find ${installNative} -type f -perm +111 -exec strip -ur {} \; || true
+else
+	find ${installNative} -type f -executable -exec strip {} \; || true
+fi
 find ${installNative} -type f -exec chmod a-w {} +
 if [ ${buildDocumentation} = "y" ]; then
 	find ${installNative}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installNative}/share/doc \;
