@@ -322,26 +322,33 @@ buildExpat() {
 	local buildFolder="${1}"
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/expat"
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
-	mkdir -p ${buildFolder}/${expat}
-	cd ${buildFolder}/${expat}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
-	eval "${top}/${sources}/${expat}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
-		--disable-shared \
-		--disable-nls"
-	echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
-	make install
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${expat} remove build folder${normal}"
-		rm -rf ${buildFolder}/${expat}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${expat}
+		cd ${buildFolder}/${expat}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
+			eval "${top}/${sources}/${expat}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+				--disable-shared \
+				--disable-nls"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${expat} remove build folder${normal}"
+			rm -rf ${buildFolder}/${expat}
+		fi
 	fi
 	)
 }
