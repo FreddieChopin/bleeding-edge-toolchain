@@ -360,36 +360,43 @@ buildBinutils() {
 	local bannerPrefix="${3}"
 	local configureOptions="${4}"
 	local documentations="${5}"
+	local tagFileBase="${top}/${buildFolder}/binutils"
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
-	mkdir -p ${buildFolder}/${binutils}
-	cd ${buildFolder}/${binutils}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
-	eval "${top}/${sources}/${binutils}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--target=${target} \
-		--prefix=${top}/${installFolder} \
-		--docdir=${top}/${installFolder}/share/doc \
-		--disable-nls \
-		--enable-interwork \
-		--enable-multilib \
-		--enable-plugins \
-		--with-system-zlib \
-		\"--with-pkgversion=${pkgversion}\""
-	echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
-	make install
-	for documentation in ${documentations}; do
-		echo "${bold}---------- ${bannerPrefix}${binutils} make install-${documentation}${normal}"
-		make install-${documentation}
-	done
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${binutils} remove build folder${normal}"
-		rm -rf ${buildFolder}/${binutils}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${binutils}
+		cd ${buildFolder}/${binutils}
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
+			eval "${top}/${sources}/${binutils}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--target=${target} \
+				--prefix=${top}/${installFolder} \
+				--docdir=${top}/${installFolder}/share/doc \
+				--disable-nls \
+				--enable-interwork \
+				--enable-multilib \
+				--enable-plugins \
+				--with-system-zlib \
+				\"--with-pkgversion=${pkgversion}\""
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
+		make install
+		for documentation in ${documentations}; do
+			echo "${bold}---------- ${bannerPrefix}${binutils} make install-${documentation}${normal}"
+			make install-${documentation}
+		done
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${binutils} remove build folder${normal}"
+			rm -rf ${buildFolder}/${binutils}
+		fi
 	fi
 	)
 }
