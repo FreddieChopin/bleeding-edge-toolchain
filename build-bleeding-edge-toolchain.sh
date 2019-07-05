@@ -878,6 +878,7 @@ buildGdb \
 	"--build=${hostTriplet} --host=${hostTriplet} --with-python=yes" \
 	"${documentationTypes}"
 
+find ${installNative} -type f -exec chmod a+w {} +
 postCleanup ${installNative} "" ${hostSystem} ""
 find ${installNative} -type f -executable -exec strip {} \; || true
 find ${installNative} -type f -exec chmod a-w {} +
