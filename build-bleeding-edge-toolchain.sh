@@ -247,28 +247,35 @@ buildMpc() {
 	local buildFolder="${1}"
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/mpc"
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
-	mkdir -p ${buildFolder}/${mpc}
-	cd ${buildFolder}/${mpc}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
-	eval "${top}/${sources}/${mpc}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
-		--disable-shared \
-		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
-	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
-	make install
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${mpc} remove build folder${normal}"
-		rm -rf ${buildFolder}/${mpc}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${mpc}
+		cd ${buildFolder}/${mpc}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
+			eval "${top}/${sources}/${mpc}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
+				--disable-shared \
+				--disable-nls \
+				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+				--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${mpc} remove build folder${normal}"
+			rm -rf ${buildFolder}/${mpc}
+		fi
 	fi
 	)
 }
