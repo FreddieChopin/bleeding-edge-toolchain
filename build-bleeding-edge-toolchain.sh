@@ -523,58 +523,65 @@ buildGccFinal() {
 	local optimization="${2}"
 	local installFolder="${3}"
 	local documentations="${4}"
+	local tagFileBase="${top}/${buildNative}/gcc${suffix}"
 	echo "${bold}********** ${gcc}${suffix}${normal}"
-	mkdir -p ${buildNative}/${gcc}${suffix}
-	cd ${buildNative}/${gcc}${suffix}
-	export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-	export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
-	export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
-	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
-	${top}/${sources}/${gcc}/configure \
-		${quietConfigureOptions} \
-		--target=${target} \
-		--prefix=${top}/${installFolder} \
-		--docdir=${top}/${installFolder}/share/doc \
-		--libexecdir=${top}/${installFolder}/lib \
-		--enable-languages=c,c++ \
-		--disable-libstdcxx-verbose \
-		--enable-plugins \
-		--disable-decimal-float \
-		--disable-libffi \
-		--disable-libgomp \
-		--disable-libmudflap \
-		--disable-libquadmath \
-		--disable-libssp \
-		--disable-libstdcxx-pch \
-		--disable-nls \
-		--disable-shared \
-		--disable-threads \
-		--disable-tls \
-		--with-gnu-as \
-		--with-gnu-ld \
-		--with-newlib \
-		--with-headers=yes \
-		--with-sysroot=${top}/${installFolder}/${target} \
-		--with-system-zlib \
-		--with-gmp=${top}/${buildNative}/${prerequisites}/${gmp} \
-		--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
-		--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
-		--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
-		"--with-pkgversion=${pkgversion}" \
-		--with-multilib-list=rmprofile
-	echo "${bold}---------- ${gcc}${suffix} make${normal}"
-	make -j${nproc} INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
-	echo "${bold}---------- ${gcc}${suffix} make install${normal}"
-	make install
-	for documentation in ${documentations}; do
-		echo "${bold}---------- ${gcc}${suffix} make install-${documentation}${normal}"
-		make install-${documentation}
-	done
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${gcc}${suffix} remove build folder${normal}"
-		rm -rf ${buildNative}/${gcc}${suffix}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildNative}/${gcc}${suffix}
+		cd ${buildNative}/${gcc}${suffix}
+		export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
+		export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${gcc}${suffix} configure${normal}"
+			${top}/${sources}/${gcc}/configure \
+				${quietConfigureOptions} \
+				--target=${target} \
+				--prefix=${top}/${installFolder} \
+				--docdir=${top}/${installFolder}/share/doc \
+				--libexecdir=${top}/${installFolder}/lib \
+				--enable-languages=c,c++ \
+				--disable-libstdcxx-verbose \
+				--enable-plugins \
+				--disable-decimal-float \
+				--disable-libffi \
+				--disable-libgomp \
+				--disable-libmudflap \
+				--disable-libquadmath \
+				--disable-libssp \
+				--disable-libstdcxx-pch \
+				--disable-nls \
+				--disable-shared \
+				--disable-threads \
+				--disable-tls \
+				--with-gnu-as \
+				--with-gnu-ld \
+				--with-newlib \
+				--with-headers=yes \
+				--with-sysroot=${top}/${installFolder}/${target} \
+				--with-system-zlib \
+				--with-gmp=${top}/${buildNative}/${prerequisites}/${gmp} \
+				--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
+				--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
+				--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
+				"--with-pkgversion=${pkgversion}" \
+				--with-multilib-list=rmprofile
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${gcc}${suffix} make${normal}"
+		make -j${nproc} INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
+		echo "${bold}---------- ${gcc}${suffix} make install${normal}"
+		make install
+		for documentation in ${documentations}; do
+			echo "${bold}---------- ${gcc}${suffix} make install-${documentation}${normal}"
+			make install-${documentation}
+		done
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${gcc}${suffix} remove build folder${normal}"
+			rm -rf ${buildNative}/${gcc}${suffix}
+		fi
 	fi
 	)
 }
