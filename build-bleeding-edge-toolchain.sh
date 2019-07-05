@@ -140,21 +140,30 @@ buildZlib() {
 	local bannerPrefix="${2}"
 	local makeOptions="${3}"
 	local makeInstallOptions="${4}"
+	local tagFileBase="${top}/${buildFolder}/zlib"
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
-	cp -R ${sources}/${zlib} ${buildFolder}
-	cd ${buildFolder}/${zlib}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
-	./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
-	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
-	eval "make ${makeOptions} -j${nproc}"
-	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
-	eval "make ${makeInstallOptions} install"
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${zlib} remove build folder${normal}"
-		rm -rf ${buildFolder}/${zlib}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			cp -R ${sources}/${zlib} ${buildFolder}
+		fi
+		cd ${buildFolder}/${zlib}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
+			./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
+		eval "make ${makeOptions} -j${nproc}"
+		echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
+		eval "make ${makeInstallOptions} install"
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${zlib} remove build folder${normal}"
+			rm -rf ${buildFolder}/${zlib}
+		fi
 	fi
 	)
 }
