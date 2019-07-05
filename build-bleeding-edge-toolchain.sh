@@ -78,6 +78,7 @@ enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
 buildDocumentation="y"
+quietBuild="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
@@ -95,9 +96,12 @@ while [ ${#} -gt 0 ]; do
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
 			;;
+		--quiet-build)
+			quietBuild="y"
+			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet-build]" >&2
 			exit 1
 	esac
 	shift
@@ -106,6 +110,11 @@ done
 documentationTypes=""
 if [ ${buildDocumentation} = "y" ]; then
 	documentationTypes="html pdf"
+fi
+
+quietConfigureOptions=""
+if [ ${quietBuild} = "y" ]; then
+	quietConfigureOptions="--quiet --enable-silent-rules"
 fi
 
 BASE_CPPFLAGS="-pipe"
@@ -150,6 +159,7 @@ buildGmp() {
 	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
 	eval "${top}/${sources}/${gmp}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
 		--enable-cxx \
@@ -179,6 +189,7 @@ buildMpfr() {
 	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
 	eval "${top}/${sources}/${mpfr}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
 		--disable-shared \
@@ -208,6 +219,7 @@ buildMpc() {
 	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
 	eval "${top}/${sources}/${mpc}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
 		--disable-shared \
@@ -238,6 +250,7 @@ buildIsl() {
 	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
 	eval "${top}/${sources}/${isl}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
 		--disable-shared \
@@ -267,6 +280,7 @@ buildExpat() {
 	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
 	eval "${top}/${sources}/${expat}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
 		--disable-shared \
@@ -297,6 +311,7 @@ buildBinutils() {
 	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
 	eval "${top}/${sources}/${binutils}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
@@ -336,6 +351,7 @@ buildGcc() {
 	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 	eval "${top}/${sources}/${gcc}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
@@ -389,6 +405,7 @@ buildNewlib() {
 	export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${newlib}${suffix} configure${normal}"
 	eval "${top}/${sources}/${newlib}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--target=${target} \
 		--disable-newlib-supplied-syscalls \
@@ -438,6 +455,7 @@ buildGccFinal() {
 	export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
 	echo "${bold}---------- ${gcc}${suffix} configure${normal}"
 	${top}/${sources}/${gcc}/configure \
+		${quietConfigureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
 		--docdir=${top}/${installFolder}/share/doc \
@@ -528,6 +546,7 @@ buildGdb() {
 	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 	eval "${top}/${sources}/${gdb}/configure \
+		${quietConfigureOptions} \
 		${configureOptions} \
 		--target=${target} \
 		--prefix=${top}/${installFolder} \
@@ -811,6 +830,7 @@ buildMingw() {
 		cd ${buildFolder}/${libiconv}
 		echo "${bold}---------- ${bannerPrefix}${libiconv} configure${normal}"
 		${top}/${sources}/${libiconv}/configure \
+			${quietConfigureOptions} \
 			--build=${hostTriplet} \
 			--host=${triplet} \
 			--prefix=${top}/${buildFolder}/${prerequisites}/${libiconv} \
