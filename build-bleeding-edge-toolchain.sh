@@ -668,12 +668,15 @@ mkdir -p ${sources}
 cd ${sources}
 download() {
 	local ret=0
-	echo "${bold}---------- Downloading ${1}${normal}"
-	curl -L -o ${1} -C - --connect-timeout 30 -Y 1024 -y 30 ${2} || ret=$?
-	if [ $ret -eq 33 ]; then
-		echo 'This happens if the file is complete, continuing...'
-	elif [ $ret -ne 0 ]; then
-		exit $ret
+	if [ ! -f "${1}_downloaded" ]; then
+		echo "${bold}---------- Downloading ${1}${normal}"
+		curl -L -o ${1} -C - --connect-timeout 30 -Y 1024 -y 30 ${2} || ret=$?
+		if [ $ret -eq 33 ]; then
+			echo 'This happens if the file is complete, continuing...'
+		elif [ $ret -ne 0 ]; then
+			exit $ret
+		fi
+		touch "${1}_downloaded"
 	fi
 }
 download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
