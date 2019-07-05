@@ -73,6 +73,14 @@ packageArchiveWin64="${package}-win64.7z"
 bold="$(tput bold)"
 normal="$(tput sgr0)"
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	nproc="$(sysctl -n hw.ncpu)"
+	hostSystem="$(uname -sm)"
+else
+	nproc="$(nproc)"
+	hostSystem="$(uname -mo)"
+fi
+
 enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
@@ -136,7 +144,7 @@ buildZlib() {
 	echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
 	./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
 	echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
-	eval "make ${makeOptions} -j$(nproc)"
+	eval "make ${makeOptions} -j${nproc}"
 	echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
 	eval "make ${makeInstallOptions} install"
 	cd ${top}
@@ -166,7 +174,7 @@ buildGmp() {
 		--disable-shared \
 		--disable-nls"
 	echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
 	make install
 	cd ${top}
@@ -196,7 +204,7 @@ buildMpfr() {
 		--disable-nls \
 		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
 	make install
 	cd ${top}
@@ -227,7 +235,7 @@ buildMpc() {
 		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
 		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
 	echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
 	make install
 	cd ${top}
@@ -257,7 +265,7 @@ buildIsl() {
 		--disable-nls \
 		--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
 	echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
 	make install
 	cd ${top}
@@ -286,7 +294,7 @@ buildExpat() {
 		--disable-shared \
 		--disable-nls"
 	echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
 	make install
 	cd ${top}
@@ -323,7 +331,7 @@ buildBinutils() {
 		--with-system-zlib \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
 	make install
 	for documentation in ${documentations}; do
@@ -379,7 +387,7 @@ buildGcc() {
 		\"--with-pkgversion=${pkgversion}\" \
 		--with-multilib-list=rmprofile"
 	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
-	make -j$(nproc) all-gcc
+	make -j${nproc} all-gcc
 	echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
 	make install-gcc
 	cd ${top}
@@ -419,7 +427,7 @@ buildNewlib() {
 		--enable-newlib-global-stdio-streams \
 		--disable-nls"
 	echo "${bold}---------- ${newlib}${suffix} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${newlib}${suffix} make install${normal}"
 	make install
 	for documentation in ${documentations}; do
@@ -487,7 +495,7 @@ buildGccFinal() {
 		"--with-pkgversion=${pkgversion}" \
 		--with-multilib-list=rmprofile
 	echo "${bold}---------- ${gcc}${suffix} make${normal}"
-	make -j$(nproc) INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
+	make -j${nproc} INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
 	echo "${bold}---------- ${gcc}${suffix} make install${normal}"
 	make install
 	for documentation in ${documentations}; do
@@ -564,7 +572,7 @@ buildGdb() {
 		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
 		\"--with-pkgversion=${pkgversion}\""
 	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
-	make -j$(nproc)
+	make -j${nproc}
 	echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
 	make install
 	for documentation in ${documentations}; do
@@ -584,13 +592,18 @@ postCleanup() {
 	local bannerPrefix="${2}"
 	local hostSystem="${3}"
 	local extraComponents="${4}"
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		buildSystem="$(uname -srvm)"
+	else
+		buildSystem="$(uname -srvmo)"
+	fi
 	echo "${bold}********** ${bannerPrefix}Post-cleanup${normal}"
 	rm -rf ${installFolder}/include
 	find ${installFolder} -name '*.la' -exec rm -rf {} +
 	cat > ${installFolder}/info.txt <<- EOF
 	${pkgversion}
 	build date: $(date +'%Y-%m-%d')
-	build system: $(uname -srvmo)
+	build system: ${buildSystem}
 	host system: ${hostSystem}
 	target system: ${target}
 	compiler: ${CC-gcc} $(${CC-gcc} --version | grep -o '[0-9]\.[0-9]\.[0-9]')
@@ -772,7 +785,7 @@ buildGdb \
 	"--build=${hostTriplet} --host=${hostTriplet} --with-python=yes" \
 	"${documentationTypes}"
 
-postCleanup ${installNative} "" "$(uname -mo)" ""
+postCleanup ${installNative} "" ${hostSystem} ""
 find ${installNative} -type f -executable -exec strip {} \; || true
 find ${installNative} -type f -exec chmod a-w {} +
 if [ ${buildDocumentation} = "y" ]; then
@@ -783,7 +796,11 @@ echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
 rm -rf ${packageArchiveNative}
-XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} $(find ${package}/ -mindepth 1 -maxdepth 1)
+else
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+fi
 rm -rf ${package}
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -837,7 +854,7 @@ buildMingw() {
 			--disable-shared \
 			--disable-nls
 		echo "${bold}---------- ${bannerPrefix}${libiconv} make${normal}"
-		make -j$(nproc)
+		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${libiconv} make install${normal}"
 		make install
 		cd ${top}
