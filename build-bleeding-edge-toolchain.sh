@@ -466,46 +466,53 @@ buildNewlib() {
 	local optimization="${2}"
 	local configureOptions="${3}"
 	local documentations="${4}"
+	local tagFileBase="${top}/${buildNative}/newlib${suffix}"
 	echo "${bold}********** ${newlib}${suffix}${normal}"
-	mkdir -p ${buildNative}/${newlib}${suffix}
-	cd ${buildNative}/${newlib}${suffix}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	export PATH="${top}/${installNative}/bin:${PATH-}"
-	export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
-	echo "${bold}---------- ${newlib}${suffix} configure${normal}"
-	eval "${top}/${sources}/${newlib}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--target=${target} \
-		--disable-newlib-supplied-syscalls \
-		--enable-newlib-reent-small \
-		--disable-newlib-fvwrite-in-streamio \
-		--disable-newlib-fseek-optimization \
-		--disable-newlib-wide-orient \
-		--disable-newlib-unbuf-stream-opt \
-		--enable-newlib-global-atexit \
-		--enable-newlib-retargetable-locking \
-		--enable-newlib-global-stdio-streams \
-		--disable-nls"
-	echo "${bold}---------- ${newlib}${suffix} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${newlib}${suffix} make install${normal}"
-	make install
-	for documentation in ${documentations}; do
-		cd ${target}/newlib/libc
-		echo "${bold}---------- ${newlib}${suffix} libc make install-${documentation}${normal}"
-		make install-${documentation}
-		cd ../../..
-		cd ${target}/newlib/libm
-		echo "${bold}---------- ${newlib}${suffix} libm make install-${documentation}${normal}"
-		make install-${documentation}
-		cd ../../..
-	done
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${newlib}${suffix} remove build folder${normal}"
-		rm -rf ${buildNative}/${newlib}${suffix}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildNative}/${newlib}${suffix}
+		cd ${buildNative}/${newlib}${suffix}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		export PATH="${top}/${installNative}/bin:${PATH-}"
+		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${newlib}${suffix} configure${normal}"
+			eval "${top}/${sources}/${newlib}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--target=${target} \
+				--disable-newlib-supplied-syscalls \
+				--enable-newlib-reent-small \
+				--disable-newlib-fvwrite-in-streamio \
+				--disable-newlib-fseek-optimization \
+				--disable-newlib-wide-orient \
+				--disable-newlib-unbuf-stream-opt \
+				--enable-newlib-global-atexit \
+				--enable-newlib-retargetable-locking \
+				--enable-newlib-global-stdio-streams \
+				--disable-nls"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${newlib}${suffix} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${newlib}${suffix} make install${normal}"
+		make install
+		for documentation in ${documentations}; do
+			cd ${target}/newlib/libc
+			echo "${bold}---------- ${newlib}${suffix} libc make install-${documentation}${normal}"
+			make install-${documentation}
+			cd ../../..
+			cd ${target}/newlib/libm
+			echo "${bold}---------- ${newlib}${suffix} libm make install-${documentation}${normal}"
+			make install-${documentation}
+			cd ../../..
+		done
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${newlib}${suffix} remove build folder${normal}"
+			rm -rf ${buildNative}/${newlib}${suffix}
+		fi
 	fi
 	)
 }
