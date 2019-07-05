@@ -623,42 +623,52 @@ buildGdb() {
 	local bannerPrefix="${3}"
 	local configureOptions="${4}"
 	local documentations="${5}"
+	local tagFileBase="${top}/${buildFolder}/gdb-py"
+	if [[ $configureOptions == *"--with-python=no"* ]]; then
+		tagFileBase="${top}/${buildFolder}/gdb"
+	fi
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
-	mkdir -p ${buildFolder}/${gdb}
-	cd ${buildFolder}/${gdb}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
-	eval "${top}/${sources}/${gdb}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--target=${target} \
-		--prefix=${top}/${installFolder} \
-		--docdir=${top}/${installFolder}/share/doc \
-		--disable-nls \
-		--disable-sim \
-		--with-lzma=no \
-		--with-guile=no \
-		--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
-		--with-system-zlib \
-		--with-expat=yes \
-		--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
-		--with-mpfr=yes \
-		--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-		\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
-		\"--with-pkgversion=${pkgversion}\""
-	echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
-	make install
-	for documentation in ${documentations}; do
-		echo "${bold}---------- ${bannerPrefix}${gdb} make install-${documentation}${normal}"
-		make install-${documentation}
-	done
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
-		rm -rf ${buildFolder}/${gdb}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${gdb}
+		cd ${buildFolder}/${gdb}
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
+			eval "${top}/${sources}/${gdb}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--target=${target} \
+				--prefix=${top}/${installFolder} \
+				--docdir=${top}/${installFolder}/share/doc \
+				--disable-nls \
+				--disable-sim \
+				--with-lzma=no \
+				--with-guile=no \
+				--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
+				--with-system-zlib \
+				--with-expat=yes \
+				--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+				--with-mpfr=yes \
+				--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+				\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
+				\"--with-pkgversion=${pkgversion}\""
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
+		make install
+		for documentation in ${documentations}; do
+			echo "${bold}---------- ${bannerPrefix}${gdb} make install-${documentation}${normal}"
+			make install-${documentation}
+		done
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
+			rm -rf ${buildFolder}/${gdb}
+		fi
 	fi
 	)
 }
