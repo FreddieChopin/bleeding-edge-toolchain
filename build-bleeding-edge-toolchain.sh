@@ -173,27 +173,34 @@ buildGmp() {
 	local buildFolder="${1}"
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/gmp"
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
-	mkdir -p ${buildFolder}/${gmp}
-	cd ${buildFolder}/${gmp}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
-	eval "${top}/${sources}/${gmp}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
-		--enable-cxx \
-		--disable-shared \
-		--disable-nls"
-	echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
-	make install
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${gmp} remove build folder${normal}"
-		rm -rf ${buildFolder}/${gmp}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${gmp}
+		cd ${buildFolder}/${gmp}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
+			eval "${top}/${sources}/${gmp}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
+				--enable-cxx \
+				--disable-shared \
+				--disable-nls"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gmp} remove build folder${normal}"
+			rm -rf ${buildFolder}/${gmp}
+		fi
 	fi
 	)
 }
