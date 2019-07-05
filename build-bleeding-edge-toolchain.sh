@@ -844,7 +844,9 @@ if [ "${skipNanoLibraries}" = "n" ]; then
 	buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
 	)
 
-	copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+	if [ -d "${top}/${buildNative}/${nanoLibraries}" ]; then
+		copyNanoLibraries "${top}/${buildNative}/${nanoLibraries}" "${top}/${installNative}"
+	fi
 fi
 
 buildNewlib \
