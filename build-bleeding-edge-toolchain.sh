@@ -87,6 +87,7 @@ keepBuildFolders="n"
 skipNanoLibraries="n"
 buildDocumentation="y"
 quietBuild="n"
+resume="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
 		--enable-win32)
@@ -107,9 +108,12 @@ while [ ${#} -gt 0 ]; do
 		--quiet-build)
 			quietBuild="y"
 			;;
+		--resume)
+			resume="y"
+			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet-build]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet-build] [--resume]" >&2
 			exit 1
 	esac
 	shift
@@ -621,39 +625,43 @@ postCleanup() {
 	cp ${0} ${installFolder}
 }
 
-echo "${bold}********** Cleanup${normal}"
-rm -rf ${buildNative}
-rm -rf ${installNative}
-mkdir -p ${buildNative}
-mkdir -p ${installNative}
-rm -rf ${buildWin32}
-rm -rf ${installWin32}
-if [ "${enableWin32}" = "y" ]; then
-	mkdir -p ${buildWin32}
-	mkdir -p ${installWin32}
+if [ ${resume} = "y" ]; then
+	echo "${bold}********** Resuming last build${normal}"
+else
+	echo "${bold}********** Cleanup${normal}"
+	rm -rf ${buildNative}
+	rm -rf ${installNative}
+	mkdir -p ${buildNative}
+	mkdir -p ${installNative}
+	rm -rf ${buildWin32}
+	rm -rf ${installWin32}
+	if [ "${enableWin32}" = "y" ]; then
+		mkdir -p ${buildWin32}
+		mkdir -p ${installWin32}
+	fi
+	rm -rf ${buildWin64}
+	rm -rf ${installWin64}
+	if [ "${enableWin64}" = "y" ]; then
+		mkdir -p ${buildWin64}
+		mkdir -p ${installWin64}
+	fi
+	mkdir -p ${sources}
+	find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
+		! -name "${expatArchive}" \
+		! -name "${gccArchive}" \
+		! -name "${gdbArchive}" \
+		! -name "${gmpArchive}" \
+		! -name "${islArchive}" \
+		! -name "${libiconvArchive}" \
+		! -name "${mpcArchive}" \
+		! -name "${mpfrArchive}" \
+		! -name "${newlibArchive}" \
+		! -name "${pythonArchiveWin32}" \
+		! -name "${pythonArchiveWin64}" \
+		! -name "${zlibArchive}" \
+		-exec rm -rf {} +
+	find ${sources} -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
 fi
-rm -rf ${buildWin64}
-rm -rf ${installWin64}
-if [ "${enableWin64}" = "y" ]; then
-	mkdir -p ${buildWin64}
-	mkdir -p ${installWin64}
-fi
-mkdir -p ${sources}
-find ${sources} -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
-find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
-	! -name "${expatArchive}" \
-	! -name "${gccArchive}" \
-	! -name "${gdbArchive}" \
-	! -name "${gmpArchive}" \
-	! -name "${islArchive}" \
-	! -name "${libiconvArchive}" \
-	! -name "${mpcArchive}" \
-	! -name "${mpfrArchive}" \
-	! -name "${newlibArchive}" \
-	! -name "${pythonArchiveWin32}" \
-	! -name "${pythonArchiveWin64}" \
-	! -name "${zlibArchive}" \
-	-exec rm -rf {} +
 
 echo "${bold}********** Download${normal}"
 mkdir -p ${sources}

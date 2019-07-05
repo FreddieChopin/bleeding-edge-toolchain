@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `--quiet-build` option, which will make the build quiet(er).
+- `--resume` option, which will try to resume the last build.
 
 ### Changed
 
