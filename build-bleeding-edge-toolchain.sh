@@ -407,48 +407,55 @@ buildGcc() {
 	local installFolder="${2}"
 	local bannerPrefix="${3}"
 	local configureOptions="${4}"
+	local tagFileBase="${top}/${buildFolder}/gcc"
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
-	mkdir -p ${buildFolder}/${gcc}
-	cd ${buildFolder}/${gcc}
-	export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
-	eval "${top}/${sources}/${gcc}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--target=${target} \
-		--prefix=${top}/${installFolder} \
-		--libexecdir=${top}/${installFolder}/lib \
-		--disable-decimal-float \
-		--disable-libffi \
-		--disable-libgomp \
-		--disable-libmudflap \
-		--disable-libquadmath \
-		--disable-libssp \
-		--disable-libstdcxx-pch \
-		--disable-nls \
-		--disable-shared \
-		--disable-threads \
-		--disable-tls \
-		--with-newlib \
-		--with-gnu-as \
-		--with-gnu-ld \
-		--with-sysroot=${top}/${installFolder}/${target} \
-		--with-system-zlib \
-		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
-		--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-		--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
-		--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
-		\"--with-pkgversion=${pkgversion}\" \
-		--with-multilib-list=rmprofile"
-	echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
-	make -j${nproc} all-gcc
-	echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
-	make install-gcc
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${gcc} remove build folder${normal}"
-		rm -rf ${buildFolder}/${gcc}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${gcc}
+		cd ${buildFolder}/${gcc}
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
+			eval "${top}/${sources}/${gcc}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--target=${target} \
+				--prefix=${top}/${installFolder} \
+				--libexecdir=${top}/${installFolder}/lib \
+				--disable-decimal-float \
+				--disable-libffi \
+				--disable-libgomp \
+				--disable-libmudflap \
+				--disable-libquadmath \
+				--disable-libssp \
+				--disable-libstdcxx-pch \
+				--disable-nls \
+				--disable-shared \
+				--disable-threads \
+				--disable-tls \
+				--with-newlib \
+				--with-gnu-as \
+				--with-gnu-ld \
+				--with-sysroot=${top}/${installFolder}/${target} \
+				--with-system-zlib \
+				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+				--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+				--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
+				--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
+				\"--with-pkgversion=${pkgversion}\" \
+				--with-multilib-list=rmprofile"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
+		make -j${nproc} all-gcc
+		echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
+		make install-gcc
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${gcc} remove build folder${normal}"
+			rm -rf ${buildFolder}/${gcc}
+		fi
 	fi
 	)
 }
