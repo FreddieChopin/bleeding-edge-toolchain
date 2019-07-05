@@ -285,27 +285,34 @@ buildIsl() {
 	local buildFolder="${1}"
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/isl"
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
-	mkdir -p ${buildFolder}/${isl}
-	cd ${buildFolder}/${isl}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
-	eval "${top}/${sources}/${isl}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
-		--disable-shared \
-		--disable-nls \
-		--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
-	echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
-	make install
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${isl} remove build folder${normal}"
-		rm -rf ${buildFolder}/${isl}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${isl}
+		cd ${buildFolder}/${isl}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
+			eval "${top}/${sources}/${isl}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
+				--disable-shared \
+				--disable-nls \
+				--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${isl} remove build folder${normal}"
+			rm -rf ${buildFolder}/${isl}
+		fi
 	fi
 	)
 }
