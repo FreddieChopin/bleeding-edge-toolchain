@@ -210,27 +210,34 @@ buildMpfr() {
 	local buildFolder="${1}"
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/mpfr"
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
-	mkdir -p ${buildFolder}/${mpfr}
-	cd ${buildFolder}/${mpfr}
-	export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-	export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-	echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
-	eval "${top}/${sources}/${mpfr}/configure \
-		${quietConfigureOptions} \
-		${configureOptions} \
-		--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-		--disable-shared \
-		--disable-nls \
-		--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
-	echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
-	make -j${nproc}
-	echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
-	make install
-	cd ${top}
-	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- ${bannerPrefix}${mpfr} remove build folder${normal}"
-		rm -rf ${buildFolder}/${mpfr}
+	if [ ! -f "${tagFileBase}_built" ]; then
+		mkdir -p ${buildFolder}/${mpfr}
+		cd ${buildFolder}/${mpfr}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		if [ ! -f "${tagFileBase}_configured" ]; then
+			echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
+			eval "${top}/${sources}/${mpfr}/configure \
+				${quietConfigureOptions} \
+				${configureOptions} \
+				--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+				--disable-shared \
+				--disable-nls \
+				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
+			touch "${tagFileBase}_configured"
+		fi
+		echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${mpfr} remove build folder${normal}"
+			rm -rf ${buildFolder}/${mpfr}
+		fi
 	fi
 	)
 }
