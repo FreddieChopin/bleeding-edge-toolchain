@@ -143,17 +143,15 @@ buildZlib() {
 	local tagFileBase="${top}/${buildFolder}/zlib"
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			cp -R ${sources}/${zlib} ${buildFolder}
+		if [ -d "${buildFolder}/${zlib}" ]; then
+			rm -rf "${buildFolder}/${zlib}"
 		fi
+		cp -R ${sources}/${zlib} ${buildFolder}
 		cd ${buildFolder}/${zlib}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
-			./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
+		./configure --static --prefix=${top}/${buildFolder}/${prerequisites}/${zlib}
 		echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
 		eval "make ${makeOptions} -j${nproc}"
 		echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
@@ -176,21 +174,21 @@ buildGmp() {
 	local tagFileBase="${top}/${buildFolder}/gmp"
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${gmp}" ]; then
+			rm -rf "${buildFolder}/${gmp}"
+		fi
 		mkdir -p ${buildFolder}/${gmp}
 		cd ${buildFolder}/${gmp}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
-			eval "${top}/${sources}/${gmp}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
-				--enable-cxx \
-				--disable-shared \
-				--disable-nls"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
+		eval "${top}/${sources}/${gmp}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${gmp} \
+			--enable-cxx \
+			--disable-shared \
+			--disable-nls"
 		echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
@@ -213,21 +211,21 @@ buildMpfr() {
 	local tagFileBase="${top}/${buildFolder}/mpfr"
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${mpfr}" ]; then
+			rm -rf "${buildFolder}/${mpfr}"
+		fi
 		mkdir -p ${buildFolder}/${mpfr}
 		cd ${buildFolder}/${mpfr}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
-			eval "${top}/${sources}/${mpfr}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-				--disable-shared \
-				--disable-nls \
-				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
+		eval "${top}/${sources}/${mpfr}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+			--disable-shared \
+			--disable-nls \
+			--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp}"
 		echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
@@ -250,22 +248,22 @@ buildMpc() {
 	local tagFileBase="${top}/${buildFolder}/mpc"
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${mpc}" ]; then
+			rm -rf "${buildFolder}/${mpc}"
+		fi
 		mkdir -p ${buildFolder}/${mpc}
 		cd ${buildFolder}/${mpc}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
-			eval "${top}/${sources}/${mpc}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
-				--disable-shared \
-				--disable-nls \
-				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
-				--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
+		eval "${top}/${sources}/${mpc}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${mpc} \
+			--disable-shared \
+			--disable-nls \
+			--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+			--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr}"
 		echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
@@ -288,21 +286,21 @@ buildIsl() {
 	local tagFileBase="${top}/${buildFolder}/isl"
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${isl}" ]; then
+			rm -rf "${buildFolder}/${isl}"
+		fi
 		mkdir -p ${buildFolder}/${isl}
 		cd ${buildFolder}/${isl}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
-			eval "${top}/${sources}/${isl}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
-				--disable-shared \
-				--disable-nls \
-				--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
+		eval "${top}/${sources}/${isl}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${isl} \
+			--disable-shared \
+			--disable-nls \
+			--with-gmp-prefix=${top}/${buildFolder}/${prerequisites}/${gmp}"
 		echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
@@ -325,20 +323,20 @@ buildExpat() {
 	local tagFileBase="${top}/${buildFolder}/expat"
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${expat}" ]; then
+			rm -rf "${buildFolder}/${expat}"
+		fi
 		mkdir -p ${buildFolder}/${expat}
 		cd ${buildFolder}/${expat}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
-			eval "${top}/${sources}/${expat}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
-				--disable-shared \
-				--disable-nls"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
+		eval "${top}/${sources}/${expat}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+			--disable-shared \
+			--disable-nls"
 		echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
@@ -363,26 +361,26 @@ buildBinutils() {
 	local tagFileBase="${top}/${buildFolder}/binutils"
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${binutils}" ]; then
+			rm -rf "${buildFolder}/${binutils}"
+		fi
 		mkdir -p ${buildFolder}/${binutils}
 		cd ${buildFolder}/${binutils}
 		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
-			eval "${top}/${sources}/${binutils}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--target=${target} \
-				--prefix=${top}/${installFolder} \
-				--docdir=${top}/${installFolder}/share/doc \
-				--disable-nls \
-				--enable-interwork \
-				--enable-multilib \
-				--enable-plugins \
-				--with-system-zlib \
-				\"--with-pkgversion=${pkgversion}\""
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
+		eval "${top}/${sources}/${binutils}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--target=${target} \
+			--prefix=${top}/${installFolder} \
+			--docdir=${top}/${installFolder}/share/doc \
+			--disable-nls \
+			--enable-interwork \
+			--enable-multilib \
+			--enable-plugins \
+			--with-system-zlib \
+			\"--with-pkgversion=${pkgversion}\""
 		echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
@@ -410,42 +408,42 @@ buildGcc() {
 	local tagFileBase="${top}/${buildFolder}/gcc"
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${gcc}" ]; then
+			rm -rf "${buildFolder}/${gcc}"
+		fi
 		mkdir -p ${buildFolder}/${gcc}
 		cd ${buildFolder}/${gcc}
 		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
-			eval "${top}/${sources}/${gcc}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--target=${target} \
-				--prefix=${top}/${installFolder} \
-				--libexecdir=${top}/${installFolder}/lib \
-				--disable-decimal-float \
-				--disable-libffi \
-				--disable-libgomp \
-				--disable-libmudflap \
-				--disable-libquadmath \
-				--disable-libssp \
-				--disable-libstdcxx-pch \
-				--disable-nls \
-				--disable-shared \
-				--disable-threads \
-				--disable-tls \
-				--with-newlib \
-				--with-gnu-as \
-				--with-gnu-ld \
-				--with-sysroot=${top}/${installFolder}/${target} \
-				--with-system-zlib \
-				--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
-				--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-				--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
-				--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
-				\"--with-pkgversion=${pkgversion}\" \
-				--with-multilib-list=rmprofile"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
+		eval "${top}/${sources}/${gcc}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--target=${target} \
+			--prefix=${top}/${installFolder} \
+			--libexecdir=${top}/${installFolder}/lib \
+			--disable-decimal-float \
+			--disable-libffi \
+			--disable-libgomp \
+			--disable-libmudflap \
+			--disable-libquadmath \
+			--disable-libssp \
+			--disable-libstdcxx-pch \
+			--disable-nls \
+			--disable-shared \
+			--disable-threads \
+			--disable-tls \
+			--with-newlib \
+			--with-gnu-as \
+			--with-gnu-ld \
+			--with-sysroot=${top}/${installFolder}/${target} \
+			--with-system-zlib \
+			--with-gmp=${top}/${buildFolder}/${prerequisites}/${gmp} \
+			--with-mpfr=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+			--with-mpc=${top}/${buildFolder}/${prerequisites}/${mpc} \
+			--with-isl=${top}/${buildFolder}/${prerequisites}/${isl} \
+			\"--with-pkgversion=${pkgversion}\" \
+			--with-multilib-list=rmprofile"
 		echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
 		make -j${nproc} all-gcc
 		echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
@@ -469,30 +467,30 @@ buildNewlib() {
 	local tagFileBase="${top}/${buildNative}/newlib${suffix}"
 	echo "${bold}********** ${newlib}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildNative}/${newlib}${suffix}" ]; then
+			rm -rf "${buildNative}/${newlib}${suffix}"
+		fi
 		mkdir -p ${buildNative}/${newlib}${suffix}
 		cd ${buildNative}/${newlib}${suffix}
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export PATH="${top}/${installNative}/bin:${PATH-}"
 		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${newlib}${suffix} configure${normal}"
-			eval "${top}/${sources}/${newlib}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--target=${target} \
-				--disable-newlib-supplied-syscalls \
-				--enable-newlib-reent-small \
-				--disable-newlib-fvwrite-in-streamio \
-				--disable-newlib-fseek-optimization \
-				--disable-newlib-wide-orient \
-				--disable-newlib-unbuf-stream-opt \
-				--enable-newlib-global-atexit \
-				--enable-newlib-retargetable-locking \
-				--enable-newlib-global-stdio-streams \
-				--disable-nls"
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${newlib}${suffix} configure${normal}"
+		eval "${top}/${sources}/${newlib}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--target=${target} \
+			--disable-newlib-supplied-syscalls \
+			--enable-newlib-reent-small \
+			--disable-newlib-fvwrite-in-streamio \
+			--disable-newlib-fseek-optimization \
+			--disable-newlib-wide-orient \
+			--disable-newlib-unbuf-stream-opt \
+			--enable-newlib-global-atexit \
+			--enable-newlib-retargetable-locking \
+			--enable-newlib-global-stdio-streams \
+			--disable-nls"
 		echo "${bold}---------- ${newlib}${suffix} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${newlib}${suffix} make install${normal}"
@@ -526,48 +524,48 @@ buildGccFinal() {
 	local tagFileBase="${top}/${buildNative}/gcc${suffix}"
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildNative}/${gcc}${suffix}" ]; then
+			rm -rf "${buildNative}/${gcc}${suffix}"
+		fi
 		mkdir -p ${buildNative}/${gcc}${suffix}
 		cd ${buildNative}/${gcc}${suffix}
 		export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 		export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${gcc}${suffix} configure${normal}"
-			${top}/${sources}/${gcc}/configure \
-				${quietConfigureOptions} \
-				--target=${target} \
-				--prefix=${top}/${installFolder} \
-				--docdir=${top}/${installFolder}/share/doc \
-				--libexecdir=${top}/${installFolder}/lib \
-				--enable-languages=c,c++ \
-				--disable-libstdcxx-verbose \
-				--enable-plugins \
-				--disable-decimal-float \
-				--disable-libffi \
-				--disable-libgomp \
-				--disable-libmudflap \
-				--disable-libquadmath \
-				--disable-libssp \
-				--disable-libstdcxx-pch \
-				--disable-nls \
-				--disable-shared \
-				--disable-threads \
-				--disable-tls \
-				--with-gnu-as \
-				--with-gnu-ld \
-				--with-newlib \
-				--with-headers=yes \
-				--with-sysroot=${top}/${installFolder}/${target} \
-				--with-system-zlib \
-				--with-gmp=${top}/${buildNative}/${prerequisites}/${gmp} \
-				--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
-				--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
-				--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
-				"--with-pkgversion=${pkgversion}" \
-				--with-multilib-list=rmprofile
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${gcc}${suffix} configure${normal}"
+		${top}/${sources}/${gcc}/configure \
+			${quietConfigureOptions} \
+			--target=${target} \
+			--prefix=${top}/${installFolder} \
+			--docdir=${top}/${installFolder}/share/doc \
+			--libexecdir=${top}/${installFolder}/lib \
+			--enable-languages=c,c++ \
+			--disable-libstdcxx-verbose \
+			--enable-plugins \
+			--disable-decimal-float \
+			--disable-libffi \
+			--disable-libgomp \
+			--disable-libmudflap \
+			--disable-libquadmath \
+			--disable-libssp \
+			--disable-libstdcxx-pch \
+			--disable-nls \
+			--disable-shared \
+			--disable-threads \
+			--disable-tls \
+			--with-gnu-as \
+			--with-gnu-ld \
+			--with-newlib \
+			--with-headers=yes \
+			--with-sysroot=${top}/${installFolder}/${target} \
+			--with-system-zlib \
+			--with-gmp=${top}/${buildNative}/${prerequisites}/${gmp} \
+			--with-mpfr=${top}/${buildNative}/${prerequisites}/${mpfr} \
+			--with-mpc=${top}/${buildNative}/${prerequisites}/${mpc} \
+			--with-isl=${top}/${buildNative}/${prerequisites}/${isl} \
+			"--with-pkgversion=${pkgversion}" \
+			--with-multilib-list=rmprofile
 		echo "${bold}---------- ${gcc}${suffix} make${normal}"
 		make -j${nproc} INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
 		echo "${bold}---------- ${gcc}${suffix} make install${normal}"
@@ -629,32 +627,32 @@ buildGdb() {
 	fi
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${gdb}" ]; then
+			rm -rf "${buildFolder}/${gdb}"
+		fi
 		mkdir -p ${buildFolder}/${gdb}
 		cd ${buildFolder}/${gdb}
 		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		if [ ! -f "${tagFileBase}_configured" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
-			eval "${top}/${sources}/${gdb}/configure \
-				${quietConfigureOptions} \
-				${configureOptions} \
-				--target=${target} \
-				--prefix=${top}/${installFolder} \
-				--docdir=${top}/${installFolder}/share/doc \
-				--disable-nls \
-				--disable-sim \
-				--with-lzma=no \
-				--with-guile=no \
-				--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
-				--with-system-zlib \
-				--with-expat=yes \
-				--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
-				--with-mpfr=yes \
-				--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-				\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
-				\"--with-pkgversion=${pkgversion}\""
-			touch "${tagFileBase}_configured"
-		fi
+		echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
+		eval "${top}/${sources}/${gdb}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--target=${target} \
+			--prefix=${top}/${installFolder} \
+			--docdir=${top}/${installFolder}/share/doc \
+			--disable-nls \
+			--disable-sim \
+			--with-lzma=no \
+			--with-guile=no \
+			--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
+			--with-system-zlib \
+			--with-expat=yes \
+			--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+			--with-mpfr=yes \
+			--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+			\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
+			\"--with-pkgversion=${pkgversion}\""
 		echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
 		make -j${nproc}
 		echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
