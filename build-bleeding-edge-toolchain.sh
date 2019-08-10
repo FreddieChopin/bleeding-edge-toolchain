@@ -127,6 +127,8 @@ fi
 quietConfigureOptions=""
 if [ ${quiet} = "y" ]; then
 	quietConfigureOptions="--quiet --enable-silent-rules"
+	export MAKEFLAGS="--quiet"
+	export GNUMAKEFLAGS="--quiet"
 fi
 
 BASE_CPPFLAGS="-pipe"
