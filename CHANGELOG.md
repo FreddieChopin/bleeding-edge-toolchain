@@ -3,6 +3,22 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190223...HEAD)
+-------------------------------------------------------------------------------------------------------
+
+### Added
+
+- `--quiet-build` option, which will make the build quiet(er).
+- `--resume` option, which will try to resume the last build.
+
+### Changed
+
+- Updated gdb to version 8.3.0.
+
+### Fixed
+
+- Allow building on macOS (darwin)
+
 [190503](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190223...190503) - 2019-05-03
 -------------------------------------------------------------------------------------------------------
 
