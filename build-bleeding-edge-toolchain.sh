@@ -86,7 +86,7 @@ enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
 buildDocumentation="y"
-quietBuild="n"
+quiet="n"
 resume="n"
 while [ ${#} -gt 0 ]; do
 	case ${1} in
@@ -105,15 +105,15 @@ while [ ${#} -gt 0 ]; do
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
 			;;
-		--quiet-build)
-			quietBuild="y"
+		--quiet)
+			quiet="y"
 			;;
 		--resume)
 			resume="y"
 			;;
 
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet-build] [--resume]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet] [--resume]" >&2
 			exit 1
 	esac
 	shift
@@ -125,7 +125,7 @@ if [ ${buildDocumentation} = "y" ]; then
 fi
 
 quietConfigureOptions=""
-if [ ${quietBuild} = "y" ]; then
+if [ ${quiet} = "y" ]; then
 	quietConfigureOptions="--quiet --enable-silent-rules"
 fi
 
