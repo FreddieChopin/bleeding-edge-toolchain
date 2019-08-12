@@ -3,7 +3,7 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190223...HEAD)
+[190812](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190503...190812) - 2019-08-12
 -------------------------------------------------------------------------------------------------------
 
 ### Added
@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Allow building on macOS (darwin)
+- Allow building on macOS (darwin).
 
 [190503](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190223...190503) - 2019-05-03
 -------------------------------------------------------------------------------------------------------
