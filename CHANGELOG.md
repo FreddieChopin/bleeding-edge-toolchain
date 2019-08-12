@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated gcc to version 9.2.0.
 - Updated gdb to version 8.3.0.
 - Updated expat to version 2.2.7.
 
