@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gdb to version 8.3.0.
+- Updated expat to version 2.2.7.
 
 ### Fixed
 
