@@ -99,6 +99,9 @@ while [ ${#} -gt 0 ]; do
 		--keep-build-folders)
 			keepBuildFolders="y"
 			;;
+		--resume)
+			resume="y"
+			;;
 		--skip-documentation)
 			buildDocumentation="n"
 			;;
@@ -108,12 +111,8 @@ while [ ${#} -gt 0 ]; do
 		--quiet)
 			quiet="y"
 			;;
-		--resume)
-			resume="y"
-			;;
-
 		*)
-			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--skip-documentation] [--skip-nano-libraries] [--quiet] [--resume]" >&2
+			echo "Usage: $0 [--enable-win32] [--enable-win64] [--keep-build-folders] [--resume] [--skip-documentation] [--skip-nano-libraries] [--quiet]" >&2
 			exit 1
 	esac
 	shift
