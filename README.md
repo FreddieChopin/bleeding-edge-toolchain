@@ -10,7 +10,7 @@ Toolchain for Linux
 
 Due to the fact that building a binary on "Linux distribution A" that would work on "Linux distribution B" (where
 "Linux distribution B" may just be "Linux distribution A 6 months later after a few upgrades") is really hard
-(impossible?), there will be no binary packages for Linux. This script and some spare CPU time (~30 minutes) is all you
+(impossible?), there will be no binary packages for Linux. This script and some spare CPU time (~2 hours) is all you
 need.
 
 To build native toolchain for Linux just run the script with no arguments:
