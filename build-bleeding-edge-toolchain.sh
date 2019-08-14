@@ -910,15 +910,14 @@ fi
 if [ ${buildPackages} = "y" ]; then
 
 echo "${bold}********** Package${normal}"
-rm -rf ${package}
-ln -s ${installNative} ${package}
 rm -rf ${packageArchiveNative}
+pushd ${installNative}
 if [[ "$(uname)" == "Darwin" ]]; then
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} $(find ${package}/ -mindepth 1 -maxdepth 1)
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ../${packageArchiveNative} *
 else
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ../${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 *
 fi
-rm -rf ${package}
+popd
 
 fi # packaging
 
@@ -1090,11 +1089,10 @@ buildMingw() {
 
 	if [ ${buildPackages} = "y" ]; then
 	echo "${bold}********** ${bannerPrefix}Package${normal}"
-	rm -rf ${package}
-	ln -s ${installFolder} ${package}
 	rm -rf ${packageArchive}
-	7za a -l -mx=9 ${packageArchive} ${package}
-	rm -rf ${package}
+	pushd ${installFolder}
+	7za a -l -mx=9 ../${packageArchive} *
+	popd
 	fi
 	)
 }
