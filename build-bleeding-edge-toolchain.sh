@@ -138,8 +138,8 @@ export AR="gcc-ar"
 export RANLIB="gcc-ranlib"
 export AR_FOR_TARGET=arm-none-eabi-gcc-ar
 export RANLIB_FOR_TARGET=arm-none-eabi-gcc-ranlib
-BASE_CPPFLAGS="-pipe -O3 -g0"
-BASE_LDFLAGS=
+BASE_CPPFLAGS="-pipe -O3 -g0 -fno-plt -fno-pie -no-pie -fno-pic"
+BASE_LDFLAGS="-no-pie"
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
 BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
 
