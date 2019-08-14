@@ -86,6 +86,7 @@ enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
 buildDocumentation="y"
+buildPackages="y"
 quiet="n"
 resume="n"
 while [ ${#} -gt 0 ]; do
@@ -104,6 +105,9 @@ while [ ${#} -gt 0 ]; do
 			;;
 		--skip-documentation)
 			buildDocumentation="n"
+			;;
+		--skip-packages)
+			buildPackages="n"
 			;;
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
@@ -893,6 +897,8 @@ if [ ${buildDocumentation} = "y" ]; then
 	find ${installNative}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installNative}/share/doc \;
 fi
 
+if [ ${buildPackages} = "y" ]; then
+
 echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
@@ -903,6 +909,8 @@ else
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
 fi
 rm -rf ${package}
+
+fi # packaging
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
@@ -1070,12 +1078,14 @@ buildMingw() {
 	find ${installFolder} -name '*.dll' -exec ${STRIP} --strip-unneeded {} \;
 	sed -i 's/$/\r/' ${installFolder}/info.txt
 
+	if [ ${buildPackages} = "y" ]; then
 	echo "${bold}********** ${bannerPrefix}Package${normal}"
 	rm -rf ${package}
 	ln -s ${installFolder} ${package}
 	rm -rf ${packageArchive}
 	7za a -l -mx=9 ${packageArchive} ${package}
 	rm -rf ${package}
+	fi
 	)
 }
 
