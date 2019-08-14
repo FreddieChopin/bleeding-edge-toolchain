@@ -714,6 +714,10 @@ postCleanup() {
 	http://www.freddiechopin.info/
 	EOF
 	cp ${0} ${installFolder}
+
+	# replace dupes with relative symlinks
+	rdfind -makesymlinks true -makeresultsfile false ${installFolder} || true
+	symlinks -rc ${installFolder} || true
 }
 
 if [ ${resume} = "y" ]; then
@@ -861,6 +865,10 @@ if [ "${skipNanoLibraries}" = "n" ]; then
 		""
 
 	buildGccFinal "-nano" "-Os" "${buildNative}/${nanoLibraries}" ""
+
+	# replace dupes with relative symlinks
+	rdfind -makesymlinks true -makeresultsfile false ${buildNative}/${nanoLibraries} || true
+	symlinks -rc ${buildNative}/${nanoLibraries} || true
 	)
 
 	if [ -d "${top}/${buildNative}/${nanoLibraries}" ]; then
