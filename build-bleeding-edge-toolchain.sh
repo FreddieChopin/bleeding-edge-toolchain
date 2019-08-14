@@ -138,7 +138,7 @@ export AR="gcc-ar"
 export RANLIB="gcc-ranlib"
 export AR_FOR_TARGET=arm-none-eabi-gcc-ar
 export RANLIB_FOR_TARGET=arm-none-eabi-gcc-ranlib
-BASE_CPPFLAGS="-pipe"
+BASE_CPPFLAGS="-pipe -O3"
 BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
 BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
@@ -1092,7 +1092,7 @@ buildMingw() {
 if [ "${enableWin32}" = "y" ]; then
 	buildMingw \
 		"i686-w64-mingw32" \
-		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
+		"-O3 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
 		${buildWin32} \
 		${installWin32} \
 		${pythonWin32} \
@@ -1103,7 +1103,7 @@ fi
 if [ "${enableWin64}" = "y" ]; then
 	buildMingw \
 		"x86_64-w64-mingw32" \
-		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
+		"-O3 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
 		${buildWin64} \
 		${installWin64} \
 		${pythonWin64} \
