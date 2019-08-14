@@ -951,9 +951,9 @@ buildMingw() {
 
 	mkdir -p ${installFolder}/${target}
 	cp -R ${installNative}/${target}/include ${installFolder}/${target}/
-	cp -R ${installNative}/${target}/lib ${installFolder}/${target}/
+	(cd ${installNative}/${target} && find lib/ \( -name '*.[oa]' -o -name '*.specs' \) -exec cp --parents -auv -t ../../${installFolder}/${target}/ {} +)
 	mkdir -p ${installFolder}/lib
-	cp -R ${installNative}/lib/gcc ${installFolder}/lib/
+	(cd ${installNative}/lib && find gcc/ -name '*.[oah]' -exec cp --parents -auv -t ../../${installFolder}/lib/ {} +)
 	mkdir -p ${installFolder}/share
 	if [ ${buildDocumentation} = "y" ]; then
 		cp -R ${installNative}/share/doc ${installFolder}/share/
@@ -1080,7 +1080,6 @@ buildMingw() {
 	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "- ${libiconv}\n- python-${pythonVersion}\n"
 	rm -rf ${installFolder}/lib/gcc/${target}/${gccVersion}/plugin
 	rm -rf ${installFolder}/share/info ${installFolder}/share/man
-	find ${installFolder} -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
 	dlls="$(find ${installFolder}/ -name '*.exe' -exec ${triplet}-objdump -p {} \; | sed -ne 's/^.*DLL Name: \(.*\)$/\1/p' | sort | uniq)"
 	for dll in ${dlls}; do
 		cp /usr/${triplet}/bin/${dll} ${installFolder}/bin/ || true
