@@ -138,7 +138,7 @@ export AR="gcc-ar"
 export RANLIB="gcc-ranlib"
 export AR_FOR_TARGET=arm-none-eabi-gcc-ar
 export RANLIB_FOR_TARGET=arm-none-eabi-gcc-ranlib
-BASE_CPPFLAGS="-pipe -O3"
+BASE_CPPFLAGS="-pipe -O3 -g0"
 BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
 BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
@@ -484,7 +484,7 @@ buildNewlib() {
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export PATH="${top}/${installNative}/bin:${PATH-}"
-		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
+		export CFLAGS_FOR_TARGET="${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 		echo "${bold}---------- ${newlib}${suffix} configure${normal}"
 		eval "${top}/${sources}/${newlib}/configure \
 			${quietConfigureOptions} \
@@ -540,8 +540,8 @@ buildGccFinal() {
 		cd ${buildNative}/${gcc}${suffix}
 		export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
-		export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
+		export CFLAGS_FOR_TARGET="${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
+		export CXXFLAGS_FOR_TARGET="${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
 		echo "${bold}---------- ${gcc}${suffix} configure${normal}"
 		${top}/${sources}/${gcc}/configure \
 			${quietConfigureOptions} \
