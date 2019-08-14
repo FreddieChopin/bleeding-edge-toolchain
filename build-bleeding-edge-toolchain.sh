@@ -1081,7 +1081,7 @@ buildMingw() {
 	rm -rf ${installFolder}/lib/gcc/${target}/${gccVersion}/plugin
 	rm -rf ${installFolder}/share/info ${installFolder}/share/man
 	find ${installFolder} -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
-	dlls="$(find ${installFolder}/ -name '*.exe' -exec ${triplet}-objdump -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort | uniq)"
+	dlls="$(find ${installFolder}/ -name '*.exe' -exec ${triplet}-objdump -p {} \; | sed -ne 's/^.*DLL Name: \(.*\)$/\1/p' | sort | uniq)"
 	for dll in ${dlls}; do
 		cp /usr/${triplet}/bin/${dll} ${installFolder}/bin/ || true
 	done
