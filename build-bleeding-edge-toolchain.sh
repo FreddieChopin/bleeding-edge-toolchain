@@ -550,6 +550,7 @@ buildGccFinal() {
 			--docdir=${top}/${installFolder}/share/doc \
 			--libexecdir=${top}/${installFolder}/lib \
 			--enable-languages=c,c++ \
+			--enable-checking=yes,extra \
 			--disable-libstdcxx-verbose \
 			--enable-plugins \
 			--disable-decimal-float \
@@ -1020,6 +1021,7 @@ buildMingw() {
 		${bannerPrefix} \
 		"--build=${hostTriplet} --host=${triplet} \
 			--enable-languages=c,c++ \
+			--enable-checking=yes,extra \
 			--with-headers=yes \
 			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
 
