@@ -424,6 +424,7 @@ buildGcc() {
 		cd ${buildFolder}/${gcc}
 		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		export LDFLAGS_FOR_BUILD="${BASE_LDFLAGS-} ${LDFLAGS_FOR_BUILD-}"
 		echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 		eval "${top}/${sources}/${gcc}/configure \
 			${quietConfigureOptions} \
