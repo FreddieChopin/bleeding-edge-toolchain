@@ -375,7 +375,7 @@ buildBinutils() {
 		fi
 		mkdir -p ${buildFolder}/${binutils}
 		cd ${buildFolder}/${binutils}
-		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
 		eval "${top}/${sources}/${binutils}/configure \
@@ -422,7 +422,7 @@ buildGcc() {
 		fi
 		mkdir -p ${buildFolder}/${gcc}
 		cd ${buildFolder}/${gcc}
-		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
 		eval "${top}/${sources}/${gcc}/configure \
@@ -538,7 +538,7 @@ buildGccFinal() {
 		fi
 		mkdir -p ${buildNative}/${gcc}${suffix}
 		cd ${buildNative}/${gcc}${suffix}
-		export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export CPPFLAGS="-I${top}/${buildNative}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildNative}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 		export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
@@ -641,7 +641,7 @@ buildGdb() {
 		fi
 		mkdir -p ${buildFolder}/${gdb}
 		cd ${buildFolder}/${gdb}
-		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
 		eval "${top}/${sources}/${gdb}/configure \
