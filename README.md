@@ -49,6 +49,21 @@ with their own dependencies (binutils, headers, ...)
 - `libtermcap` and `libwinpthread` compiled for `Mingw-w64`
 - `p7zip`, used to compress the toolchain into an archive in `.7z` format
 
+Toolchain for Raspberry Pi
+--------------------------
+
+Additionally, a toolchain for Raspberry Pi can also be build by passing `--enable-pi` as argument to the script:
+
+`./build-bleeding-edge-toolchain.sh --enable-pi`
+
+This compilation has following dependencies:
+- `gcc-arm-linux-gnueabihf`,
+- `g++-arm-linux-gnueabihf`
+
+On an Ubuntu dist, these are easiest installed with
+
+`sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf`
+
 Additional options
 ------------------
 
