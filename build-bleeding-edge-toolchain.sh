@@ -48,6 +48,8 @@ gdb="gdb-${gdbVersion}"
 gdbArchive="${gdb}.tar.xz"
 gmp="gmp-${gmpVersion}"
 gmpArchive="${gmp}.tar.xz"
+ncurses="ncurses-${ncursesVersion}"
+ncursesArchive="ncurses-${ncursesVersion}.tar.gz"
 isl="isl-${islVersion}"
 islArchive="${isl}.tar.xz"
 libiconv="libiconv-${libiconvVersion}"
@@ -188,6 +190,44 @@ buildZlib() {
 		if [ "${keepBuildFolders}" = "n" ]; then
 			messageB "${bannerPrefix}${zlib} remove build folder"
 			maybeDelete "${buildFolder}/${zlib}"
+		fi
+	fi
+	)
+}
+
+buildNcurses() {
+	(
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/ncurses"
+	echo "${bold}********** ${bannerPrefix}${ncurses}${normal}"
+	if [ ! -f "${tagFileBase}_built" ]; then
+		if [ -d "${buildFolder}/${ncurses}" ]; then
+			rm -rf "${buildFolder}/${ncurses}"
+		fi
+		mkdir -p ${buildFolder}/${ncurses}
+		cd ${buildFolder}/${ncurses}
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		echo "${bold}---------- ${bannerPrefix}${ncurses} configure${normal}"
+		eval "${top}/${sources}/${ncurses}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${ncurses} \
+			--enable-cxx \
+			--disable-stripping \
+			--disable-shared \
+			--disable-nls"
+		echo "${bold}---------- ${bannerPrefix}${ncurses} make${normal}"
+		make -j${nproc}
+		echo "${bold}---------- ${bannerPrefix}${ncurses} make install${normal}"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			echo "${bold}---------- ${bannerPrefix}${ncurses} remove build folder${normal}"
+			rm -rf ${buildFolder}/${ncurses}
 		fi
 	fi
 	)
@@ -634,12 +674,12 @@ buildGdb() {
 	messageA "${bannerPrefix}${gdb}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${gdb}"
-		mkdir -p "${buildFolder}/${gdb}"
-		cd "${buildFolder}/${gdb}"
-		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-		export LDFLAGS="-L\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		mkdir -p ${buildFolder}/${gdb}
+		cd ${buildFolder}/${gdb}
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include -I${top}/${buildFolder}/${prerequisites}/${ncurses}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib -L${top}/${buildFolder}/${prerequisites}/${ncurses}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		messageB "${bannerPrefix}${gdb} configure"
-		eval "\"${top}/${sources}/${gdb}/configure\" \
+		eval "${top}/${sources}/${gdb}/configure \
 			${quietConfigureOptions} \
 			${configureOptions} \
 			--target=\"${target}\" \
@@ -737,6 +777,7 @@ else
 		! -name "${gccArchive}" \
 		! -name "${gdbArchive}" \
 		! -name "${gmpArchive}" \
+		! -name "${ncursesArchive}" \
 		! -name "${islArchive}" \
 		! -name "${libiconvArchive}" \
 		! -name "${mpcArchive}" \
@@ -766,6 +807,7 @@ download() {
 	fi
 }
 download "${binutilsArchive}" "${gnuMirror}/binutils/${binutilsArchive}"
+download ${ncursesArchive} http://ftp.gnu.org/pub/gnu/ncurses/${ncursesArchive}
 download "${expatArchive}" "https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}"
 if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 	download "${gccArchive}" "${gnuMirror}/gcc/${gcc}/${gccArchive}"
@@ -799,12 +841,14 @@ extract() {
 		touch "${1}_extracted"
 	fi
 }
-extract "${binutilsArchive}"
-extract "${expatArchive}"
-extract "${gccArchive}"
-extract "${gdbArchive}"
-extract "${gmpArchive}"
-extract "${islArchive}"
+extract ${binutilsArchive}
+extract ${ncursesArchive}
+extract ${expatArchive}
+extract ${gccArchive}
+extract ${gdbArchive}
+extract ${gmpArchive}
+extract ${islArchive}
+
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	extract "${libiconvArchive}"
 fi
@@ -828,7 +872,9 @@ hostTriplet=$("${sources}/${newlib}/config.guess")
 
 buildZlib "${buildNative}" "" "" ""
 
-buildGmp "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
+buildNcurses ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
+
+buildGmp ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
 buildMpfr "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
@@ -1167,6 +1213,11 @@ buildPi() {
 			INCLUDE_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" \
 			LIBRARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\""
 
+	buildNcurses \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
 	buildGmp \
 		${buildFolder} \
 		${bannerPrefix} \
@@ -1210,7 +1261,7 @@ buildPi() {
 		${buildFolder} \
 		${installFolder} \
 		"" \
-		"--build=${hostTriplet} --host=${triplet} --with-python=yes" \
+		"--build=${hostTriplet} --host=${triplet} --enable-tui" \
 		""
 	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "-"
 
@@ -1227,6 +1278,7 @@ buildPi() {
 	if [ ${buildDocumentation} = "y" ]; then
 		find ${installFolder}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installFolder}/share/doc \;
 	fi
+	echo "Do 'export TERMINFO=/lib/terminfo' if gdb-tui not working" > ${installFolder}/README-GDB-TUI
 
 	if [ ! -f "${packageArchive}" ]; then
 		echo "${bold}********** ${bannerPrefix}Package${normal}"
