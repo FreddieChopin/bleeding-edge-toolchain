@@ -114,6 +114,7 @@ while [ "${#}" -gt 0 ]; do
 		*)
 			echo "Usage: ${0} [--enable-win32] [--enable-win64] [--keep-build-folders] [--resume] [--skip-documentation] [--skip-nano-libraries] [--quiet]" >&2
 			exit 1
+			;;
 	esac
 	shift
 done
