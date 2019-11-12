@@ -388,6 +388,7 @@ buildBinutils() {
 			--enable-interwork \
 			--enable-multilib \
 			--enable-plugins \
+			--disable-gdb \
 			--with-system-zlib \
 			\"--with-pkgversion=${pkgversion}\""
 		echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
