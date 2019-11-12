@@ -655,6 +655,7 @@ buildGdb() {
 			--docdir=${top}/${installFolder}/share/doc \
 			--disable-nls \
 			--disable-sim \
+			--disable-werror \
 			--with-lzma=no \
 			--with-guile=no \
 			--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
