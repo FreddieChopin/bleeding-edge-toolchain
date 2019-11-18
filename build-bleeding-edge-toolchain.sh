@@ -12,10 +12,9 @@
 set -e
 set -u
 
-binutilsVersion="2.32"
+gccVersion="master"
+binutilsVersion="master"
 expatVersion="2.2.7"
-gccVersion="9.2.0"
-gdbVersion="8.3"
 gmpVersion="6.1.2"
 islVersion="0.21"
 libiconvVersion="1.16"
@@ -36,14 +35,10 @@ nanoLibraries="nanoLibraries"
 prerequisites="prerequisites"
 sources="sources"
 
+gcc="gcc-${gccVersion}"
 binutils="binutils-${binutilsVersion}"
-binutilsArchive="${binutils}.tar.xz"
 expat="expat-${expatVersion}"
 expatArchive="${expat}.tar.bz2"
-gcc="gcc-${gccVersion}"
-gccArchive="${gcc}.tar.xz"
-gdb="gdb-${gdbVersion}"
-gdbArchive="${gdb}.tar.xz"
 gmp="gmp-${gmpVersion}"
 gmpArchive="${gmp}.tar.xz"
 isl="isl-${islVersion}"
@@ -385,11 +380,20 @@ buildBinutils() {
 			--prefix=${top}/${installFolder} \
 			--docdir=${top}/${installFolder}/share/doc \
 			--disable-nls \
+			--disable-sim \
+			--disable-werror \
 			--enable-interwork \
 			--enable-multilib \
 			--enable-plugins \
-			--disable-gdb \
+			--with-lzma=no \
+			--with-guile=no \
+			--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
 			--with-system-zlib \
+			--with-expat=yes \
+			--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
+			--with-mpfr=yes \
+			--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
+			\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
 			\"--with-pkgversion=${pkgversion}\""
 		echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
 		make -j${nproc}
@@ -626,64 +630,6 @@ copyNanoLibraries() {
 	fi
 }
 
-buildGdb() {
-	(
-	local buildFolder="${1}"
-	local installFolder="${2}"
-	local bannerPrefix="${3}"
-	local configureOptions="${4}"
-	local documentations="${5}"
-	local tagFileBase="${top}/${buildFolder}/gdb-py"
-	if [[ $configureOptions == *"--with-python=no"* ]]; then
-		tagFileBase="${top}/${buildFolder}/gdb"
-	fi
-	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
-	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${gdb}" ]; then
-			rm -rf "${buildFolder}/${gdb}"
-		fi
-		mkdir -p ${buildFolder}/${gdb}
-		cd ${buildFolder}/${gdb}
-		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include ${BASE_CPPFLAGS-} -march=haswell ${CPPFLAGS-}"
-		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
-		eval "${top}/${sources}/${gdb}/configure \
-			${quietConfigureOptions} \
-			${configureOptions} \
-			--target=${target} \
-			--prefix=${top}/${installFolder} \
-			--docdir=${top}/${installFolder}/share/doc \
-			--disable-nls \
-			--disable-sim \
-			--disable-werror \
-			--with-lzma=no \
-			--with-guile=no \
-			--with-system-gdbinit=${top}/${installFolder}/${target}/lib/gdbinit \
-			--with-system-zlib \
-			--with-expat=yes \
-			--with-libexpat-prefix=${top}/${buildFolder}/${prerequisites}/${expat} \
-			--with-mpfr=yes \
-			--with-libmpfr-prefix=${top}/${buildFolder}/${prerequisites}/${mpfr} \
-			\"--with-gdb-datadir='\\\${prefix}'/${target}/share/gdb\" \
-			\"--with-pkgversion=${pkgversion}\""
-		echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
-		make -j${nproc}
-		echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
-		make install
-		for documentation in ${documentations}; do
-			echo "${bold}---------- ${bannerPrefix}${gdb} make install-${documentation}${normal}"
-			make install-${documentation}
-		done
-		touch "${tagFileBase}_built"
-		cd ${top}
-		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
-			rm -rf ${buildFolder}/${gdb}
-		fi
-	fi
-	)
-}
-
 postCleanup() {
 	local installFolder="${1}"
 	local bannerPrefix="${2}"
@@ -709,7 +655,6 @@ postCleanup() {
 	- ${gcc}
 	- ${newlib}
 	- ${binutils}
-	- ${gdb}
 	$(echo -en "- ${expat}\n- ${gmp}\n- ${isl}\n- ${mpc}\n- ${mpfr}\n- ${zlib}\n${extraComponents}" | sort)
 
 	This package and info about it can be found on Freddie Chopin's website:
@@ -743,10 +688,8 @@ else
 		mkdir -p ${installWin64}
 	fi
 	mkdir -p ${sources}
-	find ${sources} -mindepth 1 -maxdepth 1 -type f ! -name "${binutilsArchive}" \
+	find ${sources} -mindepth 1 -maxdepth 1 -type f \
 		! -name "${expatArchive}" \
-		! -name "${gccArchive}" \
-		! -name "${gdbArchive}" \
 		! -name "${gmpArchive}" \
 		! -name "${islArchive}" \
 		! -name "${libiconvArchive}" \
@@ -776,14 +719,16 @@ download() {
 		touch "${1}_downloaded"
 	fi
 }
-download ${binutilsArchive} http://ftp.gnu.org/gnu/binutils/${binutilsArchive}
+
+checkout() {
+	pushd .
+	git clone --depth=1 -b ${1} ${2} ${3} || (cd ${3} && git pull)
+	popd
+}
+
 download ${expatArchive} https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}
-if [ ${gccVersion#*-} = ${gccVersion} ]; then
-	download ${gccArchive} http://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}
-else
-	download ${gccArchive} https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}
-fi
-download ${gdbArchive} http://ftp.gnu.org/gnu/gdb/${gdbArchive}
+checkout ${gccVersion} git://gcc.gnu.org/git/gcc.git ${gcc}
+checkout ${binutilsVersion} git://sourceware.org/git/binutils-gdb.git ${binutils}
 download ${gmpArchive} http://ftp.gnu.org/gnu/gmp/${gmpArchive}
 download ${islArchive} http://isl.gforge.inria.fr/${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -810,10 +755,7 @@ extract() {
 		touch "${1}_extracted"
 	fi
 }
-extract ${binutilsArchive}
 extract ${expatArchive}
-extract ${gccArchive}
-extract ${gdbArchive}
 extract ${gmpArchive}
 extract ${islArchive}
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -849,7 +791,7 @@ buildIsl ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
 buildExpat ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
 
-buildBinutils ${buildNative} ${installNative} "" "--build=${hostTriplet} --host=${hostTriplet}" "${documentationTypes}"
+buildBinutils ${buildNative} ${installNative} "" "--build=${hostTriplet} --host=${hostTriplet} --with-python=yes" "${documentationTypes}"
 
 buildGcc ${buildNative} ${installNative} "" "--enable-languages=c --without-headers"
 
@@ -889,13 +831,6 @@ buildNewlib \
 	"${documentationTypes}"
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
-
-buildGdb \
-	${buildNative} \
-	${installNative} \
-	"" \
-	"--build=${hostTriplet} --host=${hostTriplet} --with-python=yes" \
-	"${documentationTypes}"
 
 find ${installNative} -type f -exec chmod a+w {} +
 postCleanup ${installNative} "" ${hostSystem} ""
@@ -1018,23 +953,6 @@ buildMingw() {
 		${bannerPrefix} \
 		"--build=${hostTriplet} --host=${triplet}"
 
-	buildBinutils \
-		${buildFolder} \
-		${installFolder} \
-		${bannerPrefix} \
-		"--build=${hostTriplet} --host=${triplet}" \
-		""
-
-	buildGcc \
-		${buildFolder} \
-		${installFolder} \
-		${bannerPrefix} \
-		"--build=${hostTriplet} --host=${triplet} \
-			--enable-languages=c,c++ \
-			--enable-checking=yes,extra \
-			--with-headers=yes \
-			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
-
 	cat > ${buildFolder}/python.sh <<- EOF
 	#!/bin/sh
 	shift
@@ -1055,28 +973,24 @@ buildMingw() {
 	EOF
 	chmod +x ${buildFolder}/python.sh
 
-	buildGdb \
+	buildBinutils \
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
 		"--build=${hostTriplet} --host=${triplet} \
 			--with-python=${top}/${buildFolder}/python.sh \
-			--program-prefix=${target}- \
-			--program-suffix=-py \
 			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}" \
 		""
-	if [ "${keepBuildFolders}" = "y" ]; then
-		mv ${buildFolder}/${gdb} ${buildFolder}/${gdb}-py
-	fi
 
-	buildGdb \
+	buildGcc \
 		${buildFolder} \
 		${installFolder} \
 		${bannerPrefix} \
 		"--build=${hostTriplet} --host=${triplet} \
-			--with-python=no \
-			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}" \
-		""
+			--enable-languages=c,c++ \
+			--enable-checking=yes,extra \
+			--with-headers=yes \
+			--with-libiconv-prefix=${top}/${buildFolder}/${prerequisites}/${libiconv}"
 
 	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "- ${libiconv}\n- python-${pythonVersion}\n"
 	rm -rf ${installFolder}/lib/gcc/${target}/${gccVersion}/plugin
