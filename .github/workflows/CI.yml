@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  schedule:
+    - cron: '0 5 * * 1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: Trass3r/setup-cpp@master
+    - name: prerequisites
+      run: |
+        sudo apt update
+        sudo apt install -y g++-9 bison flex g++-mingw-w64-x86-64 p7zip texinfo
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 900 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+    - name: build
+      run: |
+        mkdir build && cd build
+        ../build-bleeding-edge-toolchain.sh --skip-documentation --enable-win64
+
+    - run: echo "::set-env name=DATE::$(date '+%y%m%d')"
+    - uses: actions/upload-artifact@v1
+      with:
+        name: native
+        path: build/installNative
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: win64
+        path: build/installWin64
