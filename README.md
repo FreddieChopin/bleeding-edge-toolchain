@@ -3,6 +3,8 @@ bleeding-edge-toolchain
 
 All-in-one script to build bleeding-edge-toolchain for ARM microcontrollers.
 
+It does not include CMSIS though. That can be retrieved separately from https://github.com/ARM-software/CMSIS_5/releases.
+
 [bleeding-edge-toolchain - what it's all about?](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)
 
 Toolchain for Linux
