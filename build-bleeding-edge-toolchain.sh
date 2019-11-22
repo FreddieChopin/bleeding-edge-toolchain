@@ -70,8 +70,8 @@ packageArchiveNative="${package}.tar.xz"
 packageArchiveWin32="${package}-win32.7z"
 packageArchiveWin64="${package}-win64.7z"
 
-bold="$(tput bold)"
-normal="$(tput sgr0)"
+bold="$(tput bold)" || true
+normal="$(tput sgr0)" || true
 
 if [[ "$(uname)" == "Darwin" ]]; then
 	nproc="$(sysctl -n hw.ncpu)"
