@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gcc to version 9.3.0.
+- Updated newlib to version 3.3.0.
 - Updated binutils to version 2.34.
 - Updated gdb to version 9.1.
 - Updated expat to version 2.2.9.
