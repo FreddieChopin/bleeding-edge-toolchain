@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gcc to version 9.3.0.
+- Updated binutils to version 2.34.
 
 [190812](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190503...190812) - 2019-08-12
 -------------------------------------------------------------------------------------------------------
