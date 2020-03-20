@@ -22,7 +22,7 @@ libiconvVersion="1.16"
 mpcVersion="1.1.0"
 mpfrVersion="4.0.2"
 newlibVersion="3.3.0"
-pythonVersion="2.7.16"
+pythonVersion="2.7.17"
 zlibVersion="1.2.11"
 
 top="$(pwd)"
