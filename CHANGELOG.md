@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Updated binutils to version 2.34.
 - Updated gdb to version 9.1.
 - Updated expat to version 2.2.9.
+- Updated gmp to version 6.2.0.
 
 [190812](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190503...190812) - 2019-08-12
 -------------------------------------------------------------------------------------------------------
