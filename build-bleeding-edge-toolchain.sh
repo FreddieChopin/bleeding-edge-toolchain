@@ -74,8 +74,9 @@ packageArchiveWin64="${package}-win64.7z"
 
 bold="$(tput bold)"
 normal="$(tput sgr0)"
+uname="$(uname)"
 
-if [ "$(uname)" = "Darwin" ]; then
+if [ "${uname}" = "Darwin" ]; then
 	nproc="$(sysctl -n hw.ncpu)"
 	hostSystem="$(uname -sm)"
 else
@@ -677,7 +678,7 @@ postCleanup() {
 	bannerPrefix="${2}"
 	hostSystem="${3}"
 	extraComponents="${4}"
-	if [ "$(uname)" = "Darwin" ]; then
+	if [ "${uname}" = "Darwin" ]; then
 		buildSystem="$(uname -srvm)"
 	else
 		buildSystem="$(uname -srvmo)"
@@ -880,7 +881,7 @@ buildGdb \
 
 find "${installNative}" -type f -exec chmod a+w {} +
 postCleanup "${installNative}" "" "${hostSystem}" ""
-if [ "$(uname)" = "Darwin" ]; then
+if [ "${uname}" = "Darwin" ]; then
 	find "${installNative}" -type f -perm +111 -exec strip -ur {} \; || true
 else
 	find "${installNative}" -type f -executable -exec strip {} \; || true
@@ -894,7 +895,7 @@ messageA "Package"
 maybeDelete "${package}"
 ln -s "${installNative}" "${package}"
 maybeDelete "${packageArchiveNative}"
-if [ "$(uname)" = "Darwin" ]; then
+if [ "${uname}" = "Darwin" ]; then
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "$(find "${package}/" -mindepth 1 -maxdepth 1)"
 else
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "$(find "${package}/" -mindepth 1 -maxdepth 1)"
