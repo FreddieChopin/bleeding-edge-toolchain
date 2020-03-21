@@ -136,6 +136,14 @@ BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
 BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
 
+maybeDelete() {
+	if [ -f "${1}" ] || [ -h "${1}" ]; then
+		rm -f "${1:?}"
+	elif [ -d "${1}" ]; then
+		rm -rf "${1:?}"
+	fi
+}
+
 buildZlib() {
 	(
 	buildFolder="${1}"
@@ -145,9 +153,7 @@ buildZlib() {
 	tagFileBase="${top}/${buildFolder}/zlib"
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${zlib}" ]; then
-			rm -rf "${buildFolder}/${zlib}"
-		fi
+		maybeDelete "${buildFolder}/${zlib}"
 		cp -R "${sources}/${zlib}" "${buildFolder}"
 		cd "${buildFolder}/${zlib}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -162,7 +168,7 @@ buildZlib() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${zlib} remove build folder${normal}"
-			rm -rf "${buildFolder}/${zlib}"
+			maybeDelete "${buildFolder}/${zlib}"
 		fi
 	fi
 	)
@@ -176,9 +182,7 @@ buildGmp() {
 	tagFileBase="${top}/${buildFolder}/gmp"
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${gmp}" ]; then
-			rm -rf "${buildFolder}/${gmp}"
-		fi
+		maybeDelete "${buildFolder}/${gmp}"
 		mkdir -p "${buildFolder}/${gmp}"
 		cd "${buildFolder}/${gmp}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -199,7 +203,7 @@ buildGmp() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${gmp} remove build folder${normal}"
-			rm -rf "${buildFolder}/${gmp}"
+			maybeDelete "${buildFolder}/${gmp}"
 		fi
 	fi
 	)
@@ -213,9 +217,7 @@ buildMpfr() {
 	tagFileBase="${top}/${buildFolder}/mpfr"
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${mpfr}" ]; then
-			rm -rf "${buildFolder}/${mpfr}"
-		fi
+		maybeDelete "${buildFolder}/${mpfr}"
 		mkdir -p "${buildFolder}/${mpfr}"
 		cd "${buildFolder}/${mpfr}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -236,7 +238,7 @@ buildMpfr() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${mpfr} remove build folder${normal}"
-			rm -rf "${buildFolder}/${mpfr}"
+			maybeDelete "${buildFolder}/${mpfr}"
 		fi
 	fi
 	)
@@ -250,9 +252,7 @@ buildMpc() {
 	tagFileBase="${top}/${buildFolder}/mpc"
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${mpc}" ]; then
-			rm -rf "${buildFolder}/${mpc}"
-		fi
+		maybeDelete "${buildFolder}/${mpc}"
 		mkdir -p "${buildFolder}/${mpc}"
 		cd "${buildFolder}/${mpc}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -274,7 +274,7 @@ buildMpc() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${mpc} remove build folder${normal}"
-			rm -rf "${buildFolder}/${mpc}"
+			maybeDelete "${buildFolder}/${mpc}"
 		fi
 	fi
 	)
@@ -288,9 +288,7 @@ buildIsl() {
 	tagFileBase="${top}/${buildFolder}/isl"
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${isl}" ]; then
-			rm -rf "${buildFolder}/${isl}"
-		fi
+		maybeDelete "${buildFolder}/${isl}"
 		mkdir -p "${buildFolder}/${isl}"
 		cd "${buildFolder}/${isl}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -311,7 +309,7 @@ buildIsl() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${isl} remove build folder${normal}"
-			rm -rf "${buildFolder}/${isl}"
+			maybeDelete "${buildFolder}/${isl}"
 		fi
 	fi
 	)
@@ -325,9 +323,7 @@ buildExpat() {
 	tagFileBase="${top}/${buildFolder}/expat"
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${expat}" ]; then
-			rm -rf "${buildFolder}/${expat}"
-		fi
+		maybeDelete "${buildFolder}/${expat}"
 		mkdir -p "${buildFolder}/${expat}"
 		cd "${buildFolder}/${expat}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -347,7 +343,7 @@ buildExpat() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${expat} remove build folder${normal}"
-			rm -rf "${buildFolder}/${expat}"
+			maybeDelete "${buildFolder}/${expat}"
 		fi
 	fi
 	)
@@ -363,9 +359,7 @@ buildBinutils() {
 	tagFileBase="${top}/${buildFolder}/binutils"
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${binutils}" ]; then
-			rm -rf "${buildFolder}/${binutils}"
-		fi
+		maybeDelete "${buildFolder}/${binutils}"
 		mkdir -p "${buildFolder}/${binutils}"
 		cd "${buildFolder}/${binutils}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -395,7 +389,7 @@ buildBinutils() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${binutils} remove build folder${normal}"
-			rm -rf "${buildFolder}/${binutils}"
+			maybeDelete "${buildFolder}/${binutils}"
 		fi
 	fi
 	)
@@ -410,9 +404,7 @@ buildGcc() {
 	tagFileBase="${top}/${buildFolder}/gcc"
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${gcc}" ]; then
-			rm -rf "${buildFolder}/${gcc}"
-		fi
+		maybeDelete "${buildFolder}/${gcc}"
 		mkdir -p "${buildFolder}/${gcc}"
 		cd "${buildFolder}/${gcc}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -454,7 +446,7 @@ buildGcc() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${gcc} remove build folder${normal}"
-			rm -rf "${buildFolder}/${gcc}"
+			maybeDelete "${buildFolder}/${gcc}"
 		fi
 	fi
 	)
@@ -469,9 +461,7 @@ buildNewlib() {
 	tagFileBase="${top}/${buildNative}/newlib${suffix}"
 	echo "${bold}********** ${newlib}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildNative}/${newlib}${suffix}" ]; then
-			rm -rf "${buildNative}/${newlib}${suffix}"
-		fi
+		maybeDelete "${buildNative}/${newlib}${suffix}"
 		mkdir -p "${buildNative}/${newlib}${suffix}"
 		cd "${buildNative}/${newlib}${suffix}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -511,7 +501,7 @@ buildNewlib() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${newlib}${suffix} remove build folder${normal}"
-			rm -rf "${buildNative}/${newlib}${suffix}"
+			maybeDelete "${buildNative}/${newlib}${suffix}"
 		fi
 	fi
 	)
@@ -526,9 +516,7 @@ buildGccFinal() {
 	tagFileBase="${top}/${buildNative}/gcc${suffix}"
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildNative}/${gcc}${suffix}" ]; then
-			rm -rf "${buildNative}/${gcc}${suffix}"
-		fi
+		maybeDelete "${buildNative}/${gcc}${suffix}"
 		mkdir -p "${buildNative}/${gcc}${suffix}"
 		cd "${buildNative}/${gcc}${suffix}"
 		export CPPFLAGS="-I\"${top}/${buildNative}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -580,7 +568,7 @@ buildGccFinal() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${gcc}${suffix} remove build folder${normal}"
-			rm -rf "${buildNative}/${gcc}${suffix}"
+			maybeDelete "${buildNative}/${gcc}${suffix}"
 		fi
 	fi
 	)
@@ -611,7 +599,7 @@ copyNanoLibraries() {
 
 	if [ "${keepBuildFolders}" = "n" ]; then
 		echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
-		rm -rf "${top}/${buildNative}/${nanoLibraries}"
+		maybeDelete "${top}/${buildNative}/${nanoLibraries}"
 	fi
 	)
 }
@@ -631,9 +619,7 @@ buildGdb() {
 	esac
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${gdb}" ]; then
-			rm -rf "${buildFolder}/${gdb}"
-		fi
+		maybeDelete "${buildFolder}/${gdb}"
 		mkdir -p "${buildFolder}/${gdb}"
 		cd "${buildFolder}/${gdb}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
@@ -669,7 +655,7 @@ buildGdb() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
-			rm -rf "${buildFolder}/${gdb}"
+			maybeDelete "${buildFolder}/${gdb}"
 		fi
 	fi
 	)
@@ -687,7 +673,7 @@ postCleanup() {
 		buildSystem="$(uname -srvmo)"
 	fi
 	echo "${bold}********** ${bannerPrefix}Post-cleanup${normal}"
-	rm -rf "${installFolder}/include"
+	maybeDelete "${installFolder}/include"
 	find "${installFolder}" -name '*.la' -exec rm -rf {} +
 	cat > "${installFolder}/info.txt" <<- EOF
 	${pkgversion}
@@ -715,18 +701,18 @@ if [ "${resume}" = "y" ]; then
 	echo "${bold}********** Resuming last build${normal}"
 else
 	echo "${bold}********** Cleanup${normal}"
-	rm -rf "${buildNative}"
-	rm -rf "${installNative}"
+	maybeDelete "${buildNative}"
+	maybeDelete "${installNative}"
 	mkdir -p "${buildNative}"
 	mkdir -p "${installNative}"
-	rm -rf "${buildWin32}"
-	rm -rf "${installWin32}"
+	maybeDelete "${buildWin32}"
+	maybeDelete "${installWin32}"
 	if [ "${enableWin32}" = "y" ]; then
 		mkdir -p "${buildWin32}"
 		mkdir -p "${installWin32}"
 	fi
-	rm -rf "${buildWin64}"
-	rm -rf "${installWin64}"
+	maybeDelete "${buildWin64}"
+	maybeDelete "${installWin64}"
 	if [ "${enableWin64}" = "y" ]; then
 		mkdir -p "${buildWin64}"
 		mkdir -p "${installWin64}"
@@ -895,15 +881,15 @@ if [ "${buildDocumentation}" = "y" ]; then
 fi
 
 echo "${bold}********** Package${normal}"
-rm -rf "${package}"
+maybeDelete "${package}"
 ln -s "${installNative}" "${package}"
-rm -rf "${packageArchiveNative}"
+maybeDelete "${packageArchiveNative}"
 if [ "$(uname)" = "Darwin" ]; then
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "$(find "${package}/" -mindepth 1 -maxdepth 1)"
 else
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "$(find "${package}/" -mindepth 1 -maxdepth 1)"
 fi
-rm -rf "${package}"
+maybeDelete "${package}"
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
@@ -962,7 +948,7 @@ buildMingw() {
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
 			echo "${bold}---------- ${bannerPrefix}${libiconv} remove build folder${normal}"
-			rm -rf "${top}/${buildFolder}/${libiconv}"
+			maybeDelete "${top}/${buildFolder}/${libiconv}"
 		fi
 	)
 
@@ -1060,8 +1046,9 @@ buildMingw() {
 		""
 
 	postCleanup "${installFolder}" "${bannerPrefix}" "${triplet}" "- ${libiconv}\n- python-${pythonVersion}\n"
-	rm -rf "${installFolder}/lib/gcc/${target}/${gccVersion}/plugin"
-	rm -rf "${installFolder}/share/info" "${installFolder}/share/man"
+	maybeDelete "${installFolder}/lib/gcc/${target}/${gccVersion}/plugin"
+	maybeDelete "${installFolder}/share/info"
+	maybeDelete "${installFolder}/share/man"
 	find "${installFolder}" -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
 	dlls=$(find "${installFolder}/" -name '*.exe' -exec "${triplet}-objdump" -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort | uniq)
 	for dll in ${dlls}; do
@@ -1072,11 +1059,11 @@ buildMingw() {
 	sed -i 's/$/\r/' "${installFolder}/info.txt"
 
 	echo "${bold}********** ${bannerPrefix}Package${normal}"
-	rm -rf "${package}"
+	maybeDelete "${package}"
 	ln -s "${installFolder}" "${package}"
-	rm -rf "${packageArchive}"
+	maybeDelete "${packageArchive}"
 	7za a -l -mx=9 "${packageArchive}" "${package}"
-	rm -rf "${package}"
+	maybeDelete "${package}"
 	)
 }
 
