@@ -73,7 +73,7 @@ packageArchiveWin64="${package}-win64.7z"
 bold="$(tput bold)"
 normal="$(tput sgr0)"
 
-if [[ "$(uname)" == "Darwin" ]]; then
+if [ "$(uname)" = "Darwin" ]; then
 	nproc="$(sysctl -n hw.ncpu)"
 	hostSystem="$(uname -sm)"
 else
@@ -623,9 +623,11 @@ buildGdb() {
 	local configureOptions="${4}"
 	local documentations="${5}"
 	local tagFileBase="${top}/${buildFolder}/gdb-py"
-	if [[ $configureOptions == *"--with-python=no"* ]]; then
-		tagFileBase="${top}/${buildFolder}/gdb"
-	fi
+	case ${configureOptions} in
+		*"--with-python=no"*)
+			tagFileBase="${top}/${buildFolder}/gdb"
+			;;
+	esac
 	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${gdb}" ]; then
@@ -677,7 +679,7 @@ postCleanup() {
 	local bannerPrefix="${2}"
 	local hostSystem="${3}"
 	local extraComponents="${4}"
-	if [[ "$(uname)" == "Darwin" ]]; then
+	if [ "$(uname)" = "Darwin" ]; then
 		buildSystem="$(uname -srvm)"
 	else
 		buildSystem="$(uname -srvmo)"
@@ -879,7 +881,7 @@ buildGdb \
 
 find ${installNative} -type f -exec chmod a+w {} +
 postCleanup ${installNative} "" ${hostSystem} ""
-if [[ "$(uname)" == "Darwin" ]]; then
+if [ "$(uname)" = "Darwin" ]; then
 	find ${installNative} -type f -perm +111 -exec strip -ur {} \; || true
 else
 	find ${installNative} -type f -executable -exec strip {} \; || true
@@ -893,7 +895,7 @@ echo "${bold}********** Package${normal}"
 rm -rf ${package}
 ln -s ${installNative} ${package}
 rm -rf ${packageArchiveNative}
-if [[ "$(uname)" == "Darwin" ]]; then
+if [ "$(uname)" = "Darwin" ]; then
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} $(find ${package}/ -mindepth 1 -maxdepth 1)
 else
 	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchiveNative} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
