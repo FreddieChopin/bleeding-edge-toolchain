@@ -137,11 +137,11 @@ BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-excepti
 
 buildZlib() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local makeOptions="${3}"
-	local makeInstallOptions="${4}"
-	local tagFileBase="${top}/${buildFolder}/zlib"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	makeOptions="${3}"
+	makeInstallOptions="${4}"
+	tagFileBase="${top}/${buildFolder}/zlib"
 	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${zlib}" ]; then
@@ -169,10 +169,10 @@ buildZlib() {
 
 buildGmp() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local configureOptions="${3}"
-	local tagFileBase="${top}/${buildFolder}/gmp"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	configureOptions="${3}"
+	tagFileBase="${top}/${buildFolder}/gmp"
 	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${gmp}" ]; then
@@ -206,10 +206,10 @@ buildGmp() {
 
 buildMpfr() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local configureOptions="${3}"
-	local tagFileBase="${top}/${buildFolder}/mpfr"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	configureOptions="${3}"
+	tagFileBase="${top}/${buildFolder}/mpfr"
 	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${mpfr}" ]; then
@@ -243,10 +243,10 @@ buildMpfr() {
 
 buildMpc() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local configureOptions="${3}"
-	local tagFileBase="${top}/${buildFolder}/mpc"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	configureOptions="${3}"
+	tagFileBase="${top}/${buildFolder}/mpc"
 	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${mpc}" ]; then
@@ -281,10 +281,10 @@ buildMpc() {
 
 buildIsl() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local configureOptions="${3}"
-	local tagFileBase="${top}/${buildFolder}/isl"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	configureOptions="${3}"
+	tagFileBase="${top}/${buildFolder}/isl"
 	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${isl}" ]; then
@@ -318,10 +318,10 @@ buildIsl() {
 
 buildExpat() {
 	(
-	local buildFolder="${1}"
-	local bannerPrefix="${2}"
-	local configureOptions="${3}"
-	local tagFileBase="${top}/${buildFolder}/expat"
+	buildFolder="${1}"
+	bannerPrefix="${2}"
+	configureOptions="${3}"
+	tagFileBase="${top}/${buildFolder}/expat"
 	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${expat}" ]; then
@@ -354,12 +354,12 @@ buildExpat() {
 
 buildBinutils() {
 	(
-	local buildFolder="${1}"
-	local installFolder="${2}"
-	local bannerPrefix="${3}"
-	local configureOptions="${4}"
-	local documentations="${5}"
-	local tagFileBase="${top}/${buildFolder}/binutils"
+	buildFolder="${1}"
+	installFolder="${2}"
+	bannerPrefix="${3}"
+	configureOptions="${4}"
+	documentations="${5}"
+	tagFileBase="${top}/${buildFolder}/binutils"
 	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${binutils}" ]; then
@@ -402,11 +402,11 @@ buildBinutils() {
 
 buildGcc() {
 	(
-	local buildFolder="${1}"
-	local installFolder="${2}"
-	local bannerPrefix="${3}"
-	local configureOptions="${4}"
-	local tagFileBase="${top}/${buildFolder}/gcc"
+	buildFolder="${1}"
+	installFolder="${2}"
+	bannerPrefix="${3}"
+	configureOptions="${4}"
+	tagFileBase="${top}/${buildFolder}/gcc"
 	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildFolder}/${gcc}" ]; then
@@ -461,11 +461,11 @@ buildGcc() {
 
 buildNewlib() {
 	(
-	local suffix="${1}"
-	local optimization="${2}"
-	local configureOptions="${3}"
-	local documentations="${4}"
-	local tagFileBase="${top}/${buildNative}/newlib${suffix}"
+	suffix="${1}"
+	optimization="${2}"
+	configureOptions="${3}"
+	documentations="${4}"
+	tagFileBase="${top}/${buildNative}/newlib${suffix}"
 	echo "${bold}********** ${newlib}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildNative}/${newlib}${suffix}" ]; then
@@ -518,11 +518,11 @@ buildNewlib() {
 
 buildGccFinal() {
 	(
-	local suffix="${1}"
-	local optimization="${2}"
-	local installFolder="${3}"
-	local documentations="${4}"
-	local tagFileBase="${top}/${buildNative}/gcc${suffix}"
+	suffix="${1}"
+	optimization="${2}"
+	installFolder="${3}"
+	documentations="${4}"
+	tagFileBase="${top}/${buildNative}/gcc${suffix}"
 	echo "${bold}********** ${gcc}${suffix}${normal}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		if [ -d "${buildNative}/${gcc}${suffix}" ]; then
@@ -586,14 +586,13 @@ buildGccFinal() {
 }
 
 copyNanoLibraries() {
-	local source="${1}"
-	local destination="${2}"
+	(
+	source="${1}"
+	destination="${2}"
 	echo "${bold}********** \"nano\" libraries copy${normal}"
-	local multilibs=$("${destination}/bin/${target}-gcc" -print-multi-lib)
-	local sourcePrefix="${source}/${target}/lib"
-	local destinationPrefix="${destination}/${target}/lib"
-	local sourceDirectory
-	local destinationDirectory
+	multilibs=$("${destination}/bin/${target}-gcc" -print-multi-lib)
+	sourcePrefix="${source}/${target}/lib"
+	destinationPrefix="${destination}/${target}/lib"
 	for multilib in ${multilibs}; do
 		multilib="${multilib%%;*}"
 		sourceDirectory="${sourcePrefix}/${multilib}"
@@ -613,16 +612,17 @@ copyNanoLibraries() {
 		echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
 		rm -rf "${top}/${buildNative}/${nanoLibraries}"
 	fi
+	)
 }
 
 buildGdb() {
 	(
-	local buildFolder="${1}"
-	local installFolder="${2}"
-	local bannerPrefix="${3}"
-	local configureOptions="${4}"
-	local documentations="${5}"
-	local tagFileBase="${top}/${buildFolder}/gdb-py"
+	buildFolder="${1}"
+	installFolder="${2}"
+	bannerPrefix="${3}"
+	configureOptions="${4}"
+	documentations="${5}"
+	tagFileBase="${top}/${buildFolder}/gdb-py"
 	case "${configureOptions}" in
 		*"--with-python=no"*)
 			tagFileBase="${top}/${buildFolder}/gdb"
@@ -675,10 +675,11 @@ buildGdb() {
 }
 
 postCleanup() {
-	local installFolder="${1}"
-	local bannerPrefix="${2}"
-	local hostSystem="${3}"
-	local extraComponents="${4}"
+	(
+	installFolder="${1}"
+	bannerPrefix="${2}"
+	hostSystem="${3}"
+	extraComponents="${4}"
 	if [ "$(uname)" = "Darwin" ]; then
 		buildSystem="$(uname -srvm)"
 	else
@@ -706,6 +707,7 @@ postCleanup() {
 	http://www.freddiechopin.info/
 	EOF
 	cp "${0}" "${installFolder}"
+	)
 }
 
 if [ "${resume}" = "y" ]; then
@@ -750,7 +752,7 @@ echo "${bold}********** Download${normal}"
 mkdir -p "${sources}"
 cd "${sources}"
 download() {
-	local ret=0
+	ret=0
 	if [ ! -f "${1}_downloaded" ]; then
 		echo "${bold}---------- Downloading ${1}${normal}"
 		curl -L -o "${1}" -C - --connect-timeout 30 -Y 1024 -y 30 "${2}" || ret="${?}"
@@ -906,13 +908,13 @@ if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
 buildMingw() {
 	(
-	local triplet="${1}"
-	local flags="${2}"
-	local buildFolder="${3}"
-	local installFolder="${4}"
-	local pythonFolder="${5}"
-	local bannerPrefix="${6}"
-	local packageArchive="${7}"
+	triplet="${1}"
+	flags="${2}"
+	buildFolder="${3}"
+	installFolder="${4}"
+	pythonFolder="${5}"
+	bannerPrefix="${6}"
+	packageArchive="${7}"
 
 	export AR="${triplet}-ar"
 	export AS="${triplet}-as"
