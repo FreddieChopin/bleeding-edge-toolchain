@@ -10,8 +10,7 @@
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 #
 
-set -e
-set -u
+set -eu
 
 binutilsVersion="2.34"
 expatVersion="2.2.9"
@@ -602,8 +601,8 @@ copyNanoLibraries() {
 		cp "${sourceDirectory}/libsupc++.a" "${destinationDirectory}/libsupc++_nano.a"
 	done
 
-	mkdir -p "${destination}/arm-none-eabi/include/newlib-nano"
-	cp "${source}/arm-none-eabi/include/newlib.h" "${destination}/arm-none-eabi/include/newlib-nano"
+	mkdir -p "${destination}/${target}/include/newlib-nano"
+	cp "${source}/${target}/include/newlib.h" "${destination}/${target}/include/newlib-nano"
 
 	if [ "${keepBuildFolders}" = "n" ]; then
 		messageB "\"nano\" libraries remove install folder"
@@ -689,7 +688,7 @@ postCleanup() {
 	build system: ${buildSystem}
 	host system: ${hostSystem}
 	target system: ${target}
-	compiler: ${CC-gcc} $(${CC-gcc} --version | grep -o '[0-9]\.[0-9]\.[0-9]')
+	compiler: $(${CC-gcc} --version | head -n1)
 
 	Toolchain components:
 	- ${gcc}
@@ -893,9 +892,9 @@ maybeDelete "${package}"
 ln -s "${installNative}" "${package}"
 maybeDelete "${packageArchiveNative}"
 if [ "${uname}" = "Darwin" ]; then
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "$(find "${package}/" -mindepth 1 -maxdepth 1)"
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "${package}"/*
 else
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "$(find "${package}/" -mindepth 1 -maxdepth 1)"
+	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "${package}"/*
 fi
 maybeDelete "${package}"
 
@@ -1058,7 +1057,7 @@ buildMingw() {
 	maybeDelete "${installFolder}/share/info"
 	maybeDelete "${installFolder}/share/man"
 	find "${installFolder}" -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
-	dlls=$(find "${installFolder}/" -name '*.exe' -exec "${triplet}-objdump" -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort | uniq)
+	dlls=$(find "${installFolder}/" -name '*.exe' -exec "${triplet}-objdump" -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort -u)
 	for dll in ${dlls}; do
 		cp "/usr/${triplet}/bin/${dll}" "${installFolder}/bin/" || true
 	done
