@@ -206,8 +206,7 @@ buildGmp() {
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${gmp}\" \
 			--enable-cxx \
-			--disable-shared \
-			--disable-nls"
+			--disable-shared"
 		messageB "${bannerPrefix}${gmp} make"
 		make "-j${nproc}"
 		messageB "${bannerPrefix}${gmp} make install"
@@ -241,7 +240,6 @@ buildMpfr() {
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\" \
 			--disable-shared \
-			--disable-nls \
 			--with-gmp=\"${top}/${buildFolder}/${prerequisites}/${gmp}\""
 		messageB "${bannerPrefix}${mpfr} make"
 		make "-j${nproc}"
@@ -276,7 +274,6 @@ buildMpc() {
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${mpc}\" \
 			--disable-shared \
-			--disable-nls \
 			--with-gmp=\"${top}/${buildFolder}/${prerequisites}/${gmp}\" \
 			--with-mpfr=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\""
 		messageB "${bannerPrefix}${mpc} make"
@@ -312,7 +309,6 @@ buildIsl() {
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${isl}\" \
 			--disable-shared \
-			--disable-nls \
 			--with-gmp-prefix=\"${top}/${buildFolder}/${prerequisites}/${gmp}\""
 		messageB "${bannerPrefix}${isl} make"
 		make "-j${nproc}"
@@ -346,8 +342,7 @@ buildExpat() {
 			${quietConfigureOptions} \
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${expat}\" \
-			--disable-shared \
-			--disable-nls"
+			--disable-shared"
 		messageB "${bannerPrefix}${expat} make"
 		make "-j${nproc}"
 		messageB "${bannerPrefix}${expat} make install"
