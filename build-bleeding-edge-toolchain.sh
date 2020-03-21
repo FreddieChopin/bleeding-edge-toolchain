@@ -115,7 +115,9 @@ while [ "${#}" -gt 0 ]; do
 			quiet="y"
 			;;
 		*)
-			echo "Usage: ${0} [--enable-win32] [--enable-win64] [--keep-build-folders] [--resume] [--skip-documentation] [--skip-nano-libraries] [--quiet]" >&2
+			printf "Usage: %s\n" "${0}" >&2
+			printf "\t\t[--enable-win32] [--enable-win64] [--keep-build-folders] [--resume]\n" >&2
+			printf "\t\t[--skip-documentation] [--skip-nano-libraries] [--quiet]\n" >&2
 			exit 1
 			;;
 	esac
