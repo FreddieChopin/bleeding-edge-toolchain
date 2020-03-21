@@ -64,6 +64,7 @@ pythonArchiveWin64="${pythonWin64}.msi"
 zlib="zlib-${zlibVersion}"
 zlibArchive="${zlib}.tar.gz"
 
+gnuMirror="https://ftpmirror.gnu.org"
 pkgversion="bleeding-edge-toolchain"
 target="arm-none-eabi"
 package="${target}-${gcc}-$(date +'%y%m%d')"
@@ -752,21 +753,21 @@ download() {
 		touch "${1}_downloaded"
 	fi
 }
-download "${binutilsArchive}" "https://ftp.gnu.org/gnu/binutils/${binutilsArchive}"
+download "${binutilsArchive}" "${gnuMirror}/binutils/${binutilsArchive}"
 download "${expatArchive}" "https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}"
 if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
-	download "${gccArchive}" "https://ftp.gnu.org/gnu/gcc/${gcc}/${gccArchive}"
+	download "${gccArchive}" "${gnuMirror}/gcc/${gcc}/${gccArchive}"
 else
 	download "${gccArchive}" "https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}"
 fi
-download "${gdbArchive}" "https://ftp.gnu.org/gnu/gdb/${gdbArchive}"
-download "${gmpArchive}" "https://ftp.gnu.org/gnu/gmp/${gmpArchive}"
+download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
+download "${gmpArchive}" "${gnuMirror}/gmp/${gmpArchive}"
 download "${islArchive}" "http://isl.gforge.inria.fr/${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
-	download "${libiconvArchive}" "https://ftp.gnu.org/pub/gnu/libiconv/${libiconvArchive}"
+	download "${libiconvArchive}" "${gnuMirror}/libiconv/${libiconvArchive}"
 fi
-download "${mpcArchive}" "https://ftp.gnu.org/gnu/mpc/${mpcArchive}"
-download "${mpfrArchive}" "https://ftp.gnu.org/gnu/mpfr/${mpfrArchive}"
+download "${mpcArchive}" "${gnuMirror}/mpc/${mpcArchive}"
+download "${mpfrArchive}" "${gnuMirror}/mpfr/${mpfrArchive}"
 download "${newlibArchive}" "https://sourceware.org/pub/newlib/${newlibArchive}"
 if [ "${enableWin32}" = "y" ]; then
 	download "${pythonArchiveWin32}" "https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin32}"
