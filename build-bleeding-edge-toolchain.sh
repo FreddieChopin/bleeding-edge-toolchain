@@ -138,6 +138,14 @@ BASE_LDFLAGS=
 BASE_CFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections"
 BASE_CXXFLAGS_FOR_TARGET="-pipe -ffunction-sections -fdata-sections -fno-exceptions"
 
+messageA() {
+	echo "${bold}********** ${1}${normal}"
+}
+
+messageB() {
+	echo "${bold}---------- ${1}${normal}"
+}
+
 maybeDelete() {
 	if [ -f "${1}" ] || [ -h "${1}" ]; then
 		rm -f "${1:?}"
@@ -153,23 +161,23 @@ buildZlib() {
 	makeOptions="${3}"
 	makeInstallOptions="${4}"
 	tagFileBase="${top}/${buildFolder}/zlib"
-	echo "${bold}********** ${bannerPrefix}${zlib}${normal}"
+	messageA "${bannerPrefix}${zlib}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${zlib}"
 		cp -R "${sources}/${zlib}" "${buildFolder}"
 		cd "${buildFolder}/${zlib}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${zlib} configure${normal}"
+		messageB "${bannerPrefix}${zlib} configure"
 		./configure --static --prefix="${top}/${buildFolder}/${prerequisites}/${zlib}"
-		echo "${bold}---------- ${bannerPrefix}${zlib} make${normal}"
+		messageB "${bannerPrefix}${zlib} make"
 		eval "make ${makeOptions} \"-j${nproc}\""
-		echo "${bold}---------- ${bannerPrefix}${zlib} make install${normal}"
+		messageB "${bannerPrefix}${zlib} make install"
 		eval "make ${makeInstallOptions} install"
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${zlib} remove build folder${normal}"
+			messageB "${bannerPrefix}${zlib} remove build folder"
 			maybeDelete "${buildFolder}/${zlib}"
 		fi
 	fi
@@ -182,14 +190,14 @@ buildGmp() {
 	bannerPrefix="${2}"
 	configureOptions="${3}"
 	tagFileBase="${top}/${buildFolder}/gmp"
-	echo "${bold}********** ${bannerPrefix}${gmp}${normal}"
+	messageA "${bannerPrefix}${gmp}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${gmp}"
 		mkdir -p "${buildFolder}/${gmp}"
 		cd "${buildFolder}/${gmp}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${gmp} configure${normal}"
+		messageB "${bannerPrefix}${gmp} configure"
 		eval "\"${top}/${sources}/${gmp}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -197,14 +205,14 @@ buildGmp() {
 			--enable-cxx \
 			--disable-shared \
 			--disable-nls"
-		echo "${bold}---------- ${bannerPrefix}${gmp} make${normal}"
+		messageB "${bannerPrefix}${gmp} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${gmp} make install${normal}"
+		messageB "${bannerPrefix}${gmp} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gmp} remove build folder${normal}"
+			messageB "${bannerPrefix}${gmp} remove build folder"
 			maybeDelete "${buildFolder}/${gmp}"
 		fi
 	fi
@@ -217,14 +225,14 @@ buildMpfr() {
 	bannerPrefix="${2}"
 	configureOptions="${3}"
 	tagFileBase="${top}/${buildFolder}/mpfr"
-	echo "${bold}********** ${bannerPrefix}${mpfr}${normal}"
+	messageA "${bannerPrefix}${mpfr}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${mpfr}"
 		mkdir -p "${buildFolder}/${mpfr}"
 		cd "${buildFolder}/${mpfr}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${mpfr} configure${normal}"
+		messageB "${bannerPrefix}${mpfr} configure"
 		eval "\"${top}/${sources}/${mpfr}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -232,14 +240,14 @@ buildMpfr() {
 			--disable-shared \
 			--disable-nls \
 			--with-gmp=\"${top}/${buildFolder}/${prerequisites}/${gmp}\""
-		echo "${bold}---------- ${bannerPrefix}${mpfr} make${normal}"
+		messageB "${bannerPrefix}${mpfr} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${mpfr} make install${normal}"
+		messageB "${bannerPrefix}${mpfr} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${mpfr} remove build folder${normal}"
+			messageB "${bannerPrefix}${mpfr} remove build folder"
 			maybeDelete "${buildFolder}/${mpfr}"
 		fi
 	fi
@@ -252,14 +260,14 @@ buildMpc() {
 	bannerPrefix="${2}"
 	configureOptions="${3}"
 	tagFileBase="${top}/${buildFolder}/mpc"
-	echo "${bold}********** ${bannerPrefix}${mpc}${normal}"
+	messageA "${bannerPrefix}${mpc}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${mpc}"
 		mkdir -p "${buildFolder}/${mpc}"
 		cd "${buildFolder}/${mpc}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${mpc} configure${normal}"
+		messageB "${bannerPrefix}${mpc} configure"
 		eval "\"${top}/${sources}/${mpc}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -268,14 +276,14 @@ buildMpc() {
 			--disable-nls \
 			--with-gmp=\"${top}/${buildFolder}/${prerequisites}/${gmp}\" \
 			--with-mpfr=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\""
-		echo "${bold}---------- ${bannerPrefix}${mpc} make${normal}"
+		messageB "${bannerPrefix}${mpc} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${mpc} make install${normal}"
+		messageB "${bannerPrefix}${mpc} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${mpc} remove build folder${normal}"
+			messageB "${bannerPrefix}${mpc} remove build folder"
 			maybeDelete "${buildFolder}/${mpc}"
 		fi
 	fi
@@ -288,14 +296,14 @@ buildIsl() {
 	bannerPrefix="${2}"
 	configureOptions="${3}"
 	tagFileBase="${top}/${buildFolder}/isl"
-	echo "${bold}********** ${bannerPrefix}${isl}${normal}"
+	messageA "${bannerPrefix}${isl}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${isl}"
 		mkdir -p "${buildFolder}/${isl}"
 		cd "${buildFolder}/${isl}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${isl} configure${normal}"
+		messageB "${bannerPrefix}${isl} configure"
 		eval "\"${top}/${sources}/${isl}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -303,14 +311,14 @@ buildIsl() {
 			--disable-shared \
 			--disable-nls \
 			--with-gmp-prefix=\"${top}/${buildFolder}/${prerequisites}/${gmp}\""
-		echo "${bold}---------- ${bannerPrefix}${isl} make${normal}"
+		messageB "${bannerPrefix}${isl} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${isl} make install${normal}"
+		messageB "${bannerPrefix}${isl} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${isl} remove build folder${normal}"
+			messageB "${bannerPrefix}${isl} remove build folder"
 			maybeDelete "${buildFolder}/${isl}"
 		fi
 	fi
@@ -323,28 +331,28 @@ buildExpat() {
 	bannerPrefix="${2}"
 	configureOptions="${3}"
 	tagFileBase="${top}/${buildFolder}/expat"
-	echo "${bold}********** ${bannerPrefix}${expat}${normal}"
+	messageA "${bannerPrefix}${expat}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${expat}"
 		mkdir -p "${buildFolder}/${expat}"
 		cd "${buildFolder}/${expat}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${expat} configure${normal}"
+		messageB "${bannerPrefix}${expat} configure"
 		eval "\"${top}/${sources}/${expat}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${expat}\" \
 			--disable-shared \
 			--disable-nls"
-		echo "${bold}---------- ${bannerPrefix}${expat} make${normal}"
+		messageB "${bannerPrefix}${expat} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${expat} make install${normal}"
+		messageB "${bannerPrefix}${expat} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${expat} remove build folder${normal}"
+			messageB "${bannerPrefix}${expat} remove build folder"
 			maybeDelete "${buildFolder}/${expat}"
 		fi
 	fi
@@ -359,14 +367,14 @@ buildBinutils() {
 	configureOptions="${4}"
 	documentations="${5}"
 	tagFileBase="${top}/${buildFolder}/binutils"
-	echo "${bold}********** ${bannerPrefix}${binutils}${normal}"
+	messageA "${bannerPrefix}${binutils}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${binutils}"
 		mkdir -p "${buildFolder}/${binutils}"
 		cd "${buildFolder}/${binutils}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${binutils} configure${normal}"
+		messageB "${bannerPrefix}${binutils} configure"
 		eval "\"${top}/${sources}/${binutils}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -379,18 +387,18 @@ buildBinutils() {
 			--enable-plugins \
 			--with-system-zlib \
 			--with-pkgversion=\"${pkgversion}\""
-		echo "${bold}---------- ${bannerPrefix}${binutils} make${normal}"
+		messageB "${bannerPrefix}${binutils} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${binutils} make install${normal}"
+		messageB "${bannerPrefix}${binutils} make install"
 		make install
 		for documentation in ${documentations}; do
-			echo "${bold}---------- ${bannerPrefix}${binutils} make install-${documentation}${normal}"
+			messageB "${bannerPrefix}${binutils} make install-${documentation}"
 			make "install-${documentation}"
 		done
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${binutils} remove build folder${normal}"
+			messageB "${bannerPrefix}${binutils} remove build folder"
 			maybeDelete "${buildFolder}/${binutils}"
 		fi
 	fi
@@ -404,14 +412,14 @@ buildGcc() {
 	bannerPrefix="${3}"
 	configureOptions="${4}"
 	tagFileBase="${top}/${buildFolder}/gcc"
-	echo "${bold}********** ${bannerPrefix}${gcc}${normal}"
+	messageA "${bannerPrefix}${gcc}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${gcc}"
 		mkdir -p "${buildFolder}/${gcc}"
 		cd "${buildFolder}/${gcc}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${gcc} configure${normal}"
+		messageB "${bannerPrefix}${gcc} configure"
 		eval "\"${top}/${sources}/${gcc}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -440,14 +448,14 @@ buildGcc() {
 			--with-isl=\"${top}/${buildFolder}/${prerequisites}/${isl}\" \
 			--with-pkgversion=\"${pkgversion}\" \
 			--with-multilib-list=rmprofile"
-		echo "${bold}---------- ${bannerPrefix}${gcc} make all-gcc${normal}"
+		messageB "${bannerPrefix}${gcc} make all-gcc"
 		make "-j${nproc}" all-gcc
-		echo "${bold}---------- ${bannerPrefix}${gcc} make install-gcc${normal}"
+		messageB "${bannerPrefix}${gcc} make install-gcc"
 		make install-gcc
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gcc} remove build folder${normal}"
+			messageB "${bannerPrefix}${gcc} remove build folder"
 			maybeDelete "${buildFolder}/${gcc}"
 		fi
 	fi
@@ -461,7 +469,7 @@ buildNewlib() {
 	configureOptions="${3}"
 	documentations="${4}"
 	tagFileBase="${top}/${buildNative}/newlib${suffix}"
-	echo "${bold}********** ${newlib}${suffix}${normal}"
+	messageA "${newlib}${suffix}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildNative}/${newlib}${suffix}"
 		mkdir -p "${buildNative}/${newlib}${suffix}"
@@ -470,7 +478,7 @@ buildNewlib() {
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export PATH="${top}/${installNative}/bin:${PATH-}"
 		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
-		echo "${bold}---------- ${newlib}${suffix} configure${normal}"
+		messageB "${newlib}${suffix} configure"
 		eval "\"${top}/${sources}/${newlib}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -485,24 +493,24 @@ buildNewlib() {
 			--enable-newlib-retargetable-locking \
 			--enable-newlib-global-stdio-streams \
 			--disable-nls"
-		echo "${bold}---------- ${newlib}${suffix} make${normal}"
+		messageB "${newlib}${suffix} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${newlib}${suffix} make install${normal}"
+		messageB "${newlib}${suffix} make install"
 		make install
 		for documentation in ${documentations}; do
 			cd "${target}/newlib/libc"
-			echo "${bold}---------- ${newlib}${suffix} libc make install-${documentation}${normal}"
+			messageB "${newlib}${suffix} libc make install-${documentation}"
 			make "install-${documentation}"
 			cd ../../..
 			cd "${target}/newlib/libm"
-			echo "${bold}---------- ${newlib}${suffix} libm make install-${documentation}${normal}"
+			messageB "${newlib}${suffix} libm make install-${documentation}"
 			make "install-${documentation}"
 			cd ../../..
 		done
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${newlib}${suffix} remove build folder${normal}"
+			messageB "${newlib}${suffix} remove build folder"
 			maybeDelete "${buildNative}/${newlib}${suffix}"
 		fi
 	fi
@@ -516,7 +524,7 @@ buildGccFinal() {
 	installFolder="${3}"
 	documentations="${4}"
 	tagFileBase="${top}/${buildNative}/gcc${suffix}"
-	echo "${bold}********** ${gcc}${suffix}${normal}"
+	messageA "${gcc}${suffix}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildNative}/${gcc}${suffix}"
 		mkdir -p "${buildNative}/${gcc}${suffix}"
@@ -525,7 +533,7 @@ buildGccFinal() {
 		export LDFLAGS="-L\"${top}/${buildNative}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		export CFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CFLAGS_FOR_TARGET-} ${CFLAGS_FOR_TARGET-}"
 		export CXXFLAGS_FOR_TARGET="-g ${optimization} ${BASE_CXXFLAGS_FOR_TARGET-} ${CXXFLAGS_FOR_TARGET-}"
-		echo "${bold}---------- ${gcc}${suffix} configure${normal}"
+		messageB "${gcc}${suffix} configure"
 		eval "\"${top}/${sources}/${gcc}/configure\" \
 			${quietConfigureOptions} \
 			--target=\"${target}\" \
@@ -558,18 +566,18 @@ buildGccFinal() {
 			--with-isl=\"${top}/${buildNative}/${prerequisites}/${isl}\" \
 			--with-pkgversion=\"${pkgversion}\" \
 			--with-multilib-list=rmprofile"
-		echo "${bold}---------- ${gcc}${suffix} make${normal}"
+		messageB "${gcc}${suffix} make"
 		make "-j${nproc}" INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"
-		echo "${bold}---------- ${gcc}${suffix} make install${normal}"
+		messageB "${gcc}${suffix} make install"
 		make install
 		for documentation in ${documentations}; do
-			echo "${bold}---------- ${gcc}${suffix} make install-${documentation}${normal}"
+			messageB "${gcc}${suffix} make install-${documentation}"
 			make "install-${documentation}"
 		done
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${gcc}${suffix} remove build folder${normal}"
+			messageB "${gcc}${suffix} remove build folder"
 			maybeDelete "${buildNative}/${gcc}${suffix}"
 		fi
 	fi
@@ -580,7 +588,7 @@ copyNanoLibraries() {
 	(
 	source="${1}"
 	destination="${2}"
-	echo "${bold}********** \"nano\" libraries copy${normal}"
+	messageA "\"nano\" libraries copy"
 	multilibs=$("${destination}/bin/${target}-gcc" -print-multi-lib)
 	sourcePrefix="${source}/${target}/lib"
 	destinationPrefix="${destination}/${target}/lib"
@@ -600,7 +608,7 @@ copyNanoLibraries() {
 	cp "${source}/arm-none-eabi/include/newlib.h" "${destination}/arm-none-eabi/include/newlib-nano"
 
 	if [ "${keepBuildFolders}" = "n" ]; then
-		echo "${bold}---------- \"nano\" libraries remove install folder${normal}"
+		messageB "\"nano\" libraries remove install folder"
 		maybeDelete "${top}/${buildNative}/${nanoLibraries}"
 	fi
 	)
@@ -619,14 +627,14 @@ buildGdb() {
 			tagFileBase="${top}/${buildFolder}/gdb"
 			;;
 	esac
-	echo "${bold}********** ${bannerPrefix}${gdb}${normal}"
+	messageA "${bannerPrefix}${gdb}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${gdb}"
 		mkdir -p "${buildFolder}/${gdb}"
 		cd "${buildFolder}/${gdb}"
 		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${gdb} configure${normal}"
+		messageB "${bannerPrefix}${gdb} configure"
 		eval "\"${top}/${sources}/${gdb}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -645,18 +653,18 @@ buildGdb() {
 			--with-libmpfr-prefix=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\" \
 			--with-gdb-datadir=\"'\\\${prefix}'/${target}/share/gdb\" \
 			--with-pkgversion=\"${pkgversion}\""
-		echo "${bold}---------- ${bannerPrefix}${gdb} make${normal}"
+		messageB "${bannerPrefix}${gdb} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${gdb} make install${normal}"
+		messageB "${bannerPrefix}${gdb} make install"
 		make install
 		for documentation in ${documentations}; do
-			echo "${bold}---------- ${bannerPrefix}${gdb} make install-${documentation}${normal}"
+			messageB "${bannerPrefix}${gdb} make install-${documentation}"
 			make "install-${documentation}"
 		done
 		touch "${tagFileBase}_built"
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${gdb} remove build folder${normal}"
+			messageB "${bannerPrefix}${gdb} remove build folder"
 			maybeDelete "${buildFolder}/${gdb}"
 		fi
 	fi
@@ -674,7 +682,7 @@ postCleanup() {
 	else
 		buildSystem="$(uname -srvmo)"
 	fi
-	echo "${bold}********** ${bannerPrefix}Post-cleanup${normal}"
+	messageA "${bannerPrefix}Post-cleanup"
 	maybeDelete "${installFolder}/include"
 	find "${installFolder}" -name '*.la' -exec rm -rf {} +
 	cat > "${installFolder}/info.txt" <<- EOF
@@ -700,9 +708,9 @@ postCleanup() {
 }
 
 if [ "${resume}" = "y" ]; then
-	echo "${bold}********** Resuming last build${normal}"
+	messageA "Resuming last build"
 else
-	echo "${bold}********** Cleanup${normal}"
+	messageA "Cleanup"
 	maybeDelete "${buildNative}"
 	maybeDelete "${installNative}"
 	mkdir -p "${buildNative}"
@@ -737,13 +745,13 @@ else
 	find "${sources}" -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
 fi
 
-echo "${bold}********** Download${normal}"
+messageA "Download"
 mkdir -p "${sources}"
 cd "${sources}"
 download() {
 	ret=0
 	if [ ! -f "${1}_downloaded" ]; then
-		echo "${bold}---------- Downloading ${1}${normal}"
+		messageB "Downloading ${1}"
 		curl -L -o "${1}" -C - --connect-timeout 30 -Y 1024 -y 30 "${2}" || ret="${?}"
 		if [ "${ret}" -eq 33 ]; then
 			echo 'This happens if the file is complete, continuing...'
@@ -778,11 +786,11 @@ fi
 download "${zlibArchive}" "https://www.zlib.net/fossils/${zlibArchive}"
 cd "${top}"
 
-echo "${bold}********** Extract${normal}"
+messageA "Extract"
 cd "${sources}"
 extract() {
 	if [ ! -f "${1}_extracted" ]; then
-		echo "${bold}---------- Extracting ${1}${normal}"
+		messageB "Extracting ${1}"
 		tar -xf "${1}"
 		touch "${1}_extracted"
 	fi
@@ -800,12 +808,12 @@ extract "${mpcArchive}"
 extract "${mpfrArchive}"
 extract "${newlibArchive}"
 if [ ! -f "${pythonArchiveWin32}_extracted" ] && [ "${enableWin32}" = "y" ]; then
-	echo "${bold}---------- Extracting ${pythonArchiveWin32}${normal}"
+	messageB "Extracting ${pythonArchiveWin32}"
 	7za x "${pythonArchiveWin32}" "-o${pythonWin32}"
 	touch "${pythonArchiveWin32}_extracted"
 fi
 if [ ! -f "${pythonArchiveWin64}_extracted" ] && [ "${enableWin64}" = "y" ]; then
-	echo "${bold}---------- Extracting ${pythonArchiveWin64}${normal}"
+	messageB "Extracting ${pythonArchiveWin64}"
 	7za x "${pythonArchiveWin64}" "-o${pythonWin64}"
 	touch "${pythonArchiveWin64}_extracted"
 fi
@@ -882,7 +890,7 @@ if [ "${buildDocumentation}" = "y" ]; then
 	find "${installNative}/share/doc" -mindepth 2 -name '*.pdf' -exec mv {} "${installNative}/share/doc" \;
 fi
 
-echo "${bold}********** Package${normal}"
+messageA "Package"
 maybeDelete "${package}"
 ln -s "${installNative}" "${package}"
 maybeDelete "${packageArchiveNative}"
@@ -932,10 +940,10 @@ buildMingw() {
 	cp -R "${installNative}"/share/gcc-* "${installFolder}/share/"
 
 	(
-		echo "${bold}********** ${bannerPrefix}${libiconv}${normal}"
+		messageA "${bannerPrefix}${libiconv}"
 		mkdir -p "${buildFolder}/${libiconv}"
 		cd "${buildFolder}/${libiconv}"
-		echo "${bold}---------- ${bannerPrefix}${libiconv} configure${normal}"
+		messageB "${bannerPrefix}${libiconv} configure"
 		eval "\"${top}/${sources}/${libiconv}/configure\" \
 			${quietConfigureOptions} \
 			--build=\"${hostTriplet}\" \
@@ -943,13 +951,13 @@ buildMingw() {
 			--prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\" \
 			--disable-shared \
 			--disable-nls"
-		echo "${bold}---------- ${bannerPrefix}${libiconv} make${normal}"
+		messageB "${bannerPrefix}${libiconv} make"
 		make "-j${nproc}"
-		echo "${bold}---------- ${bannerPrefix}${libiconv} make install${normal}"
+		messageB "${bannerPrefix}${libiconv} make install"
 		make install
 		cd "${top}"
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${libiconv} remove build folder${normal}"
+			messageB "${bannerPrefix}${libiconv} remove build folder"
 			maybeDelete "${top}/${buildFolder}/${libiconv}"
 		fi
 	)
@@ -1060,7 +1068,7 @@ buildMingw() {
 	find "${installFolder}" -name '*.dll' -exec "${STRIP}" --strip-unneeded {} \;
 	sed -i 's/$/\r/' "${installFolder}/info.txt"
 
-	echo "${bold}********** ${bannerPrefix}Package${normal}"
+	messageA "${bannerPrefix}Package"
 	maybeDelete "${package}"
 	ln -s "${installFolder}" "${package}"
 	maybeDelete "${packageArchive}"
@@ -1093,4 +1101,4 @@ fi
 
 fi	# if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
-echo "${bold}********** Done${normal}"
+messageA "Done"
