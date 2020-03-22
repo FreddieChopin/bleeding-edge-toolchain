@@ -1076,11 +1076,15 @@ buildMingw() {
 	sed -i 's/$/\r/' "${installFolder}/info.txt"
 
 	messageA "${bannerPrefix}Package"
-	maybeDelete "${package}"
-	ln -s "${installFolder}" "${package}"
-	maybeDelete "${packageArchive}"
-	7za a -l -mx=9 "${packageArchive}" "${package}"
-	maybeDelete "${package}"
+	tagFile="${top}/${buildFolder}/package_generated"
+	if [ ! -f "${tagFile}" ]; then
+		maybeDelete "${package}"
+		ln -s "${installFolder}" "${package}"
+		maybeDelete "${packageArchive}"
+		7za a -l -mx=9 "${packageArchive}" "${package}"
+		maybeDelete "${package}"
+		touch "${tagFile}"
+	fi
 	)
 }
 
