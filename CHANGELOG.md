@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - Updated isl to version 0.22.
 - Updated python to version 2.7.17.
 
+### Fixed
+
+- Fixed various portability-related issues of the script (by Oliver Galvin).
+
 [190812](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190503...190812) - 2019-08-12
 -------------------------------------------------------------------------------------------------------
 

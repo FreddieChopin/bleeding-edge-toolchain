@@ -1,17 +1,21 @@
 #
 # file: .travis.yml
 #
-# author: Copyright (C) 2016-2019 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
+# author: Copyright (C) 2016-2020 Freddie Chopin http://www.freddiechopin.info http://www.distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
-# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 #
 
-dist: xenial
+dist: bionic
 sudo: required
 
 # use minimal environment
 language: generic
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y build-essential cmake ninja-build
 
 script:
     - "{ time=\"0\"; while true; do sleep 60; time=\"$((${time} + 1))\"; echo \"${time} minute(s)...\"; done } &"
@@ -20,6 +24,7 @@ script:
     - "kill \"${keepAlivePid}\""
     - "wait \"${keepAlivePid}\" || true"
     - "tar -xf *.tar.xz"
+    - "rm *.tar.xz"
     - "cd arm-none-eabi-gcc-*"
     - "export PATH=$(pwd)/bin:${PATH}"
     - "cd .."
@@ -27,7 +32,7 @@ script:
     - "curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz"
     - "tar -xf master.tar.gz"
     - "cd distortos-master"
-    - "./scripts/buildAllConfigurations.sh"
+    - "./scripts/buildAllConfigurations.sh configurations"
 
 after_failure:
     - "echo \"********** /tmp/stdout.log\""
