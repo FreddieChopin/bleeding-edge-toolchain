@@ -695,7 +695,7 @@ postCleanup() {
 	- ${newlib}
 	- ${binutils}
 	- ${gdb}
-	$(printf -- "- %s\n- %s\n- %s\n- %s\n- %s\n- %s\n%s" "${expat}" "${gmp}" "${isl}" "${mpc}" "${mpfr}" "${zlib}" "${extraComponents}" | sort)
+	$(printf -- "- %s\n- %s\n- %s\n- %s\n- %s\n- %s\n%b" "${expat}" "${gmp}" "${isl}" "${mpc}" "${mpfr}" "${zlib}" "${extraComponents}" | sort)
 
 	This package and info about it can be found on Freddie Chopin's website:
 	http://www.freddiechopin.info/
