@@ -888,15 +888,19 @@ if [ "${buildDocumentation}" = "y" ]; then
 fi
 
 messageA "Package"
-maybeDelete "${package}"
-ln -s "${installNative}" "${package}"
-maybeDelete "${packageArchiveNative}"
-if [ "${uname}" = "Darwin" ]; then
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "${package}"/*
-else
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "${package}"/*
+tagFile="${top}/${buildNative}/package_generated"
+if [ ! -f "${tagFile}" ]; then
+	maybeDelete "${package}"
+	ln -s "${installNative}" "${package}"
+	maybeDelete "${packageArchiveNative}"
+	if [ "${uname}" = "Darwin" ]; then
+		XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "${package}"/*
+	else
+		XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "${package}"/*
+	fi
+	maybeDelete "${package}"
+	touch "${tagFile}"
 fi
-maybeDelete "${package}"
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
@@ -925,37 +929,43 @@ buildMingw() {
 	export STRIP="${triplet}-strip"
 	export WINDRES="${triplet}-windres"
 
+	messageA "${bannerPrefix}Copy common files"
 	mkdir -p "${installFolder}/${target}"
-	cp -R "${installNative}/${target}/include" "${installFolder}/${target}/include"
-	cp -R "${installNative}/${target}/lib" "${installFolder}/${target}/lib"
+	cp -Rf "${installNative}/${target}/include" "${installFolder}/${target}"
+	cp -Rf "${installNative}/${target}/lib" "${installFolder}/${target}"
 	mkdir -p "${installFolder}/lib"
-	cp -R "${installNative}/lib/gcc" "${installFolder}/lib/gcc"
+	cp -Rf "${installNative}/lib/gcc" "${installFolder}/lib"
 	mkdir -p "${installFolder}/share"
 	if [ "${buildDocumentation}" = "y" ]; then
-		cp -R "${installNative}/share/doc" "${installFolder}/share/doc"
+		cp -Rf "${installNative}/share/doc" "${installFolder}/share"
 	fi
-	cp -R "${installNative}"/share/gcc-* "${installFolder}/share/"
+	cp -Rf "${installNative}"/share/gcc-* "${installFolder}/share"
 
 	(
 		messageA "${bannerPrefix}${libiconv}"
-		mkdir -p "${buildFolder}/${libiconv}"
-		cd "${buildFolder}/${libiconv}"
-		messageB "${bannerPrefix}${libiconv} configure"
-		eval "\"${top}/${sources}/${libiconv}/configure\" \
-			${quietConfigureOptions} \
-			--build=\"${hostTriplet}\" \
-			--host=\"${triplet}\" \
-			--prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\" \
-			--disable-shared \
-			--disable-nls"
-		messageB "${bannerPrefix}${libiconv} make"
-		make "-j${nproc}"
-		messageB "${bannerPrefix}${libiconv} make install"
-		make install
-		cd "${top}"
-		if [ "${keepBuildFolders}" = "n" ]; then
-			messageB "${bannerPrefix}${libiconv} remove build folder"
-			maybeDelete "${top}/${buildFolder}/${libiconv}"
+		tagFile="${top}/${buildFolder}/libiconv_built"
+		if [ ! -f "${tagFile}" ]; then
+			maybeDelete "${buildFolder}/${libiconv}"
+			mkdir -p "${buildFolder}/${libiconv}"
+			cd "${buildFolder}/${libiconv}"
+			messageB "${bannerPrefix}${libiconv} configure"
+			eval "\"${top}/${sources}/${libiconv}/configure\" \
+				${quietConfigureOptions} \
+				--build=\"${hostTriplet}\" \
+				--host=\"${triplet}\" \
+				--prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\" \
+				--disable-shared \
+				--disable-nls"
+			messageB "${bannerPrefix}${libiconv} make"
+			make "-j${nproc}"
+			messageB "${bannerPrefix}${libiconv} make install"
+			make install
+			touch "${tagFile}"
+			cd "${top}"
+			if [ "${keepBuildFolders}" = "n" ]; then
+				messageB "${bannerPrefix}${libiconv} remove build folder"
+				maybeDelete "${top}/${buildFolder}/${libiconv}"
+			fi
 		fi
 	)
 
@@ -1066,11 +1076,15 @@ buildMingw() {
 	sed -i 's/$/\r/' "${installFolder}/info.txt"
 
 	messageA "${bannerPrefix}Package"
-	maybeDelete "${package}"
-	ln -s "${installFolder}" "${package}"
-	maybeDelete "${packageArchive}"
-	7za a -l -mx=9 "${packageArchive}" "${package}"
-	maybeDelete "${package}"
+	tagFile="${top}/${buildFolder}/package_generated"
+	if [ ! -f "${tagFile}" ]; then
+		maybeDelete "${package}"
+		ln -s "${installFolder}" "${package}"
+		maybeDelete "${packageArchive}"
+		7za a -l -mx=9 "${packageArchive}" "${package}"
+		maybeDelete "${package}"
+		touch "${tagFile}"
+	fi
 	)
 }
 
