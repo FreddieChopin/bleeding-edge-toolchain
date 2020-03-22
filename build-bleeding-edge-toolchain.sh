@@ -943,24 +943,29 @@ buildMingw() {
 
 	(
 		messageA "${bannerPrefix}${libiconv}"
-		mkdir -p "${buildFolder}/${libiconv}"
-		cd "${buildFolder}/${libiconv}"
-		messageB "${bannerPrefix}${libiconv} configure"
-		eval "\"${top}/${sources}/${libiconv}/configure\" \
-			${quietConfigureOptions} \
-			--build=\"${hostTriplet}\" \
-			--host=\"${triplet}\" \
-			--prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\" \
-			--disable-shared \
-			--disable-nls"
-		messageB "${bannerPrefix}${libiconv} make"
-		make "-j${nproc}"
-		messageB "${bannerPrefix}${libiconv} make install"
-		make install
-		cd "${top}"
-		if [ "${keepBuildFolders}" = "n" ]; then
-			messageB "${bannerPrefix}${libiconv} remove build folder"
-			maybeDelete "${top}/${buildFolder}/${libiconv}"
+		tagFile="${top}/${buildFolder}/libiconv_built"
+		if [ ! -f "${tagFile}" ]; then
+			maybeDelete "${buildFolder}/${libiconv}"
+			mkdir -p "${buildFolder}/${libiconv}"
+			cd "${buildFolder}/${libiconv}"
+			messageB "${bannerPrefix}${libiconv} configure"
+			eval "\"${top}/${sources}/${libiconv}/configure\" \
+				${quietConfigureOptions} \
+				--build=\"${hostTriplet}\" \
+				--host=\"${triplet}\" \
+				--prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\" \
+				--disable-shared \
+				--disable-nls"
+			messageB "${bannerPrefix}${libiconv} make"
+			make "-j${nproc}"
+			messageB "${bannerPrefix}${libiconv} make install"
+			make install
+			touch "${tagFile}"
+			cd "${top}"
+			if [ "${keepBuildFolders}" = "n" ]; then
+				messageB "${bannerPrefix}${libiconv} remove build folder"
+				maybeDelete "${top}/${buildFolder}/${libiconv}"
+			fi
 		fi
 	)
 
