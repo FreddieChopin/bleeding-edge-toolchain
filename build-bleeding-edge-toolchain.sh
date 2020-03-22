@@ -929,6 +929,7 @@ buildMingw() {
 	export STRIP="${triplet}-strip"
 	export WINDRES="${triplet}-windres"
 
+	messageA "${bannerPrefix}Copy common files"
 	mkdir -p "${installFolder}/${target}"
 	cp -Rf "${installNative}/${target}/include" "${installFolder}/${target}"
 	cp -Rf "${installNative}/${target}/lib" "${installFolder}/${target}"
