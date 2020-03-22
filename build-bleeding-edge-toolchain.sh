@@ -888,15 +888,19 @@ if [ "${buildDocumentation}" = "y" ]; then
 fi
 
 messageA "Package"
-maybeDelete "${package}"
-ln -s "${installNative}" "${package}"
-maybeDelete "${packageArchiveNative}"
-if [ "${uname}" = "Darwin" ]; then
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "${package}"/*
-else
-	XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "${package}"/*
+tagFile="${top}/${buildNative}/package_generated"
+if [ ! -f "${tagFile}" ]; then
+	maybeDelete "${package}"
+	ln -s "${installNative}" "${package}"
+	maybeDelete "${packageArchiveNative}"
+	if [ "${uname}" = "Darwin" ]; then
+		XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" "${package}"/*
+	else
+		XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf "${packageArchiveNative}" --mtime='@0' --numeric-owner --group=0 --owner=0 "${package}"/*
+	fi
+	maybeDelete "${package}"
+	touch "${tagFile}"
 fi
-maybeDelete "${package}"
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
