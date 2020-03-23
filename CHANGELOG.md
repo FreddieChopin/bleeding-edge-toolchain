@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed various portability-related issues of the script (by Oliver Galvin).
 - Fixed behaviour of `--resume` option for Windows builds.
+- Fixed Windows build for recent versions of mingw, which changed default settings for SSP.
 
 [190812](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190503...190812) - 2019-08-12
 -------------------------------------------------------------------------------------------------------
