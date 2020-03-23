@@ -913,7 +913,7 @@ buildMingw() {
 	bannerPrefix="${5}"
 	packageArchive="${6}"
 
-	flags="-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4"
+	flags="-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions --param=ssp-buffer-size=4"
 
 	export AR="${triplet}-ar"
 	export AS="${triplet}-as"
@@ -922,6 +922,7 @@ buildMingw() {
 	export CFLAGS="${flags} ${CFLAGS-}"
 	export CXX="${triplet}-g++"
 	export CXXFLAGS="${flags} ${CXXFLAGS-}"
+	export LDFLAGS="-fstack-protector -lssp ${LDFLAGS-}"
 	export NM="${triplet}-nm"
 	export OBJDUMP="${triplet}-objdump"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
@@ -973,7 +974,7 @@ buildMingw() {
 	buildZlib \
 		"${buildFolder}" \
 		"${bannerPrefix}" \
-		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
+		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\"" \
 		"-f win32/Makefile.gcc \
 			BINARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/bin\" \
 			INCLUDE_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" \
