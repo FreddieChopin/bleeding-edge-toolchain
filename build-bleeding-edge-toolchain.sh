@@ -907,12 +907,13 @@ if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 buildMingw() {
 	(
 	triplet="${1}"
-	flags="${2}"
-	buildFolder="${3}"
-	installFolder="${4}"
-	pythonFolder="${5}"
-	bannerPrefix="${6}"
-	packageArchive="${7}"
+	buildFolder="${2}"
+	installFolder="${3}"
+	pythonFolder="${4}"
+	bannerPrefix="${5}"
+	packageArchive="${6}"
+
+	flags="-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions --param=ssp-buffer-size=4"
 
 	export AR="${triplet}-ar"
 	export AS="${triplet}-as"
@@ -921,6 +922,7 @@ buildMingw() {
 	export CFLAGS="${flags} ${CFLAGS-}"
 	export CXX="${triplet}-g++"
 	export CXXFLAGS="${flags} ${CXXFLAGS-}"
+	export LDFLAGS="-fstack-protector -lssp ${LDFLAGS-}"
 	export NM="${triplet}-nm"
 	export OBJDUMP="${triplet}-objdump"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
@@ -972,7 +974,7 @@ buildMingw() {
 	buildZlib \
 		"${buildFolder}" \
 		"${bannerPrefix}" \
-		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
+		"-f win32/Makefile.gcc PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\"" \
 		"-f win32/Makefile.gcc \
 			BINARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/bin\" \
 			INCLUDE_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" \
@@ -1091,7 +1093,6 @@ buildMingw() {
 if [ "${enableWin32}" = "y" ]; then
 	buildMingw \
 		"i686-w64-mingw32" \
-		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
 		"${buildWin32}" \
 		"${installWin32}" \
 		"${pythonWin32}" \
@@ -1102,7 +1103,6 @@ fi
 if [ "${enableWin64}" = "y" ]; then
 	buildMingw \
 		"x86_64-w64-mingw32" \
-		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4" \
 		"${buildWin64}" \
 		"${installWin64}" \
 		"${pythonWin64}" \
