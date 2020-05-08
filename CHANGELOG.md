@@ -3,6 +3,13 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200323...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Changed
+
+- Updated python to version 2.7.18.
+
 [200323](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/190812...200323) - 2020-03-23
 -------------------------------------------------------------------------------------------------------
 
