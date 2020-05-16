@@ -913,7 +913,7 @@ buildMingw() {
 	bannerPrefix="${5}"
 	packageArchive="${6}"
 
-	flags="-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions --param=ssp-buffer-size=4"
+	flags="-O2 -pipe -Wp,-D_FORTIFY_SOURCE=2 -fno-plt -fstack-protector -fexceptions --param=ssp-buffer-size=4"
 
 	export AR="${triplet}-ar"
 	export AS="${triplet}-as"
@@ -922,7 +922,7 @@ buildMingw() {
 	export CFLAGS="${flags} ${CFLAGS-}"
 	export CXX="${triplet}-g++"
 	export CXXFLAGS="${flags} ${CXXFLAGS-}"
-	export LDFLAGS="-fstack-protector -lssp ${LDFLAGS-}"
+	export LDFLAGS="-Wl,-O2,--sort-common,--as-needed -fstack-protector -lssp ${LDFLAGS-}"
 	export NM="${triplet}-nm"
 	export OBJDUMP="${triplet}-objdump"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
