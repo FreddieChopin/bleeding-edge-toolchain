@@ -926,6 +926,8 @@ buildMingw() {
 	export NM="${triplet}-nm"
 	export OBJDUMP="${triplet}-objdump"
 	export PATH="${top}/${installNative}/bin:${PATH-}"
+	export PKG_CONFIG_LIBDIR="/usr/${triplet}/lib/pkgconfig:/usr/${triplet}/share/pkgconfig"
+	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH_CUSTOM-}:${PKG_CONFIG_LIBDIR}"
 	export RANLIB="${triplet}-ranlib"
 	export RC="${triplet}-windres"
 	export STRIP="${triplet}-strip"
