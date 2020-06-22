@@ -201,16 +201,14 @@ buildNcurses() {
 	local bannerPrefix="${2}"
 	local configureOptions="${3}"
 	local tagFileBase="${top}/${buildFolder}/ncurses"
-	echo "${bold}********** ${bannerPrefix}${ncurses}${normal}"
+	messageA "${bannerPrefix}${ncurses}"
 	if [ ! -f "${tagFileBase}_built" ]; then
-		if [ -d "${buildFolder}/${ncurses}" ]; then
-			rm -rf "${buildFolder}/${ncurses}"
-		fi
-		mkdir -p ${buildFolder}/${ncurses}
-		cd ${buildFolder}/${ncurses}
+		maybeDelete "${buildFolder}/${ncurses}"
+		mkdir -p "${buildFolder}/${ncurses}"
+		cd "${buildFolder}/${ncurses}"
 		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
-		echo "${bold}---------- ${bannerPrefix}${ncurses} configure${normal}"
+		messageB "${bannerPrefix}${ncurses} configure"
 		eval "${top}/${sources}/${ncurses}/configure \
 			${quietConfigureOptions} \
 			${configureOptions} \
@@ -219,15 +217,15 @@ buildNcurses() {
 			--disable-stripping \
 			--disable-shared \
 			--disable-nls"
-		echo "${bold}---------- ${bannerPrefix}${ncurses} make${normal}"
+		messageB "${bannerPrefix}${ncurses} make"
 		make -j${nproc}
-		echo "${bold}---------- ${bannerPrefix}${ncurses} make install${normal}"
+		messageB "${bannerPrefix}${ncurses} make install"
 		make install
 		touch "${tagFileBase}_built"
 		cd ${top}
 		if [ "${keepBuildFolders}" = "n" ]; then
-			echo "${bold}---------- ${bannerPrefix}${ncurses} remove build folder${normal}"
-			rm -rf ${buildFolder}/${ncurses}
+			messageB "${bannerPrefix}${ncurses} remove build folder"
+			maybeDelete "${buildFolder}/${ncurses}"
 		fi
 	fi
 	)
@@ -674,12 +672,12 @@ buildGdb() {
 	messageA "${bannerPrefix}${gdb}"
 	if [ ! -f "${tagFileBase}_built" ]; then
 		maybeDelete "${buildFolder}/${gdb}"
-		mkdir -p ${buildFolder}/${gdb}
-		cd ${buildFolder}/${gdb}
+		mkdir -p "${buildFolder}/${gdb}"
+		cd "${buildFolder}/${gdb}"
 		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include -I${top}/${buildFolder}/${prerequisites}/${ncurses}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
 		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib -L${top}/${buildFolder}/${prerequisites}/${ncurses}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		messageB "${bannerPrefix}${gdb} configure"
-		eval "${top}/${sources}/${gdb}/configure \
+		eval "\"${top}/${sources}/${gdb}/configure\" \
 			${quietConfigureOptions} \
 			${configureOptions} \
 			--target=\"${target}\" \
@@ -807,7 +805,7 @@ download() {
 	fi
 }
 download "${binutilsArchive}" "${gnuMirror}/binutils/${binutilsArchive}"
-download ${ncursesArchive} http://ftp.gnu.org/pub/gnu/ncurses/${ncursesArchive}
+download "${ncursesArchive}" "http://ftp.gnu.org/pub/gnu/ncurses/${ncursesArchive}"
 download "${expatArchive}" "https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}"
 if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 	download "${gccArchive}" "${gnuMirror}/gcc/${gcc}/${gccArchive}"
@@ -841,13 +839,13 @@ extract() {
 		touch "${1}_extracted"
 	fi
 }
-extract ${binutilsArchive}
-extract ${ncursesArchive}
-extract ${expatArchive}
-extract ${gccArchive}
-extract ${gdbArchive}
-extract ${gmpArchive}
-extract ${islArchive}
+extract "${binutilsArchive}"
+extract "${ncursesArchive}"
+extract "${expatArchive}"
+extract "${gccArchive}"
+extract "${gdbArchive}"
+extract "${gmpArchive}"
+extract "${islArchive}"
 
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	extract "${libiconvArchive}"
@@ -872,9 +870,9 @@ hostTriplet=$("${sources}/${newlib}/config.guess")
 
 buildZlib "${buildNative}" "" "" ""
 
-buildNcurses ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
+buildNcurses "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
-buildGmp ${buildNative} "" "--build=${hostTriplet} --host=${hostTriplet}"
+buildGmp "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
 buildMpfr "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
@@ -1167,8 +1165,6 @@ fi
 
 fi	# if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 
-messageA "Done"
-
 buildPi() {
 	(
 	local triplet="${1}"
@@ -1281,7 +1277,7 @@ buildPi() {
 	echo "Do 'export TERMINFO=/lib/terminfo' if gdb-tui not working" > ${installFolder}/README-GDB-TUI
 
 	if [ ! -f "${packageArchive}" ]; then
-		echo "${bold}********** ${bannerPrefix}Package${normal}"
+		messageA "${bannerPrefix}Package"
 		rm -rf ${package}
 		ln -s ${installPi} ${package}
 		if [[ "$(uname)" == "Darwin" ]]; then
