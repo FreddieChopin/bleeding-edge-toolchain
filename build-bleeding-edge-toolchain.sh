@@ -1086,7 +1086,8 @@ buildMingw() {
 	find "${installFolder}" -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
 	dlls=$(find "${installFolder}/" -name '*.exe' -exec "${triplet}-objdump" -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort -u)
 	for dll in ${dlls}; do
-		cp "/usr/${triplet}/bin/${dll}" "${installFolder}/bin/" || true
+		path=$(${triplet}-gcc -print-file-name=$dll)
+		[ ! -e "${path}" ] || install -D -m644 "${path}" "${installFolder}/bin/${path##*/}"
 	done
 	find "${installFolder}" -name '*.exe' -exec "${STRIP}" {} \;
 	find "${installFolder}" -name '*.dll' -exec "${STRIP}" --strip-unneeded {} \;
