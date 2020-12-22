@@ -71,8 +71,12 @@ packageArchiveNative="${package}.tar.xz"
 packageArchiveWin32="${package}-win32.7z"
 packageArchiveWin64="${package}-win64.7z"
 
-bold="$(tput bold)"
-normal="$(tput sgr0)"
+bold=
+normal=
+if [ -n "${TERM-}" ]; then
+	bold="$(tput bold)"
+	normal="$(tput sgr0)"
+fi
 uname="$(uname)"
 
 if [ "${uname}" = "Darwin" ]; then
@@ -87,6 +91,7 @@ enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
+skipGdb="n"
 buildDocumentation="y"
 quiet="n"
 resume="n"
@@ -109,6 +114,9 @@ while [ "${#}" -gt 0 ]; do
 			;;
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
+			;;
+		--skip-gdb)
+			skipGdb="y"
 			;;
 		--quiet)
 			quiet="y"
@@ -765,7 +773,8 @@ if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 else
 	download "${gccArchive}" "https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}"
 fi
-download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
+[ "$skipGdb" = "y" ] ||
+	download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
 download "${gmpArchive}" "${gnuMirror}/gmp/${gmpArchive}"
 download "${islArchive}" "http://isl.gforge.inria.fr/${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -795,7 +804,8 @@ extract() {
 extract "${binutilsArchive}"
 extract "${expatArchive}"
 extract "${gccArchive}"
-extract "${gdbArchive}"
+[ "$skipGdb" = "y" ] ||
+	extract "${gdbArchive}"
 extract "${gmpArchive}"
 extract "${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -868,12 +878,13 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-buildGdb \
-	"${buildNative}" \
-	"${installNative}" \
-	"" \
-	"--build=\"${hostTriplet}\" --host=\"${hostTriplet}\" --with-python=yes" \
-	"${documentationTypes}"
+[ "$skipGdb" = "y" ] ||
+	buildGdb \
+		"${buildNative}" \
+		"${installNative}" \
+		"" \
+		"--build=\"${hostTriplet}\" --host=\"${hostTriplet}\" --with-python=yes" \
+		"${documentationTypes}"
 
 find "${installNative}" -type f -exec chmod a+w {} +
 postCleanup "${installNative}" "" "${hostSystem}" ""
@@ -1043,28 +1054,30 @@ buildMingw() {
 	EOF
 	chmod +x "${buildFolder}/python.sh"
 
-	buildGdb \
-		"${buildFolder}" \
-		"${installFolder}" \
-		"${bannerPrefix}" \
-		"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
-			--with-python=\"${top}/${buildFolder}/python.sh\" \
-			--program-prefix=\"${target}-\" \
-			--program-suffix=-py \
-			--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
-		""
-	if [ "${keepBuildFolders}" = "y" ]; then
-		mv "${buildFolder}/${gdb}" "${buildFolder}/${gdb}-py"
-	fi
+	[ "$skipGdb" = "y" ] || {
+		buildGdb \
+			"${buildFolder}" \
+			"${installFolder}" \
+			"${bannerPrefix}" \
+			"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
+				--with-python=\"${top}/${buildFolder}/python.sh\" \
+				--program-prefix=\"${target}-\" \
+				--program-suffix=-py \
+				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
+			""
+		if [ "${keepBuildFolders}" = "y" ]; then
+			mv "${buildFolder}/${gdb}" "${buildFolder}/${gdb}-py"
+		fi
 
-	buildGdb \
-		"${buildFolder}" \
-		"${installFolder}" \
-		"${bannerPrefix}" \
-		"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
-			--with-python=no \
-			--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
-		""
+		buildGdb \
+			"${buildFolder}" \
+			"${installFolder}" \
+			"${bannerPrefix}" \
+			"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
+				--with-python=no \
+				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
+			""
+		}
 
 	postCleanup "${installFolder}" "${bannerPrefix}" "${triplet}" "- ${libiconv}\n- python-${pythonVersion}\n"
 	maybeDelete "${installFolder}/lib/gcc/${target}/${gccVersion}/plugin"
@@ -1073,7 +1086,8 @@ buildMingw() {
 	find "${installFolder}" -executable ! -type d ! -name '*.exe' ! -name '*.dll' ! -name '*.sh' -exec rm -f {} +
 	dlls=$(find "${installFolder}/" -name '*.exe' -exec "${triplet}-objdump" -p {} \; | sed -ne "s/^.*DLL Name: \(.*\)$/\1/p" | sort -u)
 	for dll in ${dlls}; do
-		cp "/usr/${triplet}/bin/${dll}" "${installFolder}/bin/" || true
+		path=$(${triplet}-gcc -print-file-name=$dll)
+		[ ! -e "${path}" ] || install -D -m644 "${path}" "${installFolder}/bin/${path##*/}"
 	done
 	find "${installFolder}" -name '*.exe' -exec "${STRIP}" {} \;
 	find "${installFolder}" -name '*.dll' -exec "${STRIP}" --strip-unneeded {} \;
