@@ -91,6 +91,7 @@ enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
+skipGdb="n"
 buildDocumentation="y"
 quiet="n"
 resume="n"
@@ -113,6 +114,9 @@ while [ "${#}" -gt 0 ]; do
 			;;
 		--skip-nano-libraries)
 			skipNanoLibraries="y"
+			;;
+		--skip-gdb)
+			skipGdb="y"
 			;;
 		--quiet)
 			quiet="y"
@@ -769,7 +773,8 @@ if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 else
 	download "${gccArchive}" "https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}"
 fi
-download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
+[ "$skipGdb" = "y" ] ||
+	download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
 download "${gmpArchive}" "${gnuMirror}/gmp/${gmpArchive}"
 download "${islArchive}" "http://isl.gforge.inria.fr/${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -799,7 +804,8 @@ extract() {
 extract "${binutilsArchive}"
 extract "${expatArchive}"
 extract "${gccArchive}"
-extract "${gdbArchive}"
+[ "$skipGdb" = "y" ] ||
+	extract "${gdbArchive}"
 extract "${gmpArchive}"
 extract "${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -872,12 +878,13 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-buildGdb \
-	"${buildNative}" \
-	"${installNative}" \
-	"" \
-	"--build=\"${hostTriplet}\" --host=\"${hostTriplet}\" --with-python=yes" \
-	"${documentationTypes}"
+[ "$skipGdb" = "y" ] ||
+	buildGdb \
+		"${buildNative}" \
+		"${installNative}" \
+		"" \
+		"--build=\"${hostTriplet}\" --host=\"${hostTriplet}\" --with-python=yes" \
+		"${documentationTypes}"
 
 find "${installNative}" -type f -exec chmod a+w {} +
 postCleanup "${installNative}" "" "${hostSystem}" ""
@@ -1047,28 +1054,30 @@ buildMingw() {
 	EOF
 	chmod +x "${buildFolder}/python.sh"
 
-	buildGdb \
-		"${buildFolder}" \
-		"${installFolder}" \
-		"${bannerPrefix}" \
-		"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
-			--with-python=\"${top}/${buildFolder}/python.sh\" \
-			--program-prefix=\"${target}-\" \
-			--program-suffix=-py \
-			--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
-		""
-	if [ "${keepBuildFolders}" = "y" ]; then
-		mv "${buildFolder}/${gdb}" "${buildFolder}/${gdb}-py"
-	fi
+	[ "$skipGdb" = "y" ] || {
+		buildGdb \
+			"${buildFolder}" \
+			"${installFolder}" \
+			"${bannerPrefix}" \
+			"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
+				--with-python=\"${top}/${buildFolder}/python.sh\" \
+				--program-prefix=\"${target}-\" \
+				--program-suffix=-py \
+				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
+			""
+		if [ "${keepBuildFolders}" = "y" ]; then
+			mv "${buildFolder}/${gdb}" "${buildFolder}/${gdb}-py"
+		fi
 
-	buildGdb \
-		"${buildFolder}" \
-		"${installFolder}" \
-		"${bannerPrefix}" \
-		"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
-			--with-python=no \
-			--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
-		""
+		buildGdb \
+			"${buildFolder}" \
+			"${installFolder}" \
+			"${bannerPrefix}" \
+			"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
+				--with-python=no \
+				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
+			""
+		}
 
 	postCleanup "${installFolder}" "${bannerPrefix}" "${triplet}" "- ${libiconv}\n- python-${pythonVersion}\n"
 	maybeDelete "${installFolder}/lib/gcc/${target}/${gccVersion}/plugin"
