@@ -2,9 +2,11 @@
 buildNative/
 buildWin32/
 buildWin64/
+buildPi/
 installNative/
 installWin32/
 installWin64/
+installPi/
 sources/
 
 # generated toolchain during packaging
@@ -14,3 +16,4 @@ arm-none-eabi-gcc-*-*
 arm-none-eabi-gcc-*-*.tar.xz
 arm-none-eabi-gcc-*-*-win32.7z
 arm-none-eabi-gcc-*-*-win64.7z
+arm-none-eabi-gcc-*-*-pi.tar.xz

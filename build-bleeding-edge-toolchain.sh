@@ -24,14 +24,17 @@ mpfrVersion="4.0.2"
 newlibVersion="3.3.0"
 pythonVersion="2.7.18"
 zlibVersion="1.2.11"
+ncursesVersion="6.2"
 
 top="$(pwd)"
 buildNative="buildNative"
 buildWin32="buildWin32"
 buildWin64="buildWin64"
+buildPi="buildPi"
 installNative="installNative"
 installWin32="installWin32"
 installWin64="installWin64"
+installPi="installPi"
 nanoLibraries="nanoLibraries"
 prerequisites="prerequisites"
 sources="sources"
@@ -46,6 +49,8 @@ gdb="gdb-${gdbVersion}"
 gdbArchive="${gdb}.tar.xz"
 gmp="gmp-${gmpVersion}"
 gmpArchive="${gmp}.tar.xz"
+ncurses="ncurses-${ncursesVersion}"
+ncursesArchive="ncurses-${ncursesVersion}.tar.gz"
 isl="isl-${islVersion}"
 islArchive="${isl}.tar.xz"
 libiconv="libiconv-${libiconvVersion}"
@@ -70,6 +75,7 @@ package="${target}-${gcc}-$(date +'%y%m%d')"
 packageArchiveNative="${package}.tar.xz"
 packageArchiveWin32="${package}-win32.7z"
 packageArchiveWin64="${package}-win64.7z"
+packageArchivePi="${package}-pi.tar.xz"
 
 bold=
 normal=
@@ -89,6 +95,7 @@ fi
 
 enableWin32="n"
 enableWin64="n"
+enablePi="n"
 keepBuildFolders="n"
 skipNanoLibraries="n"
 skipGdb="n"
@@ -102,6 +109,9 @@ while [ "${#}" -gt 0 ]; do
 			;;
 		--enable-win64)
 			enableWin64="y"
+			;;
+		--enable-pi)
+			enablePi="y"
 			;;
 		--keep-build-folders)
 			keepBuildFolders="y"
@@ -123,7 +133,7 @@ while [ "${#}" -gt 0 ]; do
 			;;
 		*)
 			printf "Usage: %s\n" "${0}" >&2
-			printf "\t\t[--enable-win32] [--enable-win64] [--keep-build-folders] [--resume]\n" >&2
+			printf "\t\t[--enable-win32] [--enable-win64] [--enable-pi] [--keep-build-folders] [--resume]\n" >&2
 			printf "\t\t[--skip-documentation] [--skip-nano-libraries] [--quiet]\n" >&2
 			exit 1
 			;;
@@ -189,6 +199,42 @@ buildZlib() {
 		if [ "${keepBuildFolders}" = "n" ]; then
 			messageB "${bannerPrefix}${zlib} remove build folder"
 			maybeDelete "${buildFolder}/${zlib}"
+		fi
+	fi
+	)
+}
+
+buildNcurses() {
+	(
+	local buildFolder="${1}"
+	local bannerPrefix="${2}"
+	local configureOptions="${3}"
+	local tagFileBase="${top}/${buildFolder}/ncurses"
+	messageA "${bannerPrefix}${ncurses}"
+	if [ ! -f "${tagFileBase}_built" ]; then
+		maybeDelete "${buildFolder}/${ncurses}"
+		mkdir -p "${buildFolder}/${ncurses}"
+		cd "${buildFolder}/${ncurses}"
+		export CPPFLAGS="${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="${BASE_LDFLAGS-} ${LDFLAGS-}"
+		messageB "${bannerPrefix}${ncurses} configure"
+		eval "${top}/${sources}/${ncurses}/configure \
+			${quietConfigureOptions} \
+			${configureOptions} \
+			--prefix=${top}/${buildFolder}/${prerequisites}/${ncurses} \
+			--enable-cxx \
+			--disable-stripping \
+			--disable-shared \
+			--disable-nls"
+		messageB "${bannerPrefix}${ncurses} make"
+		make -j${nproc}
+		messageB "${bannerPrefix}${ncurses} make install"
+		make install
+		touch "${tagFileBase}_built"
+		cd ${top}
+		if [ "${keepBuildFolders}" = "n" ]; then
+			messageB "${bannerPrefix}${ncurses} remove build folder"
+			maybeDelete "${buildFolder}/${ncurses}"
 		fi
 	fi
 	)
@@ -637,8 +683,8 @@ buildGdb() {
 		maybeDelete "${buildFolder}/${gdb}"
 		mkdir -p "${buildFolder}/${gdb}"
 		cd "${buildFolder}/${gdb}"
-		export CPPFLAGS="-I\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
-		export LDFLAGS="-L\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\" ${BASE_LDFLAGS-} ${LDFLAGS-}"
+		export CPPFLAGS="-I${top}/${buildFolder}/${prerequisites}/${zlib}/include -I${top}/${buildFolder}/${prerequisites}/${ncurses}/include ${BASE_CPPFLAGS-} ${CPPFLAGS-}"
+		export LDFLAGS="-L${top}/${buildFolder}/${prerequisites}/${zlib}/lib -L${top}/${buildFolder}/${prerequisites}/${ncurses}/lib ${BASE_LDFLAGS-} ${LDFLAGS-}"
 		messageB "${bannerPrefix}${gdb} configure"
 		eval "\"${top}/${sources}/${gdb}/configure\" \
 			${quietConfigureOptions} \
@@ -738,6 +784,7 @@ else
 		! -name "${gccArchive}" \
 		! -name "${gdbArchive}" \
 		! -name "${gmpArchive}" \
+		! -name "${ncursesArchive}" \
 		! -name "${islArchive}" \
 		! -name "${libiconvArchive}" \
 		! -name "${mpcArchive}" \
@@ -767,6 +814,7 @@ download() {
 	fi
 }
 download "${binutilsArchive}" "${gnuMirror}/binutils/${binutilsArchive}"
+download "${ncursesArchive}" "http://ftp.gnu.org/pub/gnu/ncurses/${ncursesArchive}"
 download "${expatArchive}" "https://github.com/libexpat/libexpat/releases/download/$(echo "R_${expatVersion}" | sed 's/\./_/g')/${expatArchive}"
 if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 	download "${gccArchive}" "${gnuMirror}/gcc/${gcc}/${gccArchive}"
@@ -802,12 +850,14 @@ extract() {
 	fi
 }
 extract "${binutilsArchive}"
+extract "${ncursesArchive}"
 extract "${expatArchive}"
 extract "${gccArchive}"
 [ "$skipGdb" = "y" ] ||
 	extract "${gdbArchive}"
 extract "${gmpArchive}"
 extract "${islArchive}"
+
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	extract "${libiconvArchive}"
 fi
@@ -830,6 +880,8 @@ cd "${top}"
 hostTriplet=$("${sources}/${newlib}/config.guess")
 
 buildZlib "${buildNative}" "" "" ""
+
+buildNcurses "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
 buildGmp "${buildNative}" "" "--build=\"${hostTriplet}\" --host=\"${hostTriplet}\""
 
@@ -1127,5 +1179,141 @@ if [ "${enableWin64}" = "y" ]; then
 fi
 
 fi	# if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
+
+buildPi() {
+	(
+	local triplet="${1}"
+	local flags="${2}"
+	local buildFolder="${3}"
+	local installFolder="${4}"
+	local pythonFolder="${5}"
+	local bannerPrefix="${6}"
+	local packageArchive="${7}"
+
+	export AR="${triplet}-ar"
+	export AS="${triplet}-as"
+	export CC="${triplet}-gcc"
+	export CC_FOR_BUILD="gcc"
+	export CFLAGS="${flags} ${CFLAGS-}"
+	export CXX="${triplet}-g++"
+	export CXXFLAGS="${flags} ${CXXFLAGS-}"
+	export NM="${triplet}-nm"
+	export OBJDUMP="${triplet}-objdump"
+	export PATH="${top}/${installNative}/bin:${PATH-}"
+	export RANLIB="${triplet}-ranlib"
+	export STRIP="${triplet}-strip"
+
+	mkdir -p ${installFolder}/${target}
+	cp -R ${installNative}/${target}/include ${installFolder}/${target}/include
+	cp -R ${installNative}/${target}/lib ${installFolder}/${target}/lib
+	mkdir -p ${installFolder}/lib
+	cp -R ${installNative}/lib/gcc ${installFolder}/lib/gcc
+	mkdir -p ${installFolder}/share
+	if [ ${buildDocumentation} = "y" ]; then
+		cp -R ${installNative}/share/doc ${installFolder}/share/doc
+	fi
+	cp -R ${installNative}/share/gcc-* ${installFolder}/share/
+
+	mkdir -p ${buildFolder}
+
+	buildZlib \
+		${buildFolder} \
+		${bannerPrefix} \
+		"PREFIX=\"${triplet}-\" CFLAGS=\"${CFLAGS}\"" \
+		"	BINARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/bin\" \
+			INCLUDE_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/include\" \
+			LIBRARY_PATH=\"${top}/${buildFolder}/${prerequisites}/${zlib}/lib\""
+
+	buildNcurses \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildGmp \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildMpfr \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildMpc \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildIsl \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildExpat \
+		${buildFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}"
+
+	buildBinutils \
+		${buildFolder} \
+		${installFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet}" \
+		""
+
+	buildGcc \
+		${buildFolder} \
+		${installFolder} \
+		${bannerPrefix} \
+		"--build=${hostTriplet} --host=${triplet} \
+			--enable-languages=c,c++ \
+			--with-headers=yes"
+	buildGdb \
+		${buildFolder} \
+		${installFolder} \
+		"" \
+		"--build=${hostTriplet} --host=${triplet} --enable-tui" \
+		""
+	postCleanup ${installFolder} ${bannerPrefix} ${triplet} "-"
+
+	rm -rf ${installFolder}/lib/gcc/${target}/${gccVersion}/plugin
+	rm -rf ${installFolder}/share/info ${installFolder}/share/man
+
+	find ${installFolder} -type f -exec chmod a+w {} +
+	if [[ "$(uname)" == "Darwin" ]]; then
+		find ${installFolder} -type f -perm +111 -exec ${STRIP} -ur {} \; || true
+	else
+		find ${installFolder} -type f -executable -exec ${STRIP} {} \; || true
+	fi
+	find ${installFolder} -type f -exec chmod a-w {} +
+	if [ ${buildDocumentation} = "y" ]; then
+		find ${installFolder}/share/doc -mindepth 2 -name '*.pdf' -exec mv {} ${installFolder}/share/doc \;
+	fi
+	echo "Do 'export TERMINFO=/lib/terminfo' if gdb-tui not working" > ${installFolder}/README-GDB-TUI
+
+	if [ ! -f "${packageArchive}" ]; then
+		messageA "${bannerPrefix}Package"
+		rm -rf ${package}
+		ln -s ${installPi} ${package}
+		if [[ "$(uname)" == "Darwin" ]]; then
+			XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchive} $(find ${package}/ -mindepth 1 -maxdepth 1)
+		else
+			XZ_OPT=${XZ_OPT-"-9e -v"} tar -cJf ${packageArchive} --mtime='@0' --numeric-owner --group=0 --owner=0 $(find ${package}/ -mindepth 1 -maxdepth 1)
+		fi
+		rm -rf ${package}
+	fi
+	)
+}
+
+if [ "${enablePi}" = "y" ]; then
+	buildPi \
+		"arm-linux-gnueabihf" \
+		"-O2 -g -pipe -Wp,-D_FORTIFY_SOURCE=2 -fexceptions" \
+		${buildPi} \
+		${installPi} \
+		"" \
+		"rpi: " \
+		${packageArchivePi}
+fi
 
 messageA "Done"

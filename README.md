@@ -49,6 +49,32 @@ with their own dependencies (binutils, headers, ...)
 - `libtermcap` and `libwinpthread` compiled for `Mingw-w64`
 - `p7zip`, used to compress the toolchain into an archive in `.7z` format
 
+Toolchain for Raspberry Pi
+--------------------------
+
+Additionally, a toolchain for Raspberry Pi can also be build by passing `--enable-pi` as argument to the script:
+
+`./build-bleeding-edge-toolchain.sh --enable-pi`
+
+This compilation has following dependencies:
+- `gcc-arm-linux-gnueabihf`,
+- `g++-arm-linux-gnueabihf`
+
+On an Ubuntu dist, these are easiest installed with
+
+`sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf`
+
+It seems aclocal-1.16 is needed. If this is not part of your dist (I had aclocal-1.15) do the following:
+```
+$ wget https://ftp.gnu.org/gnu/automake/automake-1.16.tar.gz
+$ tar -xzvf automake-1.16.tar.gz
+$ cd automake-1.16/
+$ ./configure
+$ make
+$ sudo make install
+$ cd .. && rm -rf automake-1.16 automake-1.16.tar.gz
+```
+
 Additional options
 ------------------
 
