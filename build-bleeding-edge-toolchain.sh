@@ -24,6 +24,7 @@ mpfrVersion="4.0.2"
 newlibVersion="3.3.0"
 pythonVersion="2.7.18"
 zlibVersion="1.2.11"
+ncursesVersion="6.2"
 
 top="$(pwd)"
 buildNative="buildNative"
