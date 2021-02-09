@@ -17,6 +17,7 @@ multiarch GDB.
 - Updated binutils to version 2.36.1.
 - Updated gdb to version 10.1.
 - Updated expat to version 2.2.10.
+- Updated gmp to version 6.2.1.
 
 ### Fixed
 
