@@ -19,6 +19,7 @@ multiarch GDB.
 - Updated expat to version 2.2.10.
 - Updated gmp to version 6.2.1.
 - Updated isl to version 0.23.
+- Updated mpc to version 1.2.1.
 
 ### Fixed
 
