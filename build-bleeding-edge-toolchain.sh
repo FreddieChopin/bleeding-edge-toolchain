@@ -90,8 +90,8 @@ fi
 enableWin32="n"
 enableWin64="n"
 keepBuildFolders="n"
-skipNanoLibraries="n"
 skipGdb="n"
+skipNanoLibraries="n"
 buildDocumentation="y"
 quiet="n"
 resume="n"
@@ -112,11 +112,11 @@ while [ "${#}" -gt 0 ]; do
 		--skip-documentation)
 			buildDocumentation="n"
 			;;
-		--skip-nano-libraries)
-			skipNanoLibraries="y"
-			;;
 		--skip-gdb)
 			skipGdb="y"
+			;;
+		--skip-nano-libraries)
+			skipNanoLibraries="y"
 			;;
 		--quiet)
 			quiet="y"
@@ -124,7 +124,7 @@ while [ "${#}" -gt 0 ]; do
 		*)
 			printf "Usage: %s\n" "${0}" >&2
 			printf "\t\t[--enable-win32] [--enable-win64] [--keep-build-folders] [--resume]\n" >&2
-			printf "\t\t[--skip-documentation] [--skip-nano-libraries] [--quiet]\n" >&2
+			printf "\t\t[--skip-documentation] [--skip-gdb] [--skip-nano-libraries] [--quiet]\n" >&2
 			exit 1
 			;;
 	esac
@@ -773,8 +773,9 @@ if [ "${gccVersion#*-}" = "${gccVersion}" ]; then
 else
 	download "${gccArchive}" "https://gcc.gnu.org/pub/gcc/snapshots/${gccVersion}/${gccArchive}"
 fi
-[ "$skipGdb" = "y" ] ||
+if [ "${skipGdb}" = "n" ]; then
 	download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
+fi
 download "${gmpArchive}" "${gnuMirror}/gmp/${gmpArchive}"
 download "${islArchive}" "http://isl.gforge.inria.fr/${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -804,8 +805,9 @@ extract() {
 extract "${binutilsArchive}"
 extract "${expatArchive}"
 extract "${gccArchive}"
-[ "$skipGdb" = "y" ] ||
+if [ "${skipGdb}" = "n" ]; then
 	extract "${gdbArchive}"
+fi
 extract "${gmpArchive}"
 extract "${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
@@ -878,13 +880,14 @@ buildNewlib \
 
 buildGccFinal "-final" "-O2" "${installNative}" "${documentationTypes}"
 
-[ "$skipGdb" = "y" ] ||
+if [ "${skipGdb}" = "n" ]; then
 	buildGdb \
 		"${buildNative}" \
 		"${installNative}" \
 		"" \
 		"--build=\"${hostTriplet}\" --host=\"${hostTriplet}\" --with-python=yes" \
 		"${documentationTypes}"
+fi
 
 find "${installNative}" -type f -exec chmod a+w {} +
 postCleanup "${installNative}" "" "${hostSystem}" ""
@@ -1054,7 +1057,7 @@ buildMingw() {
 	EOF
 	chmod +x "${buildFolder}/python.sh"
 
-	[ "$skipGdb" = "y" ] || {
+	if [ "${skipGdb}" = "n" ]; then
 		buildGdb \
 			"${buildFolder}" \
 			"${installFolder}" \
@@ -1077,7 +1080,7 @@ buildMingw() {
 				--with-python=no \
 				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
 			""
-		}
+	fi
 
 	postCleanup "${installFolder}" "${bannerPrefix}" "${triplet}" "- ${libiconv}\n- python-${pythonVersion}\n"
 	maybeDelete "${installFolder}/lib/gcc/${target}/${gccVersion}/plugin"
