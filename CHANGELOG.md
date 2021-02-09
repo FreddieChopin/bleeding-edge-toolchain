@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - `--skip-gdb` option, which skips building of GDB. This might come in handy if your Linux distribution already has a
 multiarch GDB.
 
+### Changed
+
+- Updated binutils to version 2.36.1.
+
 ### Fixed
 
 - Fix building of toolchain on a buildserver without a tty.
