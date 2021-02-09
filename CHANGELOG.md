@@ -20,6 +20,7 @@ multiarch GDB.
 - Updated gmp to version 6.2.1.
 - Updated isl to version 0.23.
 - Updated mpc to version 1.2.1.
+- Updated mpfr to version 4.1.0.
 
 ### Fixed
 
