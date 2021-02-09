@@ -3,6 +3,19 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200517...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Added
+
+- `--skip-gdb` option, which skips building of GDB. This might come in handy if your Linux distribution already has a
+multiarch GDB.
+
+### Fixed
+
+- Fix building of toolchain on a buildserver without a tty.
+- Don't hardcode paths to mingw's dll files.
+
 [200517](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200323...200517) - 2020-05-17
 -------------------------------------------------------------------------------------------------------
 
