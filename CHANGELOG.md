@@ -3,6 +3,13 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/210213...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Changed
+
+- Updated binutils to version 2.39.
+
 [210213](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200517...210213)
 ------------------------------------------------------------------------------------------
 
