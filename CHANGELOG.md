@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Updated expat to version 2.4.9.
 - Updated isl to version 0.25.
 - Updated libiconv to version 1.17.
+- Updated zlib to version 1.2.12.
 
 ### Fixed
 

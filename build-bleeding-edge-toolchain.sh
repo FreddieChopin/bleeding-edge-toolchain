@@ -23,7 +23,7 @@ mpcVersion="1.2.1"
 mpfrVersion="4.1.0"
 newlibVersion="4.2.0.20211231"
 pythonVersion="2.7.18"
-zlibVersion="1.2.11"
+zlibVersion="1.2.12"
 
 top="$(pwd)"
 buildNative="buildNative"
