@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated newlib to version 4.2.0.20211231.
 - Updated binutils to version 2.39.
+- Updated expat to version 2.4.9.
 
 [210213](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200517...210213)
 ------------------------------------------------------------------------------------------
