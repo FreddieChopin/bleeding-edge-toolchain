@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 - Updated gdb to version 12.1.
 - Updated expat to version 2.4.9.
 
+### Fixed
+
+- Fixed download address of isl.
+
 [210213](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200517...210213)
 ------------------------------------------------------------------------------------------
 

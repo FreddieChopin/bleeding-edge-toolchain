@@ -777,7 +777,7 @@ if [ "${skipGdb}" = "n" ]; then
 	download "${gdbArchive}" "${gnuMirror}/gdb/${gdbArchive}"
 fi
 download "${gmpArchive}" "${gnuMirror}/gmp/${gmpArchive}"
-download "${islArchive}" "http://isl.gforge.inria.fr/${islArchive}"
+download "${islArchive}" "https://libisl.sourceforge.io/${islArchive}"
 if [ "${enableWin32}" = "y" ] || [ "${enableWin64}" = "y" ]; then
 	download "${libiconvArchive}" "${gnuMirror}/libiconv/${libiconvArchive}"
 fi
