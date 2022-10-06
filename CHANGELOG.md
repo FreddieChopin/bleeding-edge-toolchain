@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed download address of isl.
+- Fixed gdb build for Windows.
 
 [210213](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/200517...210213)
 ------------------------------------------------------------------------------------------

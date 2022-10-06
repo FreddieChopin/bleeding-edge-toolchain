@@ -1066,6 +1066,7 @@ buildMingw() {
 				--with-python=\"${top}/${buildFolder}/python.sh\" \
 				--program-prefix=\"${target}-\" \
 				--program-suffix=-py \
+				--with-libgmp-prefix=\"${top}/${buildFolder}/${prerequisites}/${gmp}\" \
 				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
 			""
 		if [ "${keepBuildFolders}" = "y" ]; then
@@ -1078,6 +1079,7 @@ buildMingw() {
 			"${bannerPrefix}" \
 			"--build=\"${hostTriplet}\" --host=\"${triplet}\" \
 				--with-python=no \
+				--with-libgmp-prefix=\"${top}/${buildFolder}/${prerequisites}/${gmp}\" \
 				--with-libiconv-prefix=\"${top}/${buildFolder}/${prerequisites}/${libiconv}\"" \
 			""
 	fi
