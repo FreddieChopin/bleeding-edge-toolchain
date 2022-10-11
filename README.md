@@ -59,6 +59,8 @@ option is experimental and may not work reliably in all possible cases - if in d
 don't use it to perform a clean build
 - `--skip-documentation` will skip building html/pdf documentation in the subprojects, by default - if this option is
 not provided - the documentation is built, requiring texlive/texinfo
+- `--skip-gdb` will skip building `gdb`, which may be unnecessary if your Linux distribution already has a multiarch
+`gdb`
 - `--skip-nano-libraries` will skip building of "nano" libraries, by default - if this option is not provided - "nano"
 libraries will be built, making the whole process take significantly longer
 - `--quiet` will make the build slightly less noisy
