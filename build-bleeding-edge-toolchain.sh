@@ -705,8 +705,8 @@ postCleanup() {
 	- ${gdb}
 	$(printf -- "- %s\n- %s\n- %s\n- %s\n- %s\n- %s\n%b" "${expat}" "${gmp}" "${isl}" "${mpc}" "${mpfr}" "${zlib}" "${extraComponents}" | sort)
 
-	This package and info about it can be found on Freddie Chopin's website:
-	http://www.freddiechopin.info/
+	This package and info about it can be found on bleeding-edge-toolchain's website:
+	https://github.com/FreddieChopin/bleeding-edge-toolchain
 	EOF
 	cp "${0}" "${installFolder}"
 	)
