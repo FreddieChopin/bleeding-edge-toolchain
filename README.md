@@ -34,9 +34,9 @@ Toolchain for Windows
 ---------------------
 
 As Windows is at the opposite end of spectrum when it comes to binary compatibility, the packages for 32-bit and 64-bit
-Windows are available on [Freddie Chopin's website](http://www.freddiechopin.info/) in Download > Software >
-bleeding-edge-toolchain. If you choose the easy path, just download an archive, extract it with 7-zip and add `.../bin`
-folder to your system's `PATH` environment variable.
+Windows are available on [bleeding-edge-toolchain's website](https://github.com/FreddieChopin/bleeding-edge-toolchain)
+in Releases. If you choose the easy path, just download an archive, extract it with 7-zip and add `.../bin` folder to
+your system's `PATH` environment variable.
 
 If you want to _also_ build a toolchain for 32-bit and/or 64-bit Windows pass `--enable-win32` and/or `--enable-win64`
 as arguments for the script, like this:
