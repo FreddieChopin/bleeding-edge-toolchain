@@ -807,6 +807,97 @@ extract "${expatArchive}"
 extract "${gccArchive}"
 if [ "${skipGdb}" = "n" ]; then
 	extract "${gdbArchive}"
+
+	if [ ! -f "${gdb}_patched" ]; then
+		messageB "Patching ${gdb}"
+		pushd "${gdb}"
+patch -p1 << 'EOF'
+From 7bd836d5d90353a2de192fd4711a20b4520246b7 Mon Sep 17 00:00:00 2001
+From: Simon Marchi <simon.marchi@polymtl.ca>
+Date: Tue, 10 Jan 2023 00:07:25 -0500
+Subject: [PATCH] gdb/doc: fix install-html with Texinfo 7
+
+Starting with Texinfo 7 (this commit [1]), the output directory for the
+HTML doc format is gdb/doc/gdb_html, rather than gdb/doc/gdb previously.
+This breaks the install-html target, which expects the HTML doc to be in
+gdb/doc/gdb:
+
+    $ make install-html MAKEINFO=makeinfo DESTDIR=/tmp/install
+    make[1]: Entering directory '/home/simark/build/binutils-gdb/gdb'
+    make[2]: Entering directory '/home/simark/build/binutils-gdb/gdb/doc'
+    makeinfo  -DHAVE_MAKEINFO_CLICK --html  -I /home/simark/src/binutils-gdb/gdb/doc/../../readline/readline/doc -I /home/simark/src/binutils-gdb/gdb/doc/../mi -I /home/simark/src/binutils-gdb/gdb/doc /home/simark/src/binutils-gdb/gdb/doc/gdb.texinfo
+    makeinfo  -DHAVE_MAKEINFO_CLICK --html  -I /home/simark/src/binutils-gdb/gdb/doc /home/simark/src/binutils-gdb/gdb/doc/stabs.texinfo
+    makeinfo  -DHAVE_MAKEINFO_CLICK --html  -I /home/simark/src/binutils-gdb/gdb/doc /home/simark/src/binutils-gdb/gdb/doc/annotate.texinfo
+    test -z "/usr/local/share/doc/gdb" || /bin/sh /home/simark/src/binutils-gdb/gdb/doc/../../mkinstalldirs "/tmp/install/usr/local/share/doc/gdb"
+     /usr/bin/install -c -m 644 '/home/simark/src/binutils-gdb/gdb/doc/gdb' '/tmp/install/usr/local/share/doc/gdb/gdb'
+    /usr/bin/install: cannot stat '/home/simark/src/binutils-gdb/gdb/doc/gdb': No such file or directory
+     /usr/bin/install -c -m 644 '/home/simark/src/binutils-gdb/gdb/doc/stabs' '/tmp/install/usr/local/share/doc/gdb/stabs'
+    /usr/bin/install: cannot stat '/home/simark/src/binutils-gdb/gdb/doc/stabs': No such file or directory
+     /usr/bin/install -c -m 644 '/home/simark/src/binutils-gdb/gdb/doc/annotate' '/tmp/install/usr/local/share/doc/gdb/annotate'
+    /usr/bin/install: cannot stat '/home/simark/src/binutils-gdb/gdb/doc/annotate': No such file or directory
+    make[2]: *** [Makefile:278: install-html] Error 1
+    make[2]: Leaving directory '/home/simark/build/binutils-gdb/gdb/doc'
+    make[1]: *** [Makefile:2240: subdir_do] Error 1
+    make[1]: Leaving directory '/home/simark/build/binutils-gdb/gdb'
+    make: *** [Makefile:2006: install-html] Error 2
+
+Fix this by adding -o switches to the HTML targets, to force the output
+directories.
+
+[1] https://git.savannah.gnu.org/cgit/texinfo.git/commit/?id=a868421baf9c44227c43490687f8d6b8d6c95414
+
+Change-Id: Ie147dc7b4a52eb2348005b8dc006a41b0784621f
+---
+ gdb/doc/Makefile.in | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/gdb/doc/Makefile.in b/gdb/doc/Makefile.in
+index d1012bee98c..5d40aa229b2 100644
+--- a/gdb/doc/Makefile.in
++++ b/gdb/doc/Makefile.in
+@@ -564,7 +564,10 @@ gdb.mm: $(GDB_DOC_FILES) links2roff
+ # GDB MANUAL: HTML file
+
+ gdb/index.html: ${GDB_DOC_FILES}
+-	$(MAKEHTML) $(MAKEHTMLFLAGS) $(READLINE_TEXI_INCFLAG) -I ${GDBMI_DIR} -I $(srcdir) $(srcdir)/gdb.texinfo
++	$(MAKEHTML) $(MAKEHTMLFLAGS) \
++		-o gdb \
++		$(READLINE_TEXI_INCFLAG) -I ${GDBMI_DIR} -I $(srcdir) \
++		$(srcdir)/gdb.texinfo
+
+ stabs.info: $(STABS_DOC_FILES)
+ 	$(MAKEINFO_CMD) -I $(srcdir) -o stabs.info $(srcdir)/stabs.texinfo
+@@ -572,7 +575,10 @@ stabs.info: $(STABS_DOC_FILES)
+ # STABS DOCUMENTATION: HTML file
+
+ stabs/index.html: $(STABS_DOC_FILES)
+-	$(MAKEHTML) $(MAKEHTMLFLAGS) -I $(srcdir) $(srcdir)/stabs.texinfo
++	$(MAKEHTML) $(MAKEHTMLFLAGS) \
++		-o stabs \
++		-I $(srcdir) \
++		$(srcdir)/stabs.texinfo
+
+ # Clean these up before each run.  Avoids a catch 22 with not being
+ # able to re-generate these files (to fix a corruption) because these
+@@ -614,7 +620,10 @@ annotate.info: $(ANNOTATE_DOC_FILES)
+ 	$(MAKEINFO_CMD) -I $(srcdir) -o annotate.info $(srcdir)/annotate.texinfo
+
+ annotate/index.html: $(ANNOTATE_DOC_FILES)
+-	$(MAKEHTML) $(MAKEHTMLFLAGS) -I $(srcdir) $(srcdir)/annotate.texinfo
++	$(MAKEHTML) $(MAKEHTMLFLAGS) \
++		-o annotate \
++		-I $(srcdir) \
++		$(srcdir)/annotate.texinfo
+
+ # Man pages
+ gdb.1: $(GDB_DOC_FILES)
+--
+2.34.5
+EOF
+		popd
+		touch "${gdb}_patched"
+	fi
+
 fi
 extract "${gmpArchive}"
 extract "${islArchive}"
