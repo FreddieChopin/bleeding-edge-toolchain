@@ -503,14 +503,10 @@ buildNewlib() {
 		messageB "${newlib}${suffix} make install"
 		make install
 		for documentation in ${documentations}; do
-			cd "${target}/newlib/libc"
-			messageB "${newlib}${suffix} libc make install-${documentation}"
+			cd "${target}/newlib"
+			messageB "${newlib}${suffix} make install-${documentation}"
 			make "install-${documentation}"
-			cd ../../..
-			cd "${target}/newlib/libm"
-			messageB "${newlib}${suffix} libm make install-${documentation}"
-			make "install-${documentation}"
-			cd ../../..
+			cd ../..
 		done
 		touch "${tagFileBase}_built"
 		cd "${top}"

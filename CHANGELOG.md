@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Added temporary fix for building GDB 12.1 documentation with Texinfo 7
 ([upstream patch](https://git.sr.ht/~sourceware/binutils-gdb/commit/7bd836d5d90353a2de192fd4711a20b4520246b7)).
+- Fixed documentation generation for newlib.
 
 [221119](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/221106...221119)
 ------------------------------------------------------------------------------------------
