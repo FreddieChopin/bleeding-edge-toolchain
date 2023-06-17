@@ -21,12 +21,14 @@ All notable changes to this project will be documented in this file.
 - Updated isl to version 0.26.
 - Updated mpc to version 1.3.1.
 - Updated mpfr to version 4.2.1.
+- Updated python to version 3.12.2.
 
 ### Fixed
 
 - Added temporary fix for building GDB documentation with Texinfo 7
 ([upstream patch](https://git.sr.ht/~sourceware/binutils-gdb/commit/7bd836d5d90353a2de192fd4711a20b4520246b7)).
 - Fixed documentation generation for newlib.
+- New versions of GDB finally use Python 3 for Windows, so fix the build by using packaged Python from NuGet.
 
 [221119](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/221106...221119)
 ------------------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ libiconvVersion="1.17"
 mpcVersion="1.3.1"
 mpfrVersion="4.2.1"
 newlibVersion="4.4.0.20231231"
-pythonVersion="2.7.18"
+pythonVersion="3.12.2"
 zlibVersion="1.2.13"
 
 top="$(pwd)"
@@ -56,10 +56,10 @@ mpfr="mpfr-${mpfrVersion}"
 mpfrArchive="${mpfr}.tar.xz"
 newlib="newlib-${newlibVersion}"
 newlibArchive="${newlib}.tar.gz"
-pythonWin32="python-${pythonVersion}"
-pythonArchiveWin32="${pythonWin32}.msi"
-pythonWin64="python-${pythonVersion}.amd64"
-pythonArchiveWin64="${pythonWin64}.msi"
+pythonWin32="python-${pythonVersion}-win32"
+pythonArchiveWin32="${pythonWin32}.nupkg"
+pythonWin64="python-${pythonVersion}-win64"
+pythonArchiveWin64="${pythonWin64}.nupkg"
 zlib="zlib-${zlibVersion}"
 zlibArchive="${zlib}.tar.gz"
 
@@ -781,10 +781,10 @@ download "${mpcArchive}" "${gnuMirror}/mpc/${mpcArchive}"
 download "${mpfrArchive}" "${gnuMirror}/mpfr/${mpfrArchive}"
 download "${newlibArchive}" "https://sourceware.org/pub/newlib/${newlibArchive}"
 if [ "${enableWin32}" = "y" ]; then
-	download "${pythonArchiveWin32}" "https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin32}"
+	download "${pythonArchiveWin32}" "https://www.nuget.org/api/v2/package/pythonx86/${pythonVersion}"
 fi
 if [ "${enableWin64}" = "y" ]; then
-	download "${pythonArchiveWin64}" "https://www.python.org/ftp/python/${pythonVersion}/${pythonArchiveWin64}"
+	download "${pythonArchiveWin64}" "https://www.nuget.org/api/v2/package/python/${pythonVersion}"
 fi
 download "${zlibArchive}" "https://www.zlib.net/fossils/${zlibArchive}"
 cd "${top}"
@@ -1131,13 +1131,13 @@ buildMingw() {
 	while [ "\${#}" -gt 0 ]; do
 		case "\${1}" in
 			--prefix|--exec-prefix)
-				echo "${top}/${sources}/${pythonFolder}"
+				echo "${top}/${sources}/${pythonFolder}/tools"
 				;;
 			--includes)
-				echo "-D_hypot=hypot -I${top}/${sources}/${pythonFolder}"
+				echo "-D_hypot=hypot -I${top}/${sources}/${pythonFolder}/tools/include"
 				;;
 			--ldflags)
-				echo "-L${top}/${sources}/${pythonFolder} -lpython$(echo "${pythonVersion}" | sed -n 's/^\([^.]\{1,\}\)\.\([^.]\{1,\}\).*$/\1\2/p')"
+				echo "-L${top}/${sources}/${pythonFolder}/tools -lpython$(echo "${pythonVersion}" | sed -n 's/^\([^.]\{1,\}\)\.\([^.]\{1,\}\).*$/\1\2/p')"
 				;;
 		esac
 		shift
