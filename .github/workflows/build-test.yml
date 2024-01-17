@@ -1,0 +1,21 @@
+#
+# file: build-test.yml
+#
+# author: Copyright (C) 2024 Freddie Chopin https://freddiechopin.info https://distortec.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+name: Build Test
+
+on: push
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      shell: bash
+      run: ./build-bleeding-edge-toolchain.sh --skip-documentation --skip-gdb --skip-nano-libraries
