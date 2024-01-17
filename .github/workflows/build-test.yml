@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install ninja-build
     - name: Build
       shell: bash
       run: ./build-bleeding-edge-toolchain.sh --skip-documentation --skip-gdb --skip-nano-libraries
@@ -25,3 +29,11 @@ jobs:
       run: cat installNative/info.txt
     - name: Print version info of compiled toolchain packages
       run: find ./installNative/bin -executable -type f -print -execdir {} --version \;
+    - name: Add compiled toolchain to PATH environment variable
+      run: echo "${GITHUB_WORKSPACE}/installNative/bin" >> ${GITHUB_PATH}
+    - name: Test compilation of distortos
+      run: |
+        curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz
+        tar -xf master.tar.gz
+        cd distortos-master
+        ./scripts/buildAllConfigurations.sh configurations distortosTest
