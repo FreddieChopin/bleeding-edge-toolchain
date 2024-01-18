@@ -37,3 +37,9 @@ jobs:
         tar -xf master.tar.gz
         cd distortos-master
         ./scripts/buildAllConfigurations.sh configurations distortosTest
+    - name: Upload package to FTP server
+      shell: bash
+      env:
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      run: curl -T arm-none-eabi-gcc-*.tar.xz ftp://distortos.org --user "${FTP_USERNAME}":"${FTP_PASSWORD}"
