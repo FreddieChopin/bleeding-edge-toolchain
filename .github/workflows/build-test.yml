@@ -22,7 +22,7 @@ jobs:
         sudo apt install ninja-build
     - name: Build
       shell: bash
-      run: ./build-bleeding-edge-toolchain.sh --skip-documentation --skip-gdb
+      run: ./build-bleeding-edge-toolchain.sh --skip-documentation
     - name: Print info about generated package
       run: ls -l arm-none-eabi-gcc-*.tar.xz
     - name: Print contents of generated info.txt
