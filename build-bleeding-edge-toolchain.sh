@@ -4,7 +4,7 @@
 #
 # file: build-bleeding-edge-toolchain.sh
 #
-# author: Copyright (C) 2016-2022 Freddie Chopin https://freddiechopin.info https://distortec.com
+# author: Copyright (C) 2016-2024 Freddie Chopin https://freddiechopin.info https://distortec.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -806,7 +806,8 @@ if [ "${skipGdb}" = "n" ]; then
 
 	if [ ! -f "${gdb}_patched" ]; then
 		messageB "Patching ${gdb}"
-		pushd "${gdb}"
+		(
+		cd "${gdb}"
 patch -p1 << 'EOF'
 From 7bd836d5d90353a2de192fd4711a20b4520246b7 Mon Sep 17 00:00:00 2001
 From: Simon Marchi <simon.marchi@polymtl.ca>
@@ -890,7 +891,7 @@ index d1012bee98c..5d40aa229b2 100644
 --
 2.34.5
 EOF
-		popd
+		)
 		touch "${gdb}_patched"
 	fi
 
