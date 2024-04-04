@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install ninja-build
+        sudo apt install ninja-build texlive
     - name: Build
       shell: bash
       run: ./build-bleeding-edge-toolchain.sh --skip-documentation
