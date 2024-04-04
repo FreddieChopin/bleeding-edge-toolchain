@@ -22,7 +22,7 @@ jobs:
         sudo apt install ninja-build texlive
     - name: Build
       shell: bash
-      run: ./build-bleeding-edge-toolchain.sh --skip-documentation
+      run: ./build-bleeding-edge-toolchain.sh
     - name: Print info about generated package
       run: ls -l arm-none-eabi-gcc-*.tar.xz
     - name: Print contents of generated info.txt
