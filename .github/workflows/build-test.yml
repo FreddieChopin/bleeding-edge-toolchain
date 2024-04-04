@@ -38,6 +38,7 @@ jobs:
         cd distortos-master
         ./scripts/buildAllConfigurations.sh configurations distortosTest
     - name: Upload package to FTP server
+      if: ${{ github.ref_type == 'tag' }}
       shell: bash
       env:
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
