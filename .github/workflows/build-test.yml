@@ -1,0 +1,46 @@
+#
+# file: build-test.yml
+#
+# author: Copyright (C) 2024 Freddie Chopin https://freddiechopin.info https://distortec.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+name: Build Test
+
+on: push
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install ninja-build texlive
+    - name: Build
+      shell: bash
+      run: ./build-bleeding-edge-toolchain.sh
+    - name: Print info about generated package
+      run: ls -l arm-none-eabi-gcc-*.tar.xz
+    - name: Print contents of generated info.txt
+      run: cat installNative/info.txt
+    - name: Print version info of compiled toolchain packages
+      run: find ./installNative/bin -executable -type f -print -execdir {} --version \;
+    - name: Add compiled toolchain to PATH environment variable
+      run: echo "${GITHUB_WORKSPACE}/installNative/bin" >> ${GITHUB_PATH}
+    - name: Test compilation of distortos
+      run: |
+        curl -L -O https://github.com/DISTORTEC/distortos/archive/master.tar.gz
+        tar -xf master.tar.gz
+        cd distortos-master
+        ./scripts/buildAllConfigurations.sh configurations distortosTest
+    - name: Upload package to FTP server
+      if: ${{ github.ref_type == 'tag' }}
+      shell: bash
+      env:
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      run: curl -T arm-none-eabi-gcc-*.tar.xz ftp://distortos.org --user "${FTP_USERNAME}":"${FTP_PASSWORD}"
