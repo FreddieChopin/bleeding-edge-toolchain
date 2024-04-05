@@ -3,6 +3,7 @@ bleeding-edge-toolchain
 
 All-in-one script to build bleeding-edge-toolchain for ARM microcontrollers.
 
+[![Build Test](https://github.com/FreddieChopin/bleeding-edge-toolchain/actions/workflows/build-test.yml/badge.svg)](https://github.com/FreddieChopin/bleeding-edge-toolchain/actions/workflows/build-test.yml)<br/>
 [bleeding-edge-toolchain - what it's all about?](https://freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)
 
 Toolchain for Linux
