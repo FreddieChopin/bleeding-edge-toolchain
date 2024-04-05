@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/221119...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Added
+
+- Added build test of complete toolchain (Linux only) using GitHub Actions.
+
 ### Fixed
 
 - Added temporary fix for building GDB documentation with Texinfo 7
