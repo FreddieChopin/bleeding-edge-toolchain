@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 - Added build test of complete toolchain (Linux only) using GitHub Actions.
 
+### Changed
+
+- Updated gcc to version 12.3.0.
+
 ### Fixed
 
 - Added temporary fix for building GDB documentation with Texinfo 7
