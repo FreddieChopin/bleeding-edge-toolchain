@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed documentation generation for newlib.
 - New versions of GDB finally use Python 3 for Windows, so fix the build by using packaged Python from NuGet.
-- Fixed build of GDB by using proper argument for mpfr.
+- Fixed build of GDB by using proper arguments for gmp and mpfr.
 - Fixed Windows build of GCC with recent MinGW toolchains
 ([upstream patch](https://gcc.gnu.org/pipermail/gcc-patches/2023-January/609514.html)).
 
