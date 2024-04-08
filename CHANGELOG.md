@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Updated binutils to version 2.42.
 - Updated gdb to version 14.2.
 - Updated expat to version 2.6.2.
+- Updated gmp to version 6.3.0.
 
 ### Fixed
 
