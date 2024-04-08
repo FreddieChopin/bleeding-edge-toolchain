@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Updated mpc to version 1.3.1.
 - Updated mpfr to version 4.2.1.
 - Updated python to version 3.12.2.
+- Updated zlib to version 1.3.1.
 
 ### Fixed
 
