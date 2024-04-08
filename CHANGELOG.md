@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Updated expat to version 2.6.2.
 - Updated gmp to version 6.3.0.
 - Updated isl to version 0.26.
+- Updated mpc to version 1.3.1.
 
 ### Fixed
 
