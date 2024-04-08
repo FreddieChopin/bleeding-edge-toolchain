@@ -26,8 +26,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Added temporary fix for building GDB documentation with Texinfo 7
-([upstream patch](https://git.sr.ht/~sourceware/binutils-gdb/commit/7bd836d5d90353a2de192fd4711a20b4520246b7)).
 - Fixed documentation generation for newlib.
 - New versions of GDB finally use Python 3 for Windows, so fix the build by using packaged Python from NuGet.
 
