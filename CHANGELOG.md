@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Updated gdb to version 14.2.
 - Updated expat to version 2.6.2.
 - Updated gmp to version 6.3.0.
+- Updated isl to version 0.26.
 
 ### Fixed
 
