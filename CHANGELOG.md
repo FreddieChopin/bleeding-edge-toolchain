@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed documentation generation for newlib.
 - New versions of GDB finally use Python 3 for Windows, so fix the build by using packaged Python from NuGet.
+- Fixed build of GDB by using proper argument for mpfr.
 
 [221119](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/221106...221119)
 ------------------------------------------------------------------------------------------

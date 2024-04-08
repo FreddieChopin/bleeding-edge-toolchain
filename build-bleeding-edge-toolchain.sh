@@ -650,8 +650,7 @@ buildGdb() {
 			--with-system-zlib \
 			--with-expat=yes \
 			--with-libexpat-prefix=\"${top}/${buildFolder}/${prerequisites}/${expat}\" \
-			--with-mpfr=yes \
-			--with-libmpfr-prefix=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\" \
+			--with-mpfr=\"${top}/${buildFolder}/${prerequisites}/${mpfr}\" \
 			--with-gdb-datadir=\"'\\\${prefix}'/${target}/share/gdb\" \
 			--with-pkgversion=\"${pkgversion}\""
 		messageB "${bannerPrefix}${gdb} make"
