@@ -800,14 +800,6 @@ extract() {
 extract "${binutilsArchive}"
 extract "${expatArchive}"
 extract "${gccArchive}"
-if [ ! -f "${gcc}_patched" ]; then
-	messageB "Patching ${gcc}"
-	(
-	cd "${gcc}"
-    sed -Ei 's,^( *)#( *)include <windows\.h>,\1#\2define WIN32_LEAN_AND_MEAN\n&,' $(grep -Flr "<windows.h>")
-	)
-	touch "${gcc}_patched"
-fi
 if [ "${skipGdb}" = "n" ]; then
 	extract "${gdbArchive}"
 fi
