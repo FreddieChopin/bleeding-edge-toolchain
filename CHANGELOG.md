@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gcc to version 12.3.0.
+- Updated binutils to version 2.42.
 
 ### Fixed
 
