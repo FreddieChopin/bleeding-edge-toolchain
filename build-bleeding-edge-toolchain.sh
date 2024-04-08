@@ -13,7 +13,7 @@
 set -eu
 
 binutilsVersion="2.42"
-expatVersion="2.5.0"
+expatVersion="2.6.2"
 gccVersion="12.3.0"
 gdbVersion="12.1"
 gmpVersion="6.2.1"
