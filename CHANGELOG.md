@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Updated gmp to version 6.3.0.
 - Updated isl to version 0.26.
 - Updated mpc to version 1.3.1.
+- Updated mpfr to version 4.2.1.
 
 ### Fixed
 
