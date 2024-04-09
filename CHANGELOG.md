@@ -3,6 +3,13 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240409...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Changed
+
+- Updated gcc to version 13.2.0.
+
 [240409](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240408...240409)
 ------------------------------------------------------------------------------------------
 
