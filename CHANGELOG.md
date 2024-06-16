@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gcc to version 14.1.0.
+- Updated python to version 3.12.4.
 
 [240530](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240410...240530)
 ------------------------------------------------------------------------------------------
