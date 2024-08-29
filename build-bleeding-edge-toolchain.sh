@@ -12,7 +12,7 @@
 
 set -eu
 
-binutilsVersion="2.42"
+binutilsVersion="2.43"
 expatVersion="2.6.2"
 gccVersion="14.2.0"
 gdbVersion="14.2"
