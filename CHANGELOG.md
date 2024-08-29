@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated gcc to version 14.2.0.
 - Updated binutils to version 2.43.
+- Updated gdb to version 15.1.
 
 [240616](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240530...240616)
 ------------------------------------------------------------------------------------------
