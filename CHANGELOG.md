@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Updated gdb to version 15.2.
 - Updated python to version 3.12.5.
 - Updated expat to version 2.6.3.
+- Updated isl to version 0.27.
 
 [240616](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240530...240616)
 ------------------------------------------------------------------------------------------
