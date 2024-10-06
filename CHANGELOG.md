@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Updated gcc to version 14.2.0.
 - Updated binutils to version 2.43.
 - Updated gdb to version 15.2.
-- Updated python to version 3.12.5.
+- Updated python to version 3.12.7.
 - Updated expat to version 2.6.3.
 - Updated isl to version 0.27.
 
