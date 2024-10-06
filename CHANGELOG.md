@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Updated binutils to version 2.43.
 - Updated gdb to version 15.1.
 - Updated python to version 3.12.5.
+- Updated expat to version 2.6.3.
 
 [240616](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240530...240616)
 ------------------------------------------------------------------------------------------
