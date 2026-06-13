@@ -3,6 +3,13 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
+[Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/241006...HEAD)
+--------------------------------------------------------------------------------------------
+
+### Fixed
+
+- Fixed GMP build when using recent GCC versions ([upstream patch](https://gmplib.org/repo/gmp/rev/d66d66d82dbb)).
+
 [241006](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240616...241006)
 ------------------------------------------------------------------------------------------
 
