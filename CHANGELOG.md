@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed GCC build when using recent GCC versions
+([modified upstream patch 1](https://gitlab.com/buildroot.org/buildroot/-/blob/master/package/gcc-bare-metal/0001-libcody-Make-it-buildable-by-C-11-to-C-26.patch?ref_type=heads) &
+[modified upstream patch 2](https://github.com/pktpls/openwrt/blob/f45be0f692d5c3261b1ca24c5c7a906fdccce65c/toolchain/gcc/patches-14.x/005-include-memory.patch)).
 - Fixed GMP build when using recent GCC versions ([upstream patch](https://gmplib.org/repo/gmp/rev/d66d66d82dbb)).
 
 [241006](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/240616...241006)
