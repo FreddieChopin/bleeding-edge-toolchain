@@ -15,7 +15,7 @@ set -eu
 binutilsVersion="2.43"
 expatVersion="2.6.3"
 gccVersion="14.2.0"
-gdbVersion="15.2"
+gdbVersion="17.2"
 gmpVersion="6.3.0"
 islVersion="0.27"
 libiconvVersion="1.17"

@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 [Unreleased](https://github.com/FreddieChopin/bleeding-edge-toolchain/compare/241006...HEAD)
 --------------------------------------------------------------------------------------------
 
+### Changed
+
+- Updated gdb to version 17.2.
+
 ### Fixed
 
 - Fixed GMP build when using recent GCC versions ([upstream patch](https://gmplib.org/repo/gmp/rev/d66d66d82dbb)).
