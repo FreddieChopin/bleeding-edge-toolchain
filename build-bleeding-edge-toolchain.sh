@@ -19,6 +19,7 @@ expatVersion="2.8.2"
 gccVersion="14.2.0"
 # https://sourceware.org/gdb/
 gdbVersion="17.2"
+# https://gmplib.org/
 gmpVersion="6.3.0"
 islVersion="0.27"
 libiconvVersion="1.17"
