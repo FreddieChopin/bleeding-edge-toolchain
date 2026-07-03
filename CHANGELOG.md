@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Updated gdb to version 17.2.
 - Updated expat to version 2.8.2.
 - Updated libiconv to 1.18.
+- Updated mpc to 1.4.1.
 
 ### Fixed
 
