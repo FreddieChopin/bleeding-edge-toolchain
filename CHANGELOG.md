@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated binutils to version 2.46.1.
 - Updated gdb to version 17.2.
+- Updated expat to version 2.8.2.
 
 ### Fixed
 

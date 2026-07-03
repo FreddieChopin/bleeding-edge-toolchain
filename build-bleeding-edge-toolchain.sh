@@ -14,7 +14,8 @@ set -eu
 
 # https://www.gnu.org/software/binutils/
 binutilsVersion="2.46.1"
-expatVersion="2.6.3"
+# https://libexpat.github.io/
+expatVersion="2.8.2"
 gccVersion="14.2.0"
 gdbVersion="17.2"
 gmpVersion="6.3.0"
