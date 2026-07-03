@@ -27,7 +27,8 @@ islVersion="0.27"
 libiconvVersion="1.18"
 # https://www.multiprecision.org/
 mpcVersion="1.4.1"
-mpfrVersion="4.2.1"
+# https://www.mpfr.org/
+mpfrVersion="4.2.2"
 newlibVersion="4.4.0.20231231"
 pythonVersion="3.12.7"
 zlibVersion="1.3.1"
