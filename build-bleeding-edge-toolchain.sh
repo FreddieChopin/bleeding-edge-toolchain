@@ -33,7 +33,8 @@ mpfrVersion="4.2.2"
 newlibVersion="4.6.0.20260123"
 # https://www.python.org/
 pythonVersion="3.14.6"
-zlibVersion="1.3.1"
+# https://zlib.net/
+zlibVersion="1.3.2"
 
 top="$(pwd)"
 buildNative="buildNative"
