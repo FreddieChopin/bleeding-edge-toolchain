@@ -17,6 +17,7 @@ binutilsVersion="2.46.1"
 # https://libexpat.github.io/
 expatVersion="2.8.2"
 gccVersion="14.2.0"
+# https://sourceware.org/gdb/
 gdbVersion="17.2"
 gmpVersion="6.3.0"
 islVersion="0.27"
