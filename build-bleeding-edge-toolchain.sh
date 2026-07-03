@@ -29,7 +29,8 @@ libiconvVersion="1.18"
 mpcVersion="1.4.1"
 # https://www.mpfr.org/
 mpfrVersion="4.2.2"
-newlibVersion="4.4.0.20231231"
+# https://sourceware.org/newlib/
+newlibVersion="4.6.0.20260123"
 pythonVersion="3.12.7"
 zlibVersion="1.3.1"
 
