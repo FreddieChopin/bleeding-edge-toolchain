@@ -23,7 +23,8 @@ gdbVersion="17.2"
 gmpVersion="6.3.0"
 # https://libisl.sourceforge.io/
 islVersion="0.27"
-libiconvVersion="1.17"
+# https://savannah.gnu.org/projects/libiconv/
+libiconvVersion="1.18"
 mpcVersion="1.3.1"
 mpfrVersion="4.2.1"
 newlibVersion="4.4.0.20231231"
