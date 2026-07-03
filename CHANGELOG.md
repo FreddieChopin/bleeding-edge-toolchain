@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated binutils to version 2.46.1.
 - Updated gdb to version 17.2.
 
 ### Fixed

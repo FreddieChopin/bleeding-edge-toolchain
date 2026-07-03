@@ -12,7 +12,8 @@
 
 set -eu
 
-binutilsVersion="2.43"
+# https://www.gnu.org/software/binutils/
+binutilsVersion="2.46.1"
 expatVersion="2.6.3"
 gccVersion="14.2.0"
 gdbVersion="17.2"
