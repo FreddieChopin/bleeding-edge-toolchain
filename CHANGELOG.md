@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Updated libiconv to 1.18.
 - Updated mpc to 1.4.1.
 - Updated mpfr to 4.2.2.
+- Updated python to 3.14.6.
 
 ### Fixed
 

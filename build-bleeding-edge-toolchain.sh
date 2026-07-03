@@ -31,7 +31,8 @@ mpcVersion="1.4.1"
 mpfrVersion="4.2.2"
 # https://sourceware.org/newlib/
 newlibVersion="4.6.0.20260123"
-pythonVersion="3.12.7"
+# https://www.python.org/
+pythonVersion="3.14.6"
 zlibVersion="1.3.1"
 
 top="$(pwd)"
