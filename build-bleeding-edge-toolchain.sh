@@ -21,6 +21,7 @@ gccVersion="14.2.0"
 gdbVersion="17.2"
 # https://gmplib.org/
 gmpVersion="6.3.0"
+# https://libisl.sourceforge.io/
 islVersion="0.27"
 libiconvVersion="1.17"
 mpcVersion="1.3.1"
