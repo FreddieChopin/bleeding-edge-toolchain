@@ -9,15 +9,15 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated gcc to version 14.3.0.
-- Updated newlib to 4.6.0.20260123.
+- Updated newlib to version 4.6.0.20260123.
 - Updated binutils to version 2.46.1.
 - Updated gdb to version 17.2.
 - Updated expat to version 2.8.2.
-- Updated libiconv to 1.18.
-- Updated mpc to 1.4.1.
-- Updated mpfr to 4.2.2.
-- Updated python to 3.14.6.
-- Updated zlib to 1.3.2.
+- Updated libiconv to version 1.18.
+- Updated mpc to version 1.4.1.
+- Updated mpfr to version 4.2.2.
+- Updated python to version 3.14.6.
+- Updated zlib to version 1.3.2.
 
 ### Fixed
 
