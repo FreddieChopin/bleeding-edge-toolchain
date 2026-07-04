@@ -16,7 +16,8 @@ set -eu
 binutilsVersion="2.46.1"
 # https://libexpat.github.io/
 expatVersion="2.8.2"
-gccVersion="14.2.0"
+# https://gcc.gnu.org/
+gccVersion="14.3.0"
 # https://sourceware.org/gdb/
 gdbVersion="17.2"
 # https://gmplib.org/

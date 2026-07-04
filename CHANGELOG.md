@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated gcc to version 14.3.0.
 - Updated newlib to 4.6.0.20260123.
 - Updated binutils to version 2.46.1.
 - Updated gdb to version 17.2.
