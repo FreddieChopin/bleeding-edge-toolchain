@@ -1490,7 +1490,7 @@ buildMingw() {
 		maybeDelete "${package}"
 		ln -s "${installFolder}" "${package}"
 		maybeDelete "${packageArchive}"
-		7za a -l -mx=9 "${packageArchive}" "${package}"
+		7za a -mx=9 "${packageArchive}" "${package}"
 		maybeDelete "${package}"
 		touch "${tagFile}"
 	fi
