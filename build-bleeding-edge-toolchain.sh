@@ -23,7 +23,7 @@ gdbVersion="17.2"
 # https://gmplib.org/
 gmpVersion="6.3.0"
 # https://libisl.sourceforge.io/
-islVersion="0.27"
+islVersion="0.28"
 # https://savannah.gnu.org/projects/libiconv/
 libiconvVersion="1.18"
 # https://www.multiprecision.org/

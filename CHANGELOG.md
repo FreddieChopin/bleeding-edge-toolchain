@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Updated binutils to version 2.46.1.
 - Updated gdb to version 17.2.
 - Updated expat to version 2.8.2.
+- Updated isl to version 0.28.
 - Updated libiconv to version 1.18.
 - Updated mpc to version 1.4.1.
 - Updated mpfr to version 4.2.2.
